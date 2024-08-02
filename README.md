@@ -1,5 +1,6 @@
 # Bonas
-Classified listing website 
+
+Classified listing website
 
 <details>
   <summary>Project Timeline</summary>
@@ -22,7 +23,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - Initial project structure in place.
 - Wireframes and database schema drafted.
 
-* * *
+---
 
 ### **Week 2: Database Design and Authentication**
 
@@ -37,7 +38,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - User authentication system integrated and functioning.
 - Basic user roles and permissions established.
 
-* * *
+---
 
 ### **Week 3: Basic Listing Functionality**
 
@@ -51,7 +52,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - Functional CRUD operations for listings.
 - Basic listing interface developed and operational.
 
-* * *
+---
 
 ### **Week 4: User Profiles and Dashboard**
 
@@ -65,7 +66,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - User profile pages completed and functioning.
 - User dashboard developed and users can manage their listings.
 
-* * *
+---
 
 ### **Week 5: Search, Filtering, and Payment Integration**
 
@@ -80,7 +81,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - Search and filtering functionalities operational.
 - Payment system integrated and tested.
 
-* * *
+---
 
 ### **Week 6: Notifications, Messaging, and Refinement**
 
@@ -96,7 +97,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - In-app messaging or chat implemented.
 - UI/UX improvements made based on initial feedback.
 
-* * *
+---
 
 ### **Week 7: Testing and Deployment Preparation**
 
@@ -111,7 +112,7 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - Production environment prepared and optimized.
 - Application ready for deployment.
 
-* * *
+---
 
 ### **Week 8: Launch and Post-Launch Support**
 
@@ -128,6 +129,5 @@ Here's a weekly breakdown with expected results for each phase of developing the
 - Application adjustments based on user feedback completed.
 
 This roadmap should guide the development process effectively while ensuring each key aspect of the project is addressed within the given timeframe.
-
 
 </details>

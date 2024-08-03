@@ -143,6 +143,16 @@ Here are the
 A list of categories can be found in "Categories - Bonas.json" file, it contains 
 
 
+### Database design 
+
+The design for the database can be found in "Database design- Bonas.json" file, it contains 
+
+
+### Api routes 
+
+A documentation for the api routes can be found in "Categories - Bonas.json" file, it contains 
+
+
 ### Pages 
 
 You’ll typically have the following pages to provide a comprehensive user experience:

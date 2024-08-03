@@ -131,3 +131,53 @@ This roadmap should guide the development process effectively while ensuring eac
 
 
 </details>
+
+
+### Mockup Files 
+Here are the 
+[Figma Mockup](https://www.figma.com/design/muQYHATICXzmA2kskIk0Kn/Bonas---Classified-Listing?node-id=0-1&t=htQLTlKuTEYD8137-1) designs for the project 
+
+
+### Categories 
+
+A list of categories can be found in "Categories - Bonas.json" file, it contains 
+
+
+### Pages 
+
+You’ll typically have the following pages to provide a comprehensive user experience:
+
+<details>
+  <summary>List of Pages</summary>
+  
+
+**1. Home Page** : Overview of categories, featured listings, search bar, promotional banners, and links to popular or new listings.
+
+**2. Category Pages** : Lists of subcategories, filters (e.g., location, price range), and sorting options (e.g., newest, price low to high).
+
+**3. Listing Details Page** : Detailed information about a specific listing, including photos, description, price, seller contact details, and location map.
+
+**4. Search Results Page** : Displays results based on user queries, with options to refine the search using filters and sorting options.
+
+**5. Submit a Listing Page** : Form for users to create and submit their own listings, including fields for title, description, price, photos, and category selection.
+
+**6. User Profile Page** : User information, listing history, saved searches, and account settings.
+
+**7. Dashboard (for Admins)** : Tools for managing users, listings, categories, and site content; includes analytics and reporting features.
+
+**8. Login/Register Page** : Forms for user registration, login, and password recovery.
+
+**9. About Us Page** : Information about the website’s mission, team, and history.
+
+**10. Contact Us Page** : Contact form, email addresses, phone numbers, and office location.
+
+**11. FAQ Page** : Commonly asked questions and their answers.
+
+**12. Terms and Conditions Page** : Legal agreements and policies governing the use of the website.
+
+**13. Privacy Policy Page** : Details on how user data is collected, used, and protected.
+
+**14. Blog/News Page** : Articles, updates, and news related to the website or relevant topics.
+
+**15. Testimonials/Reviews Page** : User reviews and feedback about the website or specific listings.
+</details>

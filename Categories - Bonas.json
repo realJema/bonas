@@ -1,0 +1,146 @@
+{
+  "categories": [
+    {
+      "name": "Vehicles",
+      "subcategories": [
+        "Cars",
+        "Motorbikes",
+        "Bicycles",
+        "Trucks",
+        "Vans",
+        "Auto Parts & Accessories",
+        "Car Rentals",
+        "Car Services"
+      ]
+    },
+    {
+      "name": "Real Estate",
+      "subcategories": [
+        "For Sale",
+        "For Rent",
+        "Commercial Property",
+        "Land & Plots",
+        "Holiday Rentals",
+        "Real Estate Agents",
+        "Property Management"
+      ]
+    },
+    {
+      "name": "Jobs",
+      "subcategories": [
+        "Full-Time",
+        "Part-Time",
+        "Freelance",
+        "Internships",
+        "Volunteer",
+        "Remote",
+        "Job Seekers",
+        "Recruitment Agencies"
+      ]
+    },
+    {
+      "name": "Electronics",
+      "subcategories": [
+        "Mobile Phones",
+        "Laptops & Computers",
+        "Home Appliances",
+        "Audio & Headphones",
+        "Cameras & Photography",
+        "Gaming Consoles",
+        "Smart Watches",
+        "Wearable Tech"
+      ]
+    },
+    {
+      "name": "Fashion",
+      "subcategories": [
+        "Men's Clothing",
+        "Women's Clothing",
+        "Footwear",
+        "Accessories",
+        "Jewelry",
+        "Watches",
+        "Bags & Purses",
+        "Vintage Clothing"
+      ]
+    },
+    {
+      "name": "Home & Garden",
+      "subcategories": [
+        "Furniture",
+        "Home Decor",
+        "Kitchen Appliances",
+        "Garden Tools",
+        "Outdoor Furniture",
+        "Bedding & Linens",
+        "Home Improvement",
+        "DIY Materials"
+      ]
+    },
+    {
+      "name": "Services",
+      "subcategories": [
+        "Cleaning Services",
+        "Construction & Renovation",
+        "Event Planning",
+        "Tutoring",
+        "Beauty Services",
+        "Transportation",
+        "Legal Services",
+        "Accounting & Tax Services",
+        "Health & Wellness"
+      ]
+    },
+    {
+      "name": "Pets",
+      "subcategories": [
+        "Dogs",
+        "Cats",
+        "Birds",
+        "Fish",
+        "Small Animals",
+        "Pet Supplies",
+        "Pet Adoption",
+        "Pet Services"
+      ]
+    },
+    {
+      "name": "Hobbies & Leisure",
+      "subcategories": [
+        "Sports Equipment",
+        "Books",
+        "Musical Instruments",
+        "Collectibles",
+        "Photography",
+        "Travel & Experiences",
+        "Art Supplies",
+        "Gaming"
+      ]
+    },
+    {
+      "name": "Business & Industrial",
+      "subcategories": [
+        "For Sale",
+        "Equipment",
+        "Office Supplies",
+        "Commercial Vehicles",
+        "Raw Materials",
+        "Machinery",
+        "Business Services",
+        "Industrial Supplies"
+      ]
+    },
+    {
+      "name": "Job Seekers",
+      "subcategories": [
+        "Resumes & CVs",
+        "Career Counseling",
+        "Interview Preparation",
+        "Skill Development",
+        "Networking Events",
+        "Job Fairs",
+        "Professional Certifications"
+      ]
+    }
+  ]
+}

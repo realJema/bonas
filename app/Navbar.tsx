@@ -5,8 +5,10 @@ import Link from "next/link";
 import Sidebar from "./components/Sidebar";
 import Image from "next/image";
 import profileImg from "@/public/mdprofile.jpg";
-// import SearchInput from "./components/SearchInput";
-// import Header from "./components/Header";
+import SearchInput from "./components/SearchInput";
+import Header from "./components/Header";
+
+const handleSearch = (searchText: string) => console.log(searchText);
 
 const Navbar = () => {
   return (
@@ -34,13 +36,15 @@ const Navbar = () => {
               </svg>
             </Link>
           </div>
+
+          {/* <SearchInput /> */}
           <div className="hidden sm:block w-full md:max-w-lg lg:max-w-ful">
-            {/* <SearchInput /> */}
+            <SearchInput onSearch={handleSearch} />
           </div>
         </div>
 
         {/* logo */}
-        <Link className="sm:hidden pe-36" href="/">
+        <Link className="sm:hidden" href="/">
           {" "}
           <svg
             width="89"
@@ -272,8 +276,8 @@ const Navbar = () => {
         </div>
       </nav>
 
-         {/* sub header */}
-      {/* <Header /> */}
+      {/* sub header */}
+      <Header />
     </header>
   );
 };

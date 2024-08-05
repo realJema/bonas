@@ -21,7 +21,17 @@ body {
     text-wrap: balance;
   }
 
-  
+  .hero {
+    background-image: url("/Banner-Desktop.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .swiper-slide {
+    margin-right: 20px;
+  }
+
   .my-masonry-grid {
     display: -webkit-box; /* Not needed if autoprefixing */
     display: -ms-flexbox; /* Not needed if autoprefixing */

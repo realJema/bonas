@@ -230,7 +230,7 @@ const VehiculesAndMotor = () => {
   };
 
   return (
-    <div className="mt-52">
+    <div className="mt-52 flex flex-col space-y-6">
       <div className="flex items-center justify-between">
         <Heading label="Vehicules and Motor" />
         <Navigation

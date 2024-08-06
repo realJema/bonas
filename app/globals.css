@@ -29,7 +29,7 @@ body {
   }
 
   .swiper-slide {
-    margin-right: 20px;
+    margin-right: 16px;
   }
 
   .my-masonry-grid {
@@ -60,4 +60,19 @@ body {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  /* premium swipper */
+  .premium-swiper {
+    padding: 16px 0;
+  }
+
+  .premium-swiper .swiper-slide {
+  width: auto;
+  height: auto;
+}
+
+.premium-swiper .swiper-slide:last-child {
+  margin-right: 0 !important;
+}
+
 }

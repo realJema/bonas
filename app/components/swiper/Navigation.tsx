@@ -25,7 +25,7 @@ const Navigation = ({
     <div className={`flex items-center gap-3 ${containerStyles}`}>
       <button
         className={`prev-button z-10 bg-gray-50 bg-opacity-75 transition-colors hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center shadow-md ${
-          isBeginning ? "opacity-50 cursor-not-allowed" : ""
+          isBeginning ? "opacity-50 cursor-text" : ""
         } ${styles}`}
         onClick={onPrev}
         disabled={isBeginning}
@@ -47,7 +47,7 @@ const Navigation = ({
       <button
         onClick={onNext}
         className={`next-button z-10 bg-gray-50 bg-opacity-75 transition-colors hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center shadow-md ${
-          isEnd ? "opacity-50 cursor-not-allowed" : ""
+          isEnd ? "opacity-50 cursor-text" : ""
         }`}
         disabled={isEnd}
       >

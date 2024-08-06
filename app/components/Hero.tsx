@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState, useCallback } from "react";
 import { Swiper as SwiperType } from "swiper";
 import HeroSwiper from "./swiper/HeroSwipper";
-import CustomNavigation from "./swiper/Navigation";
+import Navigation from "./swiper/Navigation";
 import HeroLink, { HeroLinkProps } from "./HeroLink";
 
 const heroLinksData: HeroLinkProps[] = [
@@ -80,7 +80,7 @@ const Hero = () => {
       </div>
       <div className="hidden sm:block xl:hidden">
         <div className="flex justify-end mb-2.5">
-          <CustomNavigation
+          <Navigation
             bg="gray-100"
             onNext={handleNext}
             onPrev={handlePrev}

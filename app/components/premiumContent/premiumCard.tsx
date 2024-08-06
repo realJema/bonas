@@ -166,7 +166,7 @@ const PremiumCard = ({
               )}
               {currentSlide < slides.length - 1 && (
                 <ButtonNext
-                  className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-50 rounded-full h-8 w-8 flex items-center justify-center shadow-sm z-10 transition-opacity duration-200 hover:bg-gray-100"
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-50 rounded-full h-8 w-8 flex items-center justify-center shadow-sm z-20 transition-opacity duration-200 hover:bg-gray-100"
                   onClick={() =>
                     setCurrentSlide((prev) =>
                       Math.min(slides.length - 1, prev + 1)

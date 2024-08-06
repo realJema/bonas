@@ -9,6 +9,7 @@ import TopRatedBadge from "../components/badges/TopRatedBadge";
 import ProBadge from "../components/badges/Probadge";
 import Navigation from "./swiper/Navigation";
 import { Swiper as SwiperInstance } from "swiper";
+import { Swiper as SwiperType } from "swiper/types";
 import Link from "next/link";
 import PremiumContentSwiper from "./premiumContent/PremiumContentSwiper";
 import premiumContentType from "../entities/PremiumContent";
@@ -225,10 +226,10 @@ const PremiumContent = () => {
     }
   };
 
-  const handleSlideChange = (swiper: SwiperInstance) => {
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
+ const handleSlideChange = (swiper: SwiperType) => {
+   setIsBeginning(swiper.isBeginning);
+   setIsEnd(swiper.isEnd);
+ };
 
   return (
     <div className="mt-10">
@@ -243,7 +244,7 @@ const PremiumContent = () => {
             onPrev={handlePrev}
             isBeginning={isBeginning}
             isEnd={isEnd}
-            containerStyles="hidden md:flex"
+            containerStyles="hidden md:flex z-20"
           />
         </div>
       </div>

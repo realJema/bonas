@@ -2,6 +2,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
 import "swiper/css";
+import "swiper/css/free-mode";
 
 interface PremiumContentSwiperProps<T> {
   data: T[];
@@ -24,7 +25,7 @@ const PremiumContentSwiper = <T,>({
   hasOverlayRight = true,
 }: PremiumContentSwiperProps<T>) => {
   return (
-    <div className="relative">
+    <div className="relative z-10">
       <Swiper
         spaceBetween={spaceBetween}
         slidesPerView="auto"
@@ -41,10 +42,10 @@ const PremiumContentSwiper = <T,>({
         ))}
       </Swiper>
       {hasOverlayLeft && (
-        <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-10" />
+        <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-5" />
       )}
       {hasOverlayRight && (
-        <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10" />
+        <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-5" />
       )}
     </div>
   );

@@ -30,8 +30,8 @@ const CustomSwiper = <T,>({
   hasOverlayRight = false,
   className = "",
   slideClassName = "",
-  overlayLeftClassName = "absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-10",
-  overlayRightClassName = "absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10",
+  overlayLeftClassName = "absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-5",
+  overlayRightClassName = "absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-5",
   swiperProps = {},
 }: CustomSwiperProps<T>) => {
   return (

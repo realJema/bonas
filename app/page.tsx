@@ -4,6 +4,7 @@ import PremiumContent from "./components/PremiumContent";
 import VehiculesAndMotor from "./components/VehiculesAndMotor";
 import JobListings from "./components/JobListings";
 import RealEstates from "./components/RealEstateListings";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <VehiculesAndMotor />
       <JobListings />
       <RealEstates />
+      <Footer />
     </>
   );
 }

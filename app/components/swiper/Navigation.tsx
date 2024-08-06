@@ -33,7 +33,7 @@ const Navigation = ({
         <svg
           width="8"
           height="15"
-          className={`${svgSize}`}
+          className={`${svgSize} text-gray-500`}
           viewBox="0 0 8 15"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -54,9 +54,10 @@ const Navigation = ({
         <svg
           width="8"
           height="15"
-          className="h-4 w-4"
+          className="h-4 w-4 text-gray-500"
           viewBox="0 0 8 15"
           xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
         >
           <path
             d="M0.772102 14.3093L0.153379 13.6906C0.00694026 13.5442 0.00694026 13.3067 0.153379 13.1603L5.80022 7.5L0.153379 1.83967C0.00694026 1.69323 0.00694026 1.45577 0.153379 1.30931L0.772102 0.690585C0.918534 0.544151 1.15598 0.544151 1.30242 0.690585L7.84661 7.23482C7.99307 7.38125 7.99307 7.61869 7.84661 7.76516L1.30242 14.3093C1.15598 14.4558 0.918534 14.4558 0.772102 14.3093Z"

@@ -2,63 +2,190 @@ import React from "react";
 import Link from "next/link";
 
 const Footer = () => {
+
+  const categories = [
+    {
+      title: "Vehicles",
+      href: "#",
+      subcategories: [
+        { label: "Cars", href: "#" },
+        { label: "Motorbikes", href: "#" },
+        { label: "Bicycles", href: "#" },
+        { label: "Trucks", href: "#" },
+        { label: "Vans", href: "#" },
+        { label: "Auto Parts & Accessories", href: "#" },
+        { label: "Car Rentals", href: "#" },
+        { label: "Car Services", href: "#" },
+      ],
+    },
+    {
+      title: "Real Estate",
+      href: "#",
+      subcategories: [
+        { label: "For Sale", href: "#" },
+        { label: "For Rent", href: "#" },
+        { label: "Commercial Property", href: "#" },
+        { label: "Land & Plots", href: "#" },
+        { label: "Holiday Rentals", href: "#" },
+        { label: "Real Estate Agents", href: "#" },
+        { label: "Property Management", href: "#" },
+      ],
+    },
+    {
+      title: "Jobs",
+      href: "#",
+      subcategories: [
+        { label: "Full-Time", href: "#" },
+        { label: "Part-Time", href: "#" },
+        { label: "Freelance", href: "#" },
+        { label: "Internships", href: "#" },
+        { label: "Volunteer", href: "#" },
+        { label: "Remote", href: "#" },
+        { label: "Job Seekers", href: "#" },
+        { label: "Recruitment Agencies", href: "#" },
+      ],
+    },
+    {
+      title: "Electronics",
+      href: "#",
+      subcategories: [
+        { label: "Mobile Phones", href: "#" },
+        { label: "Laptops & Computers", href: "#" },
+        { label: "Home Appliances", href: "#" },
+        { label: "Audio & Headphones", href: "#" },
+        { label: "Cameras & Photography", href: "#" },
+        { label: "Gaming Consoles", href: "#" },
+        { label: "Smart Watches", href: "#" },
+        { label: "Wearable Tech", href: "#" },
+      ],
+    },
+    {
+      title: "Fashion",
+      href: "#",
+      subcategories: [
+        { label: "Men's Clothing", href: "#" },
+        { label: "Women's Clothing", href: "#" },
+        { label: "Footwear", href: "#" },
+        { label: "Accessories", href: "#" },
+        { label: "Jewelry", href: "#" },
+        { label: "Watches", href: "#" },
+        { label: "Bags & Purses", href: "#" },
+        { label: "Vintage Clothing", href: "#" },
+      ],
+    },
+    {
+      title: "Home & Garden",
+      href: "#",
+      subcategories: [
+        { label: "Furniture", href: "#" },
+        { label: "Home Decor", href: "#" },
+        { label: "Kitchen Appliances", href: "#" },
+        { label: "Garden Tools", href: "#" },
+        { label: "Outdoor Furniture", href: "#" },
+        { label: "Bedding & Linens", href: "#" },
+        { label: "Home Improvement", href: "#" },
+        { label: "DIY Materials", href: "#" },
+      ],
+    },
+    {
+      title: "Services",
+      href: "#",
+      subcategories: [
+        { label: "Cleaning Services", href: "#" },
+        { label: "Construction & Renovation", href: "#" },
+        { label: "Event Planning", href: "#" },
+        { label: "Tutoring", href: "#" },
+        { label: "Beauty Services", href: "#" },
+        { label: "Transportation", href: "#" },
+        { label: "Legal Services", href: "#" },
+        { label: "Accounting & Tax Services", href: "#" },
+        { label: "Health & Wellness", href: "#" },
+      ],
+    },
+    {
+      title: "Pets",
+      href: "#",
+      subcategories: [
+        { label: "Dogs", href: "#" },
+        { label: "Cats", href: "#" },
+        { label: "Birds", href: "#" },
+        { label: "Fish", href: "#" },
+        { label: "Small Animals", href: "#" },
+        { label: "Pet Supplies", href: "#" },
+        { label: "Pet Adoption", href: "#" },
+        { label: "Pet Services", href: "#" },
+      ],
+    },
+    {
+      title: "Hobbies & Leisure",
+      href: "#",
+      subcategories: [
+        { label: "Sports Equipment", href: "#" },
+        { label: "Books", href: "#" },
+        { label: "Musical Instruments", href: "#" },
+        { label: "Collectibles", href: "#" },
+        { label: "Photography", href: "#" },
+        { label: "Travel & Experiences", href: "#" },
+        { label: "Art Supplies", href: "#" },
+        { label: "Gaming", href: "#" },
+      ],
+    },
+    {
+      title: "Business & Industrial",
+      href: "#",
+      subcategories: [
+        { label: "For Sale", href: "#" },
+        { label: "Equipment", href: "#" },
+        { label: "Office Supplies", href: "#" },
+        { label: "Commercial Vehicles", href: "#" },
+        { label: "Raw Materials", href: "#" },
+        { label: "Machinery", href: "#" },
+        { label: "Business Services", href: "#" },
+        { label: "Industrial Supplies", href: "#" },
+      ],
+    },
+    {
+      title: "Job Seekers",
+      href: "#",
+      subcategories: [
+        { label: "Resumes & CVs", href: "#" },
+        { label: "Career Counseling", href: "#" },
+        { label: "Interview Preparation", href: "#" },
+        { label: "Skill Development", href: "#" },
+        { label: "Networking Events", href: "#" },
+        { label: "Job Fairs", href: "#" },
+        { label: "Professional Certifications", href: "#" },
+      ],
+    },
+  ];
+
   return (
     <footer className="mt-20 container md:max-w-7xl py-10 px-4 sm:px-6 lg:px-8 mx-auto">
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-10">
-        <div className="col-span-full hidden lg:col-span-1 lg:block">
-          <Link
-            className="flex-none text-base font-bold text-black"
-            href="#"
-            aria-label="Categories"
-          >
-            Categories
-          </Link>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Graphics & Design
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Digital Marketing
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Writing & Translation
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Video & Animation
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Music & Audio
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Fiverr Logo Maker
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Programming & Tech
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Data
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Business
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Personal Growth & Hobbies
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Photography
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            End-to-End Projects
-          </p>
-          <p className="mt-3 text-[16px] text-gray-600 dark:text-neutral-400 hover:underline hover:cursor-pointer">
-            Sitemap
-          </p>
-        </div>
+        {categories.map((category, index) => (
+          <div key={index}>
+            <h4 className="text-xs font-extrabold text-gray-700 uppercase">
+              {category.title}
+            </h4>
+            <div className="mt-3 grid space-y-3 text-[16px]">
+              {category.subcategories.map((subcategory, subIndex) => (
+                <p key={subIndex}>
+                  <Link
+                    className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                    href={subcategory.href}
+                  >
+                    {subcategory.label}
+                  </Link>
+                </p>
+              ))}
+            </div>
+          </div>
+        ))}
 
         <div>
           <h4 className="text-xs font-extrabold text-gray-700 uppercase">
             About
           </h4>
-
           <div className="mt-3 grid space-y-3 text-[16px]">
             <p>
               <Link
@@ -70,8 +197,7 @@ const Footer = () => {
             </p>
             <p>
               <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
                 href="#"
               >
                 Press & News
@@ -79,8 +205,7 @@ const Footer = () => {
             </p>
             <p>
               <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
                 href="#"
               >
                 Partnerships
@@ -88,8 +213,7 @@ const Footer = () => {
             </p>
             <p>
               <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
                 href="#"
               >
                 Privacy Policy
@@ -97,8 +221,7 @@ const Footer = () => {
             </p>
             <p>
               <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
                 href="#"
               >
                 Terms of Service
@@ -106,8 +229,7 @@ const Footer = () => {
             </p>
             <p>
               <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
                 href="#"
               >
                 Intellectual Property Claims
@@ -115,8 +237,7 @@ const Footer = () => {
             </p>
             <p>
               <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
+                className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
                 href="#"
               >
                 Investor Relations
@@ -124,258 +245,7 @@ const Footer = () => {
             </p>
           </div>
         </div>
-
-        <div>
-          <h4 className="text-xs font-extrabold text-gray-700 uppercase ">
-            Support and Education
-          </h4>
-
-          <div className="mt-3 grid space-y-3 text-[16px]">
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Help & Support
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Trust & Safety
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Selling on Fiverr
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Buying on Fiverr
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Fiverr Guides
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Learn
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 
-                 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Online Courses
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-xs font-extrabold text-gray-700 uppercase dark:text-neutral-100">
-            Community
-          </h4>
-
-          <div className="mt-3 grid space-y-3 text-[16px]">
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Customer Success Stories
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Community Hub
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Forum
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Events
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Blog
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Creators
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Affiliates
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Podcast
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Invite a Friend
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Become a Seller
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Community Standards
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-xs font-extrabold text-gray-700 uppercase dark:text-neutral-100">
-            Business Solutions
-          </h4>
-
-          <div className="mt-3 grid space-y-3 text-[16px]">
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                About Business Solutions
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Fiverr Pro
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Fiverr Certified
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Become an Agency
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Fiverr Enterprise
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                ClearVoice
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Content Marketing
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Working Not Working
-              </Link>
-            </p>
-            <p>
-              <Link
-                className="inline-flex gap-x-2 text-gray-600 hover:text-gray-800 dark:text-neutral-400 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                href="#"
-              >
-                Contact Sales
-              </Link>
-            </p>
-          </div>
-        </div>
       </div>
-
       <div className="pt-5 mt-5 border-t border-gray-200 dark:border-neutral-700">
         <div className="sm:flex sm:justify-between sm:items-center">
           <div className="flex items-center gap-x-3">
@@ -465,8 +335,10 @@ const Footer = () => {
           </div>
         </div>
       </div>
+    
     </footer>
   );
 };
 
 export default Footer;
+

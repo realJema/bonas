@@ -28,10 +28,8 @@ body {
     background-repeat: no-repeat;
   }
 
-  .swiper-slide {
-    margin-right: 16px;
-  }
 
+  /* react mansory css */
   .my-masonry-grid {
     display: -webkit-box; /* Not needed if autoprefixing */
     display: -ms-flexbox; /* Not needed if autoprefixing */
@@ -61,7 +59,15 @@ body {
     scrollbar-width: none; /* Firefox */
   }
 
+  /* swiper js */
+
   /* premium swipper */
+
+
+  .swiper-slide {
+    margin-right: 16px;
+  }
+
   .premium-swiper {
     padding: 16px 0;
   }
@@ -74,5 +80,6 @@ body {
 .premium-swiper .swiper-slide:last-child {
   margin-right: 0 !important;
 }
+
 
 }

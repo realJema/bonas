@@ -1,16 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
 import JobListing from "../entities/JobListing";
-import TopRatedBadge from "./badges/TopRatedBadge";
-import ProBadge from "./badges/Probadge";
 import LevelBadge from "./badges/Levelbadge";
-import ItemCard from "./ItemCard";
-import CustomSwiper from "./swiper/CustomSwiper";
-import Heading from "./Heading";
-import Navigation from "./swiper/Navigation";
-import SubHeading from "./SubHeading";
-import { Swiper as SwiperType } from "swiper/types";
+import ProBadge from "./badges/Probadge";
+import TopRatedBadge from "./badges/TopRatedBadge";
+import ListingSection from "./ListingSection";
 
 const jobListings: JobListing[] = [
   {
@@ -208,73 +202,13 @@ const jobListings: JobListing[] = [
 ];
 
 const JobListings = () => {
-  const swiperRef = useRef<SwiperType | null>(null);
-  const [isBeginning, setIsBeginning] = useState(true);
-  const [isEnd, setIsEnd] = useState(false);
-
-  const handlePrev = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slidePrev();
-    }
-  };
-
-  const handleNext = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slideNext();
-    }
-  };
-
-  const handleSlideChange = (swiper: SwiperType) => {
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
-
   return (
-    <div className="mt-16 flex flex-col space-y-6">
-      <div className="flex items-center justify-between">
-        <Heading label="Job Listings" />
-        <Navigation
-          onPrev={handlePrev}
-          onNext={handleNext}
-          isBeginning={isBeginning}
-          isEnd={isEnd}
-        />
-      </div>
-
-      <SubHeading label="Find the perfect job opportunity for you" />
-
-      <CustomSwiper
-        data={jobListings}
-        renderItem={(item) => (
-          <div className="w-[230px]">
-            <ItemCard
-              title={item.title}
-              slides={item.slides}
-              name={item.name}
-              price={item.price}
-              profileImgUrl={item.profileImgUrl}
-              rating={item.rating}
-              Badge={item.Badge}
-              offersVideo={item.offersVideo}
-            />
-          </div>
-        )}
-        spaceBetween={2}
-        slidesPerView="auto"
-        className="job-listings-swiper"
-        slideClassName="pr-4"
-        hasOverlayRight={true}
-        swiperProps={{
-          freeMode: true,
-          grabCursor: true,
-          mousewheel: true,
-          keyboard: true,
-        }}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-          handleSlideChange(swiper);
-        }}
-        onSlideChange={handleSlideChange}
+    <div className="mt-16">
+      <ListingSection
+        heading="Job Listing"
+        href="#"
+        subheading="Find the perfect job opportunity for you"
+        categories={jobListings}
       />
     </div>
   );

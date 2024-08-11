@@ -127,12 +127,12 @@ const ItemCard = ({
 
   return (
     <div
-      className="w-[230px]"
+      className="w-[240px]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CarouselProvider
-        naturalSlideWidth={230}
+        naturalSlideWidth={240}
         naturalSlideHeight={192}
         totalSlides={slides.length}
         isIntrinsicHeight={true}
@@ -227,8 +227,8 @@ const ItemCard = ({
         </div>
         <p className="font-semibold">From ${price}</p>
         {offersVideo && (
-          <p className="text-gray-800 font-medium text-sm">
-            <VideoCameraIcon className="w-5 h-5 text-gray-800 inline-block mr-1" />
+          <p className="font-medium text-sm">
+            <VideoCameraIcon className="w-5 h-5 inline-block mr-1" />
             Offers video consultations
           </p>
         )}

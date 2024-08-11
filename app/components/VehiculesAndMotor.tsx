@@ -1,16 +1,10 @@
-'use client'
+"use client";
 
-import React, { useRef, useState } from "react";
 import VehiculesAndMotorType from "../entities/VehiculesAndMotor";
-import TopRatedBadge from "./badges/TopRatedBadge";
-import ProBadge from "./badges/Probadge";
 import LevelBadge from "./badges/Levelbadge";
-import ItemCard from "./ItemCard";
-import CustomSwiper from "./swiper/CustomSwiper";
-import Heading from "./Heading";
-import Navigation from "./swiper/Navigation";
-import SubHeading from "./SubHeading";
-import { Swiper as SwiperType } from "swiper/types";
+import ProBadge from "./badges/Probadge";
+import TopRatedBadge from "./badges/TopRatedBadge";
+import ListingSection from "./ListingSection";
 
 const categories: VehiculesAndMotorType[] = [
   {
@@ -208,77 +202,17 @@ const categories: VehiculesAndMotorType[] = [
 ];
 
 const VehiculesAndMotor = () => {
-  const swiperRef = useRef<SwiperType | null>(null);
-  const [isBeginning, setIsBeginning] = useState(true);
-  const [isEnd, setIsEnd] = useState(false);
-
-  const handlePrev = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slidePrev();
-    }
-  };
-
-  const handleNext = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slideNext();
-    }
-  };
-
-  const handleSlideChange = (swiper: SwiperType) => {
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
 
   return (
     <div className="mt-52 flex flex-col space-y-6">
-      <div className="flex items-center justify-between">
-        <Heading label="Vehicules and Motor" />
-        <Navigation
-          onPrev={handlePrev}
-          onNext={handleNext}
-          isBeginning={isBeginning}
-          isEnd={isEnd}
-        />
-      </div>
-
-      <SubHeading label="Hand-vetted talent for all your professional needs" />
-
-      <CustomSwiper
-        data={categories}
-        renderItem={(item) => (
-          <div className="w-[230px]">
-            <ItemCard
-              title={item.title}
-              slides={item.slides}
-              name={item.name}
-              price={item.price}
-              profileImgUrl={item.profileImgUrl}
-              rating={item.rating}
-              Badge={item.Badge}
-              offersVideo={item.offersVideo}
-            />
-          </div>
-        )}
-        spaceBetween={2}
-        slidesPerView="auto"
-        className="vehicules-motor-swiper"
-        slideClassName="pr-4"
-        hasOverlayRight={true}
-        swiperProps={{
-          freeMode: true,
-          grabCursor: true,
-          mousewheel: true,
-          keyboard: true,
-        }}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-          handleSlideChange(swiper);
-        }}
-        onSlideChange={handleSlideChange}
+      <ListingSection
+        heading="Vehicules and Motor"
+        href="#"
+        subheading="Hand-vetted talent for all your professional needs"
+        categories={categories}
       />
     </div>
   );
 };
 
 export default VehiculesAndMotor;
-

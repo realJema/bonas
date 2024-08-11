@@ -65,7 +65,7 @@ const Hero = () => {
   }, [swiper]);
 
   return (
-    <section className="hero mt-24 xl:mt-16 h-full py-10 px-8 rounded-2xl text-white">
+    <section className="hero mt-16 md:mt-24 xl:mt-16 h-full py-10 px-8 rounded-2xl text-white">
       <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8">
         Welcome to Fiverr, Mesueh C 🎉
       </h1>

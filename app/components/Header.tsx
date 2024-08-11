@@ -23,6 +23,9 @@ const Header = () => {
     { title: "Pets" },
     { title: "Hobbies & Leisure" },
     { title: "Business & Industrial" },
+    { title: "Consulting" },
+    { title: "AI Services" },
+    { title: "Personal Growth" },
   ];
 
   useEffect(() => {

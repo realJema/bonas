@@ -13,16 +13,16 @@ const Header = () => {
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const headerItems = [
-    { title: "Graphics & Design", dropdown: <GraphicsDesignDropdown /> },
-    { title: "Programming & Tech", dropdown: <ProgrammingTechDropdown /> },
-    { title: "Digital Marketing", dropdown: <DigitalMarketingDrop /> },
-    { title: "Video & Animation" },
-    { title: "Writing & Translation" },
-    { title: "Music & Audio" },
-    { title: "Business" },
-    { title: "Consulting" },
-    { title: "AI Services" },
-    { title: "Personal Growth" },
+    { title: "Vehicles", dropdown: <DigitalMarketingDrop /> },
+    { title: "Real Estate", dropdown: <GraphicsDesignDropdown /> },
+    { title: "Jobs", dropdown: <ProgrammingTechDropdown /> },
+    { title: "Electronics" },
+    { title: "Fashion" },
+    { title: "Home & Garden" },
+    { title: "Services" },
+    { title: "Pets" },
+    { title: "Hobbies & Leisure" },
+    { title: "Business & Industrial" },
   ];
 
   useEffect(() => {

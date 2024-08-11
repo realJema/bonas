@@ -65,11 +65,11 @@ const Hero = () => {
   }, [swiper]);
 
   return (
-    <section className="hero mt-16 md:mt-24 xl:mt-16 h-full py-10 px-8 rounded-2xl text-white">
-      <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8">
+    <section className="hero mt-16 md:mt-24 xl:mt-16 h-full py-10 rounded-2xl text-white">
+      <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8 px-8">
         Welcome to Fiverr, Mesueh C 🎉
       </h1>
-      <div className="hidden xl:flex items-center gap-4 w-full">
+      <div className="hidden xl:flex items-center gap-4 w-full px-8">
         {heroLinksData.map((linkData, index) => (
           <HeroLink
             className="bg-green-50 bg-opacity-20"
@@ -78,7 +78,7 @@ const Hero = () => {
           />
         ))}
       </div>
-      <div className="hidden sm:block xl:hidden">
+      <div className="xl:hidden px-4 md:px-8">
         <div className="flex justify-end mb-2.5">
           <Navigation
             bg="gray-100"

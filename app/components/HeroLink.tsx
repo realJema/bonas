@@ -26,7 +26,7 @@ const HeroLink = ({
   return (
     <Link
       href={href}
-      className={`${className} w-full bg-opacity-20 hover:cursor-pointer p-5 rounded-lg focus:border focus:border-white`}
+      className={`${className} w-full bg-opacity-20 hover:cursor-pointer p-5 rounded-lg border border-transparent focus:border-white`}
     >
       <h3 className="uppercase text-sm mb-2 font-medium">{message}</h3>
       <div className="flex justify-between">

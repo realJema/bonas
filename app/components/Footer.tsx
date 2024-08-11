@@ -255,7 +255,7 @@ const Footer = () => {
             </div>
 
             <p className="opacity-75 text-sm text-gray-700">
-              © Fiverr International Ltd. 2024
+              © Bonas International Ltd. 2024
             </p>
           </div>
 

@@ -23,7 +23,7 @@ const CustomSwiper = <T,>({
   data,
   renderItem,
   slidesPerView = "auto",
-  spaceBetween = 16,
+  spaceBetween = 4,
   onSwiper,
   onSlideChange,
   hasOverlayLeft = false,
@@ -31,16 +31,18 @@ const CustomSwiper = <T,>({
   className = "",
   slideClassName = "",
   overlayLeftClassName = "absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-5",
-  overlayRightClassName = "absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-white to-transparent z-5 xl:hidden",
+  overlayRightClassName = "absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-5",
+  swiperProps = {},
 }: CustomSwiperProps<T>) => {
   return (
-    <div className="relative w-full">
+    <div className="relative">
       <Swiper
         spaceBetween={spaceBetween}
         slidesPerView={slidesPerView}
         onSwiper={onSwiper}
         onSlideChange={onSlideChange}
-        className={`custom-swiper w-full ${className}`}
+        className={`custom-swiper ${className}`}
+        {...swiperProps}
       >
         {data.map((item, index) => (
           <SwiperSlide key={index} className={`!w-auto ${slideClassName}`}>

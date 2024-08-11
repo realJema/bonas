@@ -91,7 +91,7 @@ const ListingSection = ({
           hasOverlayRight={true}
           overlayRightClassName="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10 xl:hidden"
           className="vehicules-motor-swiper"
-          slideClassName=""
+          slideClassName="pr-4"
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
             handleSlideChange(swiper);
@@ -121,7 +121,7 @@ const ListingSection = ({
 
         <button
           onClick={handleNext}
-          className={`next-button absolute -right-10 top-1/2 transform -translate-y-1/2 bg-white transition-colors hover:bg-gray-50 rounded-full z-20 w-12 h-12 flex items-center justify-center shadow-md ${
+          className={`next-button absolute -right-5 top-1/2 transform -translate-y-1/2 bg-white transition-colors hover:bg-gray-50 rounded-full z-20 w-12 h-12 flex items-center justify-center shadow-md ${
             isEnd ? "hidden" : ""
           }`}
         >

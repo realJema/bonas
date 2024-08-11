@@ -244,7 +244,7 @@ const PremiumContent = () => {
             onPrev={handlePrev}
             isBeginning={isBeginning}
             isEnd={isEnd}
-            containerStyles="hidden md:flex z-20"
+            containerStyles="hidden md:flex z-10"
           />
         </div>
       </div>

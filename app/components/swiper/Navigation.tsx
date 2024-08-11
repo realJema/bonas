@@ -22,7 +22,7 @@ const Navigation = ({
   isEnd,
 }: NavigationProps) => {
   return (
-    <div className={`flex items-center gap-3 ${containerStyles} z-20`}>
+    <div className={`flex items-center gap-3 ${containerStyles}`}>
       <button
         className={`prev-button z-20 bg-gray-50 bg-opacity-75 transition-colors hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center shadow-md ${
           isBeginning ? "opacity-40 cursor-text" : ""

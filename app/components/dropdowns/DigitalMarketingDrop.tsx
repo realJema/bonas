@@ -22,7 +22,10 @@ const menuItems: MenuItem[] = [
     title: "Methods & Techniques",
     items: [
       { name: "Video Marketing", href: "#" },
-      { name: "E-Commerce Marketing", href: "#" },
+      {
+        name: "E-Commerce Marketing",
+        href: "/categories/vehicles/e-commerce-marketing",
+      },
       { name: "Email Marketing", href: "#" },
       { name: "Email Automations", href: "#" },
       { name: "Guest Posting", href: "#" },

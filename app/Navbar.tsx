@@ -13,8 +13,8 @@ const handleSearch = (searchText: string) => console.log(searchText);
 
 const Navbar = () => {
   return (
-    <header className="border-b h-16 bg-white px-6 xl:px-0">
-      <nav className="flex justify-around sm:justify-between items-center sticky z-40 top-0 border-b h-16 bg-white gap-5 sm:gap-3 container mx-auto md:max-w-7xl">
+    <header className="border-b h-16 bg-white w-full">
+      <nav className="flex justify-around sm:justify-between items-center sticky z-40 top-0 border-b h-16 bg-white gap-5 sm:gap-3 container mx-auto px-10 md:px-4 md:max-w-7xl">
         <div className="flex items-center gap-4 md:gap-7 w-full">
           <div className="flex items-center gap-3">
             <div className="xl:hidden">

@@ -8,6 +8,7 @@ import profileImg from "@/public/mdprofile.jpg";
 import SearchInput from "./components/SearchInput";
 import Header from "./components/Header";
 import Logo from "./components/Logo";
+import SignInModal from "./components/auth/SignInModal";
 
 const handleSearch = (searchText: string) => console.log(searchText);
 
@@ -240,8 +241,26 @@ const Navbar = () => {
             Oders
           </Link>
 
+          <Link
+            className="flex whitespace-nowrap text-gray-600  gap-2 items-center hover:text-green-500 font-semibold"
+            href="/"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="hs-vertically-centered-modal"
+            data-hs-overlay="#hs-vertically-centered-modal"
+          >
+            Sign In
+          </Link>
+
+          <Link
+            href="/"
+            className="flex sm:text-green-500  gap-2 items-center font-medium text-base hover:opacity-80 sm:hover:text-white sm:hover:bg-green-500 sm:border sm:border-green-500 px-3 py-1 rounded-sm"
+          >
+            Join
+          </Link>
+
           {/* user profule */}
-          <div className="hidden sm:flex flex-row items-center justify-end gap-2">
+          {/* <div className="hidden sm:flex flex-row items-center justify-end gap-2">
             <div
               className="hs-dropdown relative inline-flex"
               data-hs-dropdown-placement="bottom-right"
@@ -367,12 +386,13 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </nav>
 
       {/* sub header */}
       <Header />
+      <SignInModal />
     </header>
   );
 };

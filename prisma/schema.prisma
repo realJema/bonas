@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  username            String    @unique
+  passwordHash        String
+  email               String    @unique
+  phoneNumber         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  profilePicture      String?
+  address             String?
+  dateOfBirth         DateTime?
+  gender              String?
+  interests           String?   @db.Text
+  preferredCategories String?   @db.Text
+  searchHistory       String?   @db.Text
+  favoriteListings    String?   @db.Text
+  listings            Listing[]
+  reviews             Review[]
+  jobSeeker           JobSeeker?
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?    @db.Text
+  parentId    Int?
+  parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryToCategory")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  listings    Listing[]
+}
+
+model Listing {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  categoryId  Int
+  title       String
+  description String   @db.Text
+  price       Decimal? @db.Decimal(10, 2)
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+  images      Image[]
+  reviews     Review[]
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  imageUrl  String
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  userId    Int
+  rating    Int
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model JobSeeker {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  resumeUrl  String?
+  skills     String?  @db.Text
+  experience String?  @db.Text
+  desiredJob String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}

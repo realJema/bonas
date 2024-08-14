@@ -10,6 +10,8 @@ const page = ({ params: { mainCategory, subCategory } }: Props) => {
     <div>
       <BreadCrumbs title={mainCategory}/>
         <h3 className="font-extrabold text-2xl capitalize">{subCategory}</h3>
+
+        
     </div>
   );
 };

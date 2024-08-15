@@ -161,11 +161,11 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="mt-20 container md:max-w-7xl py-10 px-4 sm:px-6 lg:px-8 mx-auto">
+    <footer className="mt-20 container md:max-w-7xl py-10 px-4 sm:px-6 lg:px-8 mx-auto border-t">
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-10">
         {categories.map((category, index) => (
           <div key={index}>
-            <h4 className="text-xs font-extrabold text-gray-700 uppercase">
+            <h4 className="text-sm font-bold text-gray-700 uppercase">
               {category.title}
             </h4>
             <div className="mt-3 grid space-y-3 text-[16px]">
@@ -184,7 +184,7 @@ const Footer = () => {
         ))}
 
         <div>
-          <h4 className="text-xs font-extrabold text-gray-700 uppercase">
+          <h4 className="text-sm font-bold text-gray-700 uppercase">
             About
           </h4>
           <div className="mt-3 grid space-y-3 text-[16px]">

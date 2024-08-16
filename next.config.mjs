@@ -10,7 +10,20 @@ const nextConfig = {
         protocol: "https",
         hostname: "fiverr-res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
+  },
+
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "referrer-policy", value: "no-referrer" }],
+      },
+    ];
   },
 };
 

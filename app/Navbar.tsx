@@ -4,12 +4,14 @@ import { EnvelopeIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Sidebar from "./components/Sidebar";
 import Image from "next/image";
-import profileImg from "@/public/mdprofile.jpg";
 import SearchInput from "./components/SearchInput";
 import Header from "./components/Header";
 import Logo from "./components/Logo";
 import SignInModal from "./components/auth/SignInModal";
 import { useSession } from "next-auth/react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { useEffect, useState } from "react";
 
 const handleSearch = (searchText: string) => console.log(searchText);
 
@@ -239,108 +241,8 @@ const Navbar = () => {
             Oders
           </Link>
 
-          {status === "unauthenticated" && (
-            <>
-              <Link
-                className="flex whitespace-nowrap text-gray-600  gap-2 items-center hover:text-green-500 font-semibold"
-                href="/"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                aria-controls="hs-vertically-centered-modal"
-                data-hs-overlay="#hs-vertically-centered-modal"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/"
-                className="flex sm:text-green-500  gap-2 items-center font-medium text-base hover:opacity-80 sm:hover:text-white sm:hover:bg-green-500 sm:border sm:border-green-500 px-3 py-1 rounded-sm"
-              >
-                Join
-              </Link>
-            </>
-          )}
           {/* user profule */}
-          <div
-            className="hs-dropdown relative inline-flex"
-            data-hs-dropdown-placement="bottom-right"
-          >
-            <button
-              id="hs-dropdown-with-header"
-              type="button"
-              className="hs-dropdown-toggle relative w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-700"
-            >
-              <Image
-                width={38}
-                height={38}
-                className="inline-block size-[38px] rounded-full ring-2 ring-white dark:ring-neutral-900"
-                src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                alt="Profile"
-              />
-              <span className="absolute top-8 end-0 inline-flex items-center size-3 rounded-full border-2 border-white text-xs font-medium transform -translate-y-1/2 translate-x-1/2 bg-green-500 text-white">
-                <span className="sr-only">Online</span>
-              </span>
-            </button>
-
-            <div
-              className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 z-10 bg-white shadow-md rounded-lg p-2 dark:bg-neutral-800 dark:border dark:border-neutral-700"
-              aria-labelledby="hs-dropdown-with-header"
-            >
-              <div className="py-3 px-5 -m-2 bg-gray-100 rounded-t-lg dark:bg-neutral-700">
-                <p className="text-sm text-gray-500 dark:text-neutral-400">
-                  Signed in as
-                </p>
-                <p className="text-sm font-medium text-gray-800 dark:text-neutral-300">
-                  james@site.com
-                </p>
-              </div>
-              <div className="mt-2 py-2 first:pt-0 last:pb-0">
-                {[
-                  "Profile",
-                  "Dashboard",
-                  "Post a Request",
-                  "Refer a Friend",
-                ].map((item) => (
-                  <Link
-                    key={item}
-                    href="#"
-                    className="block py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                  >
-                    {item}
-                  </Link>
-                ))}
-                <hr className="my-2 border-gray-200 dark:border-neutral-700" />
-                {["Settings", "Billing and payments"].map((item) => (
-                  <Link
-                    key={item}
-                    href="#"
-                    className="block py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                  >
-                    {item}
-                  </Link>
-                ))}
-                <hr className="my-2 border-gray-200 dark:border-neutral-700" />
-                {["English", "$ USD", "Help & support"].map((item) => (
-                  <Link
-                    key={item}
-                    href="#"
-                    className="block py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                  >
-                    {item}
-                  </Link>
-                ))}
-                <hr className="my-2 border-gray-200 dark:border-neutral-700" />
-
-                {status === "authenticated" && (
-                  <Link
-                    href="/api/auth/signout"
-                    className="block py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                  >
-                    Logout
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
+          <AuthStatus />
         </div>
       </nav>
 
@@ -348,6 +250,157 @@ const Navbar = () => {
       <Header />
       <SignInModal />
     </header>
+  );
+};
+
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    const closeDropdown = (e: MouseEvent): void => {
+      const target = e.target as Element;
+      if (!target.closest(".hs-dropdown")) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener(
+      "click",
+      closeDropdown as unknown as EventListener
+    );
+    return () =>
+      document.removeEventListener(
+        "click",
+        closeDropdown as unknown as EventListener
+      );
+  }, []);
+
+  if (status === "loading")
+    return (
+      <div className="w-[2.375rem] h-[2.375rem]">
+        <Skeleton circle={true} height={38} width={38} />
+      </div>
+    );
+
+  {
+    /* singin and join links */
+  }
+  if (status === "unauthenticated")
+    return (
+      <>
+        <Link
+          className="flex whitespace-nowrap text-gray-600  gap-2 items-center hover:text-green-500 font-semibold"
+          href="/"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="hs-vertically-centered-modal"
+          data-hs-overlay="#hs-vertically-centered-modal"
+        >
+          Sign In
+        </Link>
+        <Link
+          href="/"
+          className="flex sm:text-green-500  gap-2 items-center font-medium text-base hover:opacity-80 sm:hover:text-white sm:hover:bg-green-500 sm:border sm:border-green-500 px-3 py-1 rounded-sm"
+        >
+          Join
+        </Link>
+      </>
+    );
+
+  return (
+    <div
+      className="hs-dropdown relative inline-flex"
+      data-hs-dropdown-placement="bottom-right"
+    >
+      <button
+        onClick={toggleDropdown}
+        type="button"
+        className="hs-dropdown-toggle relative w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-700"
+      >
+        {session!.user?.image ? (
+          <Image
+            width={38}
+            height={38}
+            className="inline-block size-[38px] rounded-full ring-2 ring-white dark:ring-neutral-900"
+            src={session!.user.image}
+            alt="Profile Image"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <div className="inline-block size-[38px] rounded-full ring-2 ring-white dark:ring-neutral-900 bg-gray-200 text-lg font-semibold text-gray-600">
+            {session!.user?.name?.[0].toUpperCase()}
+          </div>
+        )}
+        <span className="absolute top-8 end-0 inline-flex items-center size-3 rounded-full border-2 border-white text-xs font-medium transform -translate-y-1/2 translate-x-1/2 bg-green-500 text-white">
+          <span className="sr-only">Online</span>
+        </span>
+      </button>
+
+      {isOpen && (
+        <div
+          className={`hs-dropdown-menu absolute top-8 right-0 mt-2 transition-[opacity,margin] duration ${
+            isOpen ? "opacity-100" : "opacity-0 hidden"
+          } min-w-60 z-10 bg-white shadow-md rounded-lg p-2 dark:bg-neutral-800 dark:border dark:border-neutral-700`}
+          aria-labelledby="hs-dropdown-user-profile"
+        >
+          <div className="py-3 px-5 -m-2 bg-gray-100 rounded-t-lg dark:bg-neutral-700">
+            <p className="text-sm text-gray-500 dark:text-neutral-400">
+              Signed in as
+            </p>
+            <p className="text-sm font-medium text-gray-800 dark:text-neutral-300">
+              {session!.user!.name}
+            </p>
+          </div>
+          <div className="mt-2 py-2 first:pt-0 last:pb-0">
+            {["Profile", "Dashboard", "Post a Request", "Refer a Friend"].map(
+              (item) => (
+                <Link
+                  key={item}
+                  href="#"
+                  className={`block py-2 px-3 rounded-lg text-gray-600 hover:text-green-500 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 ${
+                    item === "Refer a Friend" ? "text-green-500" : ""
+                  }`}
+                >
+                  {item}
+                </Link>
+              )
+            )}
+            <hr className="my-2 border-gray-200 dark:border-neutral-700" />
+            {["Settings", "Billing and payments"].map((item) => (
+              <Link
+                key={item}
+                href="#"
+                className="block py-2 px-3 rounded-lg text-gray-600 hover:text-green-500 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
+              >
+                {item}
+              </Link>
+            ))}
+            <hr className="my-2 border-gray-200 dark:border-neutral-700" />
+            {["English", "$ USD", "Help & support"].map((item) => (
+              <Link
+                key={item}
+                href="#"
+                className="block py-2 px-3 rounded-lg text-gray-600 hover:text-green-500 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
+              >
+                {item}
+              </Link>
+            ))}
+            <hr className="my-2 border-gray-200 dark:border-neutral-700" />
+
+            <Link
+              href="/api/auth/signout"
+              className="block py-2 px-3 rounded-lg text-gray-600 hover:text-green-500 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
+            >
+              Logout
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

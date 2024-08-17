@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useEffect, useState } from "react";
+import SignupModal from "./components/auth/SignupModal";
 
 const handleSearch = (searchText: string) => console.log(searchText);
 
@@ -249,6 +250,7 @@ const Navbar = () => {
       {/* sub header */}
       <Header />
       <SignInModal />
+      <SignupModal />
     </header>
   );
 };
@@ -302,12 +304,15 @@ const AuthStatus = () => {
         >
           Sign In
         </Link>
-        <Link
-          href="/"
+        <button
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="hs-vertically-centered-signup-modal"
+          data-hs-overlay="#hs-vertically-centered-signup-modal"
           className="flex sm:text-green-500  gap-2 items-center font-medium text-base hover:opacity-80 sm:hover:text-white sm:hover:bg-green-500 sm:border sm:border-green-500 px-3 py-1 rounded-sm"
         >
           Join
-        </Link>
+        </button>
       </>
     );
 

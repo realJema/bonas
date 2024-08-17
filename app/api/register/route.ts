@@ -5,8 +5,12 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 
 const schema = z.object({
-  email: z.string().min(5),
-  password: z.string().min(5).max(225),
+  email: z.string().min(5, {message: 'Invalid email address'}),
+  password: z
+    .string()
+    .min(5, { message: "password must be at least 5 characters" })
+    .max(225),
+  name: z.string().min(3, { message: "name must be at least 3 characters" }),
 });
 
 export async function POST(request: NextRequest) {
@@ -29,6 +33,7 @@ export async function POST(request: NextRequest) {
     data: {
       email: body.email,
       passwordHash: hashedPassword,
+      name: body.name,
     },
   });
 

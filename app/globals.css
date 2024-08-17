@@ -28,6 +28,13 @@ body {
     background-repeat: no-repeat;
   }
 
+  .signinBg {
+    background-image: url("/standard.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
 
   /* react mansory css */
   .my-masonry-grid {

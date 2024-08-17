@@ -1,13 +1,14 @@
 import { useState } from "react";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
-const schema = z.object({
+// Schemas
+const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
@@ -17,56 +18,89 @@ const schema = z.object({
     .min(3, { message: "Name must be at least 3 characters long" }),
 });
 
-type FormData = z.infer<typeof schema>;
+const signUpSchema = signInSchema.extend({
+  name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
+});
 
-const SignInModal = () => {
+type SignInFormData = z.infer<typeof signInSchema>;
+type SignUpFormData = z.infer<typeof signUpSchema>;
+type FormData = SignInFormData | SignUpFormData;
+
+interface AuthModalProps {
+  isSignIn: boolean;
+  onClose: () => void;
+}
+
+const AuthModal: React.FC<AuthModalProps> = ({ isSignIn, onClose }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isSignInForm, setIsSignInForm] = useState(isSignIn);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(isSignInForm ? signInSchema : signUpSchema),
   });
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     setError("");
 
-    try {
-      const result = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
+    if (isSignInForm) {
+      try {
+        const result = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
 
-      if (result?.error) {
-        toast.error("Invalid email or password");
-      } else {
-        toast.success("You have been successfully logged in");
-        router.push("/");
+        if (result?.error) {
+          toast.error("Invalid email or password");
+        } else {
+          toast.success("You have been successfully logged in");
+          router.push("/");
+          onClose();
+        }
+      } catch (error) {
+        setError("An unexpected error occurred");
       }
-    } catch (error) {
-      setError("An unexpected error occurred");
+    } else {
+      try {
+        const response = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          toast.success("Account created successfully!");
+          setIsSignInForm(true);
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error || "An unexpected error occurred");
+        }
+      } catch (error) {
+        setError("An unexpected error occurred");
+      }
     }
+
     setIsLoading(false);
   };
 
   return (
     <div
       id="hs-vertically-centered-modal"
-      className="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+      className="hs-overlay size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
       role="dialog"
-      tabIndex={-1}
-      aria-labelledby="hs-vertically-centered-modal-label"
     >
-      <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-xl md:max-w-3xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3rem)] flex items-center">
+      <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-2xl md:max-w-4xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
         <div className="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
-          <div className="flex justify-between items-center px-4 dark:border-neutral-700"></div>
           <div className="bg-white rounded-xl shadow-sm dark:bg-neutral-900 dark:border-neutral-700">
             <div className="grid md:grid-cols-2">
+              {/* Left side with background image - remains the same */}
               <div className="signinBg p-6 rounded-s-xl rounded-tr-xl md:rounded-tr-none rounded-bl-none md:rounded-bl-2xl m-0">
                 <h2 className="text-white text-2xl font-bold">
                   Success starts here
@@ -119,23 +153,28 @@ const SignInModal = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Right side - changes based on sign-in or sign-up */}
               <div className="p-4 sm:p-7">
                 <div className="text-center">
                   <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
-                    Sign In
+                    {isSignInForm ? "Sign in" : "Sign up"}
                   </h1>
                   <p className="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-                    Don&apos;t have an account yet?{" "}
-                    <Link
-                      className="text-gray-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-green-500"
-                      href="../examples/html/signup.html"
+                    {isSignInForm
+                      ? "Don't have an account yet?"
+                      : "Already have an account?"}
+                    <button
+                      onClick={() => setIsSignInForm(!isSignInForm)}
+                      className="text-gray-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-green-500 ml-1"
                     >
-                      Join here
-                    </Link>
+                      {isSignInForm ? "Join here" : "Sign in"}
+                    </button>
                   </p>
                 </div>
 
                 <div className="mt-5">
+                  {/* Google Sign-in button */}
                   <Link
                     href="/api/auth/signin"
                     type="button"
@@ -173,85 +212,97 @@ const SignInModal = () => {
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid gap-y-4">
-                      <div>
+                    {!isSignInForm && (
+                      <div className="mb-4">
                         <label
-                          htmlFor="email"
-                          className="block text-sm mb-2 dark:text-white"
+                          htmlFor="name"
+                          className="block text-sm font-medium text-gray-700"
                         >
-                          Email address
+                          Name
                         </label>
-                        <div className="relative">
-                          <input
-                            type="email"
-                            id="email"
-                            {...register("email")}
-                            className="py-3 px-4 block w-full border border-gray-700 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                          />
-                        </div>
-                        {errors.email && (
+                        <input
+                          type="text"
+                          id="name"
+                          {...register("name")}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        />
+                        {!isSignInForm && "name" in errors && errors.name && (
                           <p className="text-xs text-red-600 mt-2">
-                            {errors.email.message}
+                            {errors.name.message}
                           </p>
                         )}
                       </div>
-
-                      <div>
-                        <div className="flex justify-between items-center">
-                          <label
-                            htmlFor="password"
-                            className="block text-sm mb-2 dark:text-white"
-                          >
-                            Password
-                          </label>
-                          <Link
-                            className="text-sm text-green-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-green-500"
-                            href="../examples/html/recover-account.html"
-                          >
-                            Forgot password?
-                          </Link>
-                        </div>
-                        <div className="relative">
-                          <input
-                            type="password"
-                            id="password"
-                            {...register("password")}
-                            className="py-3 px-4 block w-full border border-gray-700 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                          />
-                        </div>
-                        {errors.password && (
-                          <p className="text-xs text-red-600 mt-2">
-                            {errors.password.message}
-                          </p>
-                        )}
-                      </div>
-
-                      {error && (
-                        <p className="text-xs text-red-600 mt-2">{error}</p>
-                      )}
-
-                      <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
+                    )}
+                    <div className="mb-4">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-gray-700"
                       >
-                        {isLoading ? (
-                          <>
-                            <div
-                              className="animate-spin inline-block size-4 border-[2px] border-current border-t-transparent text-white rounded-full"
-                              role="status"
-                              aria-label="loading"
-                            >
-                              <span className="sr-only">Loading...</span>
-                            </div>
-                            Signing in...
-                          </>
-                        ) : (
-                          "Sign up"
-                        )}
-                      </button>
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        {...register("email")}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                      {errors.email && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.email.message}
+                        </p>
+                      )}
                     </div>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        id="password"
+                        {...register("password")}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                      {errors.password && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.password.message}
+                        </p>
+                      )}
+                    </div>
+                    {error && (
+                      <p className="text-red-500 text-sm mb-4">{error}</p>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                      {isLoading
+                        ? "Processing..."
+                        : isSignInForm
+                        ? "Sign In"
+                        : "Sign Up"}
+                    </button>
                   </form>
+                  <p className="mt-4 text-sm text-center">
+                    {isSignInForm
+                      ? "Don't have an account? "
+                      : "Already have an account? "}
+                    <button
+                      onClick={() => setIsSignInForm(!isSignInForm)}
+                      className="text-blue-500 hover:underline focus:outline-none"
+                    >
+                      {isSignInForm ? "Sign Up" : "Sign In"}
+                    </button>
+                  </p>
+                  <button
+                    onClick={onClose}
+                    className="mt-4 w-full bg-gray-300 text-gray-700 rounded-md py-2 px-4 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
@@ -262,4 +313,4 @@ const SignInModal = () => {
   );
 };
 
-export default SignInModal;
+export default AuthModal;

@@ -33,7 +33,7 @@ const SignupModal = () => {
     resolver: zodResolver(schema),
   });
 
-  const handleGoogleSignIn = () => {
+    const handleGoogleSignIn = () => {
     signIn("google", { callbackUrl: "/" });
   };
 
@@ -53,11 +53,11 @@ const SignupModal = () => {
       if (response.ok) {
         toast.success("Account created successfully!");
 
-        // sign in the user
+        // Sign in the user
         const result = await signIn("credentials", {
-          redirect: false,
           email: data.email,
           password: data.password,
+          redirect: false, // Avoid redirecting automatically
         });
 
         if (result?.error) {
@@ -67,8 +67,8 @@ const SignupModal = () => {
           );
           router.push("/api/auth/signin");
         } else {
-          // If sign-in is successful, redirect to the home page
-          router.push("/");
+          // Refresh the session to ensure profile data is loaded
+          router.refresh();
         }
       } else {
         setError(responseData.error || "An unexpected error occurred");
@@ -81,15 +81,16 @@ const SignupModal = () => {
     }
   };
 
+
   return (
     <div
-      id="hs-vertically-centered-signup-modal"
+      id="hs-signup-modal"
       className="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
       role="dialog"
       tabIndex={-1}
-      aria-labelledby="hs-vertically-centered-signup-modal"
+      aria-labelledby="hs-scale-animation-modal-label"
     >
-      <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg md:max-w-3xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3rem)] h-[80vh] max-h-[80vh] flex items-center">
+      <div className="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-xl md:max-w-3xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
         <div className="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
           <div className="bg-white rounded-xl shadow-sm dark:bg-neutral-900 dark:border-neutral-700">
             <div className="grid md:grid-cols-2">

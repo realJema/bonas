@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -23,36 +24,41 @@ const SignInModal = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
 
-  const onSubmit = async (data: FormData) => {
-    setIsLoading(true);
-    setError("");
+    const handleGoogleSignIn = () => {
+      signIn("google", { callbackUrl: "/" });
+    };
 
-    try {
-      const result = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<FormData>({
+  //   resolver: zodResolver(schema),
+  // });
 
-      if (result?.error) {
-        toast.error("Invalid email or password");
-      } else {
-        toast.success("You have been successfully logged in");
-        router.push("/");
-      }
-    } catch (error) {
-      setError("An unexpected error occurred");
-    }
-    setIsLoading(false);
-  };
+  // const onSubmit = async (data: FormData) => {
+  //   setIsLoading(true);
+  //   setError("");
+
+  //   try {
+  //     const result = await signIn("credentials", {
+  //       email: data.email,
+  //       password: data.password,
+  //       redirect: false,
+  //     });
+
+  //     if (result?.error) {
+  //       toast.error("Invalid email or password");
+  //     } else {
+  //       toast.success("You have been successfully logged in");
+  //       router.push("/");
+  //     }
+  //   } catch (error) {
+  //     setError("An unexpected error occurred");
+  //   }
+  //   setIsLoading(false);
+  // };
 
   return (
     <div
@@ -62,16 +68,16 @@ const SignInModal = () => {
       tabIndex={-1}
       aria-labelledby="hs-vertically-centered-modal-label"
     >
-      <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-xl md:max-w-3xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3rem)] flex items-center">
+      <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-xl md:max-w-3xl sm:w-full m-3 sm:mx-auto h-[80vh] min-h-[80vh] max-h-[80vh] overflow-y-auto flex items-stretch">
         <div className="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
           <div className="flex justify-between items-center px-4 dark:border-neutral-700"></div>
-          <div className="bg-white rounded-xl shadow-sm dark:bg-neutral-900 dark:border-neutral-700">
-            <div className="grid md:grid-cols-2">
+          <div className="bg-white rounded-xl shadow-sm dark:bg-neutral-900 dark:border-neutral-700 flex-grow">
+            <div className="grid md:grid-cols-2 h-full">
               <div className="signinBg p-6 rounded-s-xl rounded-tr-xl md:rounded-tr-none rounded-bl-none md:rounded-bl-2xl m-0">
                 <h2 className="text-white text-2xl font-bold">
                   Success starts here
                 </h2>
-                <div className="flex-col gap-6 mt-5">
+                <div className="flex-col space-y-5 mt-6">
                   <p className="flex items-center gap-2 text-white text-lg font-medium">
                     <span>
                       <svg
@@ -80,7 +86,7 @@ const SignInModal = () => {
                         fill="currentColor"
                         viewBox="0 0 16 16"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="text-white size-3"
+                        className="text-white size-3 flex-shrink-0"
                       >
                         <path d="M13.6202 2.6083L5.4001 10.8284L2.37973 7.80805C2.23329 7.66161 1.99585 7.66161 1.84939 7.80805L0.96551 8.69193C0.819073 8.83836 0.819073 9.0758 0.96551 9.22227L5.13492 13.3917C5.28135 13.5381 5.51879 13.5381 5.66526 13.3917L15.0344 4.02252C15.1809 3.87608 15.1809 3.63865 15.0344 3.49218L14.1505 2.6083C14.0041 2.46186 13.7667 2.46186 13.6202 2.6083Z"></path>
                       </svg>
@@ -93,7 +99,7 @@ const SignInModal = () => {
                         width="16"
                         height="16"
                         fill="currentColor"
-                        className="text-white size-3"
+                        className="text-white size-3 flex-shrink-0"
                         viewBox="0 0 16 16"
                         xmlns="http://www.w3.org/2000/svg"
                       >
@@ -102,7 +108,7 @@ const SignInModal = () => {
                     </span>{" "}
                     Quality work done faster
                   </p>
-                  <p className="flex items-start gap-2 text-white text-lg font-medium">
+                  <p className="flex items-center gap-2 text-white text-lg font-medium">
                     <span>
                       <svg
                         width="16"
@@ -110,7 +116,7 @@ const SignInModal = () => {
                         fill="currentColor"
                         className="text-white size-3"
                         viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns="http://www.w3.org/2000/svg flex-shrink-0 "
                       >
                         <path d="M13.6202 2.6083L5.4001 10.8284L2.37973 7.80805C2.23329 7.66161 1.99585 7.66161 1.84939 7.80805L0.96551 8.69193C0.819073 8.83836 0.819073 9.0758 0.96551 9.22227L5.13492 13.3917C5.28135 13.5381 5.51879 13.5381 5.66526 13.3917L15.0344 4.02252C15.1809 3.87608 15.1809 3.63865 15.0344 3.49218L14.1505 2.6083C14.0041 2.46186 13.7667 2.46186 13.6202 2.6083Z"></path>
                       </svg>
@@ -136,8 +142,8 @@ const SignInModal = () => {
                 </div>
 
                 <div className="mt-5">
-                  <Link
-                    href="/api/auth/signin"
+                  <button
+                    onClick={handleGoogleSignIn}
                     type="button"
                     className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
                   >
@@ -166,13 +172,13 @@ const SignInModal = () => {
                       />
                     </svg>
                     Sign in with Google
-                  </Link>
+                  </button>
 
                   <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-neutral-500 dark:before:border-neutral-600 dark:after:border-neutral-600">
                     Or
                   </div>
 
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  {/* <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid gap-y-4">
                       <div>
                         <label
@@ -247,11 +253,19 @@ const SignInModal = () => {
                             Signing in...
                           </>
                         ) : (
-                          "Sign up"
+                          "Sign in"
                         )}
                       </button>
                     </div>
-                  </form>
+                  </form> */}
+                  <Link
+                    href="/api/auth/signin"
+                    type="button"
+                    className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                  >
+                    <EnvelopeIcon className="h-5 w-5" />
+                    Sign in with Email/password
+                  </Link>
                 </div>
               </div>
             </div>

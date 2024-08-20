@@ -1,6 +1,10 @@
 import React from "react";
 import BreadCrumbs from "./BreadCrumbs";
 import FilterDropdown from "./FilterDropdown";
+import Search from "./Search";
+
+import ItemCard from "@/app/components/ItemCard";
+import Listings from "./Listings";
 
 interface Props {
   params: { mainCategory: string; subCategory: string };
@@ -50,14 +54,11 @@ const filters: Filter[] = [
 
 const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
   return (
-    <div className="container mx-auto px-4">
-      <BreadCrumbs title={mainCategory} />
-      <h3 className="font-extrabold text-2xl capitalize mt-10 mb-6">
-        {subCategory}
-      </h3>
+    <div className="pt-10">
+      {/* <BreadCrumbs title={mainCategory} /> */}
 
       {/* Mobile filters */}
-      <div className="md:hidden flex overflow-x-auto space-x-4 pb-4">
+      <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
         {filters.map((filter, index) => (
           <FilterDropdown
             key={filter.id}
@@ -71,8 +72,9 @@ const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* Desktop sidebar */}
-        <aside className="hidden md:block md:w-80 sticky top-24 self-start h-screen">
+        <aside className="hidden md:block md:w-64 sticky top-24 self-start h-screen">
           <div className="flex flex-col space-y-6">
+            <Search />
             {filters.map((filter, index) => (
               <FilterDropdown
                 key={filter.id}
@@ -87,7 +89,15 @@ const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
 
         {/* Main content */}
         <main className="flex-1">
-          <p>Main content area</p>
+          <h3 className="font-extrabold text-2xl capitalize mb-2">
+            {subCategory}
+          </h3>
+          <p className="text-lg text-gray-500">
+            description of sub category will dynamically go here
+          </p>
+
+          {/* listings */}
+          <Listings />
         </main>
       </div>
     </div>

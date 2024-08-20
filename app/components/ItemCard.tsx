@@ -21,13 +21,24 @@ import {
 import "pure-react-carousel/dist/react-carousel.es.css";
 import dynamic from "next/dynamic";
 import type { ReactPlayerProps } from "react-player/types";
-import premiumContent from "@/app/entities/PremiumContent";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 export interface SlideItem {
   type: "image" | "video";
   url: string;
   thumbnail?: string;
+}
+
+interface Item {
+  title: string;
+  slides: SlideItem[];
+  name: string;
+  profileImgUrl: string;
+  price: number;
+  rating: number;
+  Badge: ComponentType;
+  offersVideo: boolean;
+  width?: string;
 }
 
 const ItemCard = ({
@@ -39,7 +50,8 @@ const ItemCard = ({
   Badge,
   offersVideo,
   slides,
-}: premiumContent) => {
+  width = "240px",
+}: Item) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -127,7 +139,7 @@ const ItemCard = ({
 
   return (
     <div
-      className="w-[240px]"
+      className={`${width}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

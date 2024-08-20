@@ -63,7 +63,7 @@ const menuItems: MenuItem[] = [
 
 const BusinessAndIndustrialDropdown = () => {
   return (
-    <div className="absolute left-0 mt-2 w-screen max-w-6xl bg-white shadow-lg rounded-lg overflow-hidden z-30">
+    <div className="absolute left-0 mt-2 w-screen max-w-6xl bg-white shadow-sm rounded-lg overflow-hidden z-30">
       <div className="p-6">
         <Masonry
           breakpointCols={{

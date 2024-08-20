@@ -45,7 +45,7 @@ const menuItems: MenuItem[] = [
 
 const VehiclesDropdown = () => {
   return (
-    <div className="absolute left-0 mt-2 w-screen max-w-6xl bg-[#fff] shadow-lg rounded-lg overflow-hidden z-30 border-r-2 border-solid border-b border-gray-50">
+    <div className="absolute left-0 mt-2 w-screen max-w-6xl bg-[#fff] shadow-sm rounded-lg overflow-hidden z-30 border-r-2 border-solid border-b border-gray-50">
       <div className="p-6">
         <Masonry
           breakpointCols={{

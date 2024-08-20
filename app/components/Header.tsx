@@ -4,6 +4,12 @@ import GraphicsDesignDropdown from "./dropdowns/GraphicsDesignDropdown";
 import ProgrammingTechDropdown from "./dropdowns/ProgrammingTechDropdown";
 import DigitalMarketingDrop from "./dropdowns/DigitalMarketingDrop";
 import SearchInput from "./SearchInput";
+import VehiclesDropdown from "./dropdowns/VehiclesDropdown";
+import JobsDropdown from "./dropdowns/JobsDropdown";
+import ElectronicsDropdown from "./dropdowns/ElectronicsDropdown";
+import FashionDropdown from "./dropdowns/FashionDropdown";
+import HomeAndGardenDropdown from "./dropdowns/HomeAndGardenDropdown";
+import ServicesDropdown from "./dropdowns/ServicesDropdown";
 
 const Header = () => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -13,13 +19,13 @@ const Header = () => {
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const headerItems = [
-    { title: "Vehicles", dropdown: <DigitalMarketingDrop /> },
+    { title: "Vehicles", dropdown: <VehiclesDropdown /> },
     { title: "Real Estate", dropdown: <GraphicsDesignDropdown /> },
-    { title: "Jobs", dropdown: <ProgrammingTechDropdown /> },
-    { title: "Electronics" },
-    { title: "Fashion" },
-    { title: "Home & Garden" },
-    { title: "Services" },
+    { title: "Jobs", dropdown: <JobsDropdown /> },
+    { title: "Electronics" , dropdown: <ElectronicsDropdown />},
+    { title: "Fashion" , dropdown: <FashionDropdown />},
+    { title: "Home & Garden" , dropdown: <HomeAndGardenDropdown />},
+    { title: "Services" , dropdown: <ServicesDropdown />},
     { title: "Pets" },
     { title: "Hobbies & Leisure" },
     { title: "Business & Industrial" },

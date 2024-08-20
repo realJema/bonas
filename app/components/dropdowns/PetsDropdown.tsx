@@ -47,7 +47,7 @@ const PetsDropdown = () => {
       <div className="p-6">
         <Masonry
           breakpointCols={{
-            default: 3,
+            default: 4,
             1100: 3,
             700: 2,
             500: 1,

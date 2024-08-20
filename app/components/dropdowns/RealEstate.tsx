@@ -66,11 +66,11 @@ const menuItems: MenuItem[] = [
 
 const RealEstateDropdown = () => {
   return (
-    <div className="absolute left-0 mt-2 w-screen max-w-6xl bg-gray-50 shadow-lg rounded-lg overflow-hidden z-30">
+    <div className="absolute left-0 mt-2 w-screen max-w-6xl bg-white shadow-lg rounded-lg overflow-hidden z-30">
       <div className="p-6">
         <Masonry
           breakpointCols={{
-            default: 3,
+            default: 4,
             1100: 3,
             700: 2,
             500: 1,

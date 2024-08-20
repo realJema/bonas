@@ -26,11 +26,11 @@ interface Window {
 const Navbar = () => {
   const { status, data: session } = useSession();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      (window as any).HSOverlay?.init();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     (window as any).HSOverlay?.init();
+  //   }
+  // }, []);
 
   const handleSearch = (searchText: string) => console.log(searchText);
 

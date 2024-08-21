@@ -1,4 +1,6 @@
-import { useState } from "react";
+// "use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -25,9 +27,19 @@ const SignInModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-    const handleGoogleSignIn = () => {
-      signIn("google", { callbackUrl: "/" });
-    };
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     window.initPreline();
+  //     const modal = document.getElementById("hs-vertically-centered-modal");
+  //     if (modal) {
+  //       window.HSCore.components.HSModal.init(modal);
+  //     }
+  //   }
+  // }, []);
+
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl: "/" });
+  };
 
   // const {
   //   register,

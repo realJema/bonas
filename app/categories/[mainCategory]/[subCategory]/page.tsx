@@ -92,7 +92,7 @@ const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
           </aside>
 
           {/* Main content */}
-          <main className="flex-1">
+          <main className="flex-1 p-5">
             <h3 className="font-extrabold text-2xl capitalize mb-2">
               {subCategory}
             </h3>

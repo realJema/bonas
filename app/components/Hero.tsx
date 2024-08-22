@@ -69,6 +69,7 @@ const Hero = () => {
       <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8 px-8">
         Welcome to Fiverr, Mesueh C 🎉
       </h1>
+      
       <div className="hidden xl:flex items-center gap-4 w-full px-8">
         {heroLinksData.map((linkData, index) => (
           <HeroLink

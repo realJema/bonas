@@ -205,17 +205,18 @@ const Listings = () => {
   return (
     <div className="mt-10 grid md:grid-cols-3 gap-6">
       {listings.map((item, index) => (
-        <ItemCard
-          key={index}
-          Badge={item.Badge}
-          name={item.name}
-          rating={item.rating}
-          price={item.price}
-          profileImgUrl={item.profileImgUrl}
-          title={item.title}
-          slides={item.slides}
-          offersVideo={item.offersVideo}
-        />
+        <div key={index} className="mt-6">
+          <ItemCard
+            Badge={item.Badge}
+            name={item.name}
+            rating={item.rating}
+            price={item.price}
+            profileImgUrl={item.profileImgUrl}
+            title={item.title}
+            slides={item.slides}
+            offersVideo={item.offersVideo}
+          />
+        </div>
       ))}
     </div>
   );

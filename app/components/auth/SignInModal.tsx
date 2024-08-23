@@ -9,15 +9,12 @@ import * as z from "zod";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import ModalDescription from "./ModalDescription";
+import { LoginSchema } from "@/schemas";
+import FormError from "./formError";
 
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(5, { message: "Password must be at least 5 characters long" }),
-});
 
-type FormData = z.infer<typeof loginSchema>;
+
+type FormData = z.infer<typeof LoginSchema>;
 
 
 interface SignInModalProps {
@@ -36,7 +33,7 @@ const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit = async (data: FormData) => {
@@ -184,7 +181,9 @@ const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
                         </p>
                       )}
                     </div>
-                    {error && <p className="text-sm text-red-500">{error}</p>}
+
+
+                    {error && <FormError message={error} />}
                     <Button
                       type="submit"
                       className="w-full"

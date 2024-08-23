@@ -227,15 +227,16 @@ const Navbar = () => {
             Orders
           </Link>
 
-          <Button
+          <button
             onClick={() => setModalState({ type: "signin" })}
-            variant="ghost"
+            className="flex whitespace-nowrap text-gray-600 gap-2 items-center hover:text-green-500 font-semibold"
           >
             Sign In
-          </Button>
+          </button>
           <Button
             onClick={() => setModalState({ type: "signup" })}
             variant="outline"
+            className="flex sm:text-green-500 gap-2 items-center font-medium text-base hover:opacity-80 sm:hover:text-white sm:hover:bg-green-500 sm:border sm:border-green-500 px-3 py-1 rounded-sm"
           >
             Join
           </Button>

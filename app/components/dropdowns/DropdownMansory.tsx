@@ -6,10 +6,10 @@ const DropdownMasonry = ({ children }: PropsWithChildren) => {
   return (
     <Masonry
       breakpointCols={{
-        default: 5,
-        1100: 4,
-        700: 3,
-        500: 2,
+        default: 4,
+        1100: 3,
+        700: 2,
+        500: 1,
       }}
       className="my-masonry-grid"
       columnClassName="my-masonry-grid_column"

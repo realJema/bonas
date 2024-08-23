@@ -7,14 +7,6 @@ import { IStaticMethods } from "preline/preline";
 declare global {
   interface Window {
     HSStaticMethods: IStaticMethods;
-      HSCore: {
-      components: {
-        HSModal: {
-          init: (element: HTMLElement) => void;
-        };
-      };
-    };
-    initPreline: () => void;
   }
 }
 

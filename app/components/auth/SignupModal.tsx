@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -17,18 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ModalDescription from "./ModalDescription";
+import { RegisterSchema } from "@/schemas";
+import { register as signUp } from "@/actions/register";
 
-const schema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(5, { message: "Password must be at least 5 characters long" }),
-  name: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters long" }),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<typeof RegisterSchema>;
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -38,8 +30,10 @@ interface SignupModalProps {
 
 const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>('')
   const [showEmailForm, setShowEmailForm] = useState(false);
 
   const {
@@ -47,16 +41,33 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(RegisterSchema),
   });
 
   const handleGoogleSignIn = () => {
     signIn("google", { callbackUrl: "/" });
   };
 
-  const onSubmit = async (data: FormData) => {
-    // ... (keep the existing onSubmit logic)
-  };
+ const onSubmit = async (data: FormData) => {
+   setError("");
+   setIsLoading(true);
+
+   try {
+     const result = await signUp(data);
+     if (result.error) {
+       setError(result.error);
+       toast.error(result.error);
+     } else if (result.success) {
+       toast.success(result.success);
+       
+     }
+   } catch (error) {
+     console.error("Registration error:", error);
+     toast.error("An unexpected error occurred");
+   } finally {
+     setIsLoading(false);
+   }
+ };
 
   const toggleEmailForm = () => {
     setShowEmailForm(!showEmailForm);
@@ -64,7 +75,7 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] h-[550px] md:max-w-4xl p-0">
+      <DialogContent className="sm:max-w-[500px] h-[600px] md:max-w-4xl p-0">
         <div className="grid md:grid-cols-2">
           <ModalDescription />
           <div className="p-5 sm:p-7 flex flex-col justify-between h-full">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useTransition } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,12 +10,10 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import ModalDescription from "./ModalDescription";
 import { LoginSchema } from "@/schemas";
-import FormError from "./formError";
-
-
+import FormError from "./FormError";
+import { login } from "@/actions/login";
 
 type FormData = z.infer<typeof LoginSchema>;
-
 
 interface SignInModalProps {
   isOpen: boolean;
@@ -23,7 +21,8 @@ interface SignInModalProps {
   switchToSignup: () => void;
 }
 
-const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
+const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
+  const [isPending, startTransition] = useTransition();
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,23 +36,27 @@ const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
   });
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true);
-    setError("");
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        onClose();
-      }
-    } catch (error) {
-      setError("An unexpected error occurred");
-    }
-    setIsLoading(false);
+    // setIsLoading(true);
+    // setError("");
+    // try {
+    //   const result = await signIn("credentials", {
+    //     redirect: false,
+    //     email: data.email,
+    //     password: data.password,
+    //   });
+    //   if (result?.error) {
+    //     setError(result.error);
+    //   } else {
+    //     onClose();
+    //   }
+    // } catch (error) {
+    //   setError("An unexpected error occurred");
+    // }
+    // setIsLoading(false);
+
+    startTransition(() => {
+      login(data);
+    });
   };
 
   const handleGoogleSignIn = () => {
@@ -153,7 +156,7 @@ const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="email">Email address</Label>
-                      <Input id="email" type="email" {...register("email")} />
+                      <Input id="email" disabled={isPending} type="email" {...register("email")} />
                       {errors.email && (
                         <p className="text-sm text-red-500">
                           {errors.email.message}
@@ -173,6 +176,7 @@ const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
                       <Input
                         id="password"
                         type="password"
+                        disabled={isPending}
                         {...register("password")}
                       />
                       {errors.password && (
@@ -181,7 +185,6 @@ const SignInModal = ({ isOpen, onClose , switchToSignup}: SignInModalProps) => {
                         </p>
                       )}
                     </div>
-
 
                     {error && <FormError message={error} />}
                     <Button

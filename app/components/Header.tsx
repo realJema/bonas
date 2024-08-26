@@ -1,8 +1,7 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import GraphicsDesignDropdown from "./dropdowns/GraphicsDesignDropdown";
-import ProgrammingTechDropdown from "./dropdowns/ProgrammingTechDropdown";
-import DigitalMarketingDrop from "./dropdowns/DigitalMarketingDrop";
 import SearchInput from "./SearchInput";
 import VehiclesDropdown from "./dropdowns/VehiclesDropdown";
 import JobsDropdown from "./dropdowns/JobsDropdown";

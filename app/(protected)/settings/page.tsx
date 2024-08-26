@@ -1,14 +1,14 @@
-import React from 'react'
-import { auth } from '@/auth'
+import React from "react";
+import { auth } from "@/auth";
 
 const SettingsPage = async () => {
-const session = await auth()
+  const session = await auth();
 
   return (
     <div>
-       {JSON.stringify(session)}
+      Settings Page
     </div>
-  )
-}
+  );
+};
 
-export default SettingsPage
+export default SettingsPage;

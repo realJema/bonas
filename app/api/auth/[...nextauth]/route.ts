@@ -29,10 +29,10 @@ export { GET, POST } from "@/auth";
 
 //         if (!user) return null;
 
-//         const passwordsMatch = await bcrypt.compare(
-//           credentials.password,
-//           user.passwordHash!
-//         );
+        // const passwordsMatch = await bcrypt.compare(
+        //   credentials.password,
+        //   user.passwordHash!
+        // );
 
 //         return passwordsMatch ? user : null;
 //       },

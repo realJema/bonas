@@ -1,12 +1,14 @@
-'use client'
+"use client";
 
 import React, { useState, useRef, useEffect, FormEvent } from "react";
 
 interface Props {
-  onSearch: (searchText: string) => void;
+  onSearch?: (searchText: string) => void;
 }
 
-const SearchInput = ({ onSearch }: Props) => {
+const handleSearch = (searchText: string) => console.log(searchText);
+
+const SearchInput = ({onSearch}:Props) => {
   const [searchText, setSearchText] = useState("");
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
@@ -49,7 +51,6 @@ const SearchInput = ({ onSearch }: Props) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchText.trim()) {
-      onSearch(searchText);
       updateRecentSearches(searchText);
     }
   };
@@ -67,7 +68,6 @@ const SearchInput = ({ onSearch }: Props) => {
   const handleSearchClick = (term: string) => {
     setSearchText(term);
     updateRecentSearches(term);
-    onSearch(term);
   };
 
   return (

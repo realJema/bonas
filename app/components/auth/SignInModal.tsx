@@ -12,6 +12,9 @@ import ModalDescription from "./ModalDescription";
 import { LoginSchema } from "@/schemas";
 import FormError from "./FormError";
 import { login } from "@/actions/login";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 type FormData = z.infer<typeof LoginSchema>;
 
@@ -22,6 +25,7 @@ interface SignInModalProps {
 }
 
 const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,37 +34,44 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors , isValid},
   } = useForm<FormData>({
     resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit = async (data: FormData) => {
-    // setIsLoading(true);
-    // setError("");
-    // try {
-    //   const result = await signIn("credentials", {
-    //     redirect: false,
-    //     email: data.email,
-    //     password: data.password,
-    //   });
-    //   if (result?.error) {
-    //     setError(result.error);
-    //   } else {
-    //     onClose();
-    //   }
-    // } catch (error) {
-    //   setError("An unexpected error occurred");
-    // }
-    // setIsLoading(false);
+    setIsLoading(true);
+    setError("");
 
-    startTransition(() => {
-      login(data);
+    startTransition(async () => {
+      try {
+        const result = await login(data);
+          if (result?.error) {
+            setError(result.error);
+          } else if (result?.success) {
+            toast.success(result.success);
+            reset()
+            // onClose();
+          } else {
+            // If no error or success message, assume successful login
+            // toast.success("You have been successfully logged in!");
+            onClose();
+            router.refresh();
+          }
+      } catch (error) {
+        setError("An unexpected error occurred");
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     });
   };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" });
+    signIn("google", {
+      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+    });
   };
 
   const toggleEmailForm = () => {
@@ -156,7 +167,12 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="email">Email address</Label>
-                      <Input id="email" disabled={isPending} type="email" {...register("email")} />
+                      <Input
+                        id="email"
+                        disabled={isPending}
+                        type="email"
+                        {...register("email")}
+                      />
                       {errors.email && (
                         <p className="text-sm text-red-500">
                           {errors.email.message}
@@ -190,7 +206,7 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
                     <Button
                       type="submit"
                       className="w-full"
-                      disabled={isLoading}
+                      disabled={isLoading || !isValid}
                     >
                       {isLoading ? "Signing in..." : "Sign in"}
                     </Button>

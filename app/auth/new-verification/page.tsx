@@ -1,5 +1,4 @@
 import React from "react";
-import EmailConfirm from "./EmailConfirm";
 import AccountConfirmationPage from "./AccountConfirmationPage";
 
 const NewVerificationPage = () => {

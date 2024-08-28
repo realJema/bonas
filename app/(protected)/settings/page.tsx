@@ -6,7 +6,7 @@ const SettingsPage = async () => {
 
   return (
     <div>
-      Settings Page
+      <h1 className="font-bold text-2xl">Settings Page</h1>
     </div>
   );
 };

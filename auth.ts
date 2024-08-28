@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import authConfig from "@/auth.config";
 import prisma from "./prisma/client";
 import { getUserById } from "./data/user";
+import { Account } from "@prisma/client";
 
 export const {
   handlers: { GET, POST },
@@ -43,7 +44,7 @@ export const {
         if (existingUser) {
           // Check if this Google account is already linked to the user
           const existingAccount = existingUser.accounts.find(
-            (acc) =>
+            (acc: Account) =>
               acc.provider === "google" &&
               acc.providerAccountId === account.providerAccountId
           );

@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from 'react';
 import FullScreenLoader from "./Loader";
 import EmailConfirm from "./EmailConfirm";
 import { newVerification } from "@/actions/new-verificatition";
 import { toast } from "react-toastify";
 
-const AccountConfirmationPage = () => {
+const AccountConfirmationContent = () => {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(true);
@@ -59,6 +60,14 @@ const AccountConfirmationPage = () => {
   }
 
   return <EmailConfirm />;
+};
+
+const AccountConfirmationPage = () => {
+  return (
+    <Suspense fallback={<FullScreenLoader />}>
+      <AccountConfirmationContent />
+    </Suspense>
+  );
 };
 
 export default AccountConfirmationPage;

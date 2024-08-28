@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id                  String     @id @default(cuid())
+  name                String?
+  username            String?    @unique
+  passwordHash        String?
+  role                UserRole @default(USER)
+  email               String     @unique
+  emailVerified       DateTime?  @map("email_verified")
+  image               String?
+  phoneNumber         String?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  profilePicture      String?
+  address             String?
+  dateOfBirth         DateTime?
+  gender              String?
+  interests           String?
+  preferredCategories String?
+  searchHistory       String?
+  favoriteListings    String?
+  jobSeeker           JobSeeker?
+  listings            Listing[]
+  reviews             Review[]
+  accounts            Account[]
+  sessions            Session[]
+
+  @@map("users")
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  parentId    Int?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryToCategory")
+  listings    Listing[]
+
+  @@index([parentId])
+}
+
+model Listing {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  categoryId  Int
+  title       String
+  description String
+  price       Decimal? @db.Decimal(10, 2)
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  images      Image[]
+  category    Category @relation(fields: [categoryId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+  reviews     Review[]
+
+  @@index([categoryId])
+  @@index([userId])
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  imageUrl  String
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id])
+
+  @@index([listingId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([listingId])
+  @@index([userId])
+}
+
+model JobSeeker {
+  id         Int      @id @default(autoincrement())
+  userId     String   @unique
+  resumeUrl  String?
+  skills     String?
+  experience String?
+  desiredJob String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  id         String @id @default(cuid())
+  email      String
+  token      String
+  expires    DateTime
+
+  @@unique([email, token])
+  @@map("verificationtokens")
+}

@@ -267,7 +267,7 @@ const Listings = ({ page }: Props) => {
 
   return (
     <>
-      <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentListings.map((item, index) => (
           <div key={index} className="mt-6">
             <ItemCard

@@ -6,6 +6,7 @@ import Search from "./Search";
 import ItemCard from "@/app/components/ItemCard";
 import Listings from "./Listings";
 import Footer from "@/app/components/Footer";
+import Hero from "./Hero";
 
 interface Props {
   params: { mainCategory: string; subCategory: string };
@@ -101,6 +102,9 @@ const CategoryPage = ({
             <p className="text-lg text-gray-500">
               description of sub category will dynamically go here
             </p>
+
+            {/* category hero */}
+            <Hero />
 
             {/* listings */}
             <Listings page={searchParams.page} />

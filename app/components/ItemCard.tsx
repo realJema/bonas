@@ -21,35 +21,31 @@ import {
 import "pure-react-carousel/dist/react-carousel.es.css";
 import dynamic from "next/dynamic";
 import type { ReactPlayerProps } from "react-player/types";
+import { Listing, Category, User } from "@prisma/client";
+import { ExtendedListing } from "../entities/ExtendedListing";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
+// Define SlideItem type
 export interface SlideItem {
   type: "image" | "video";
   url: string;
   thumbnail?: string;
 }
 
+// Define props for ItemCard
 interface Item {
-  title: string;
+  listing: ExtendedListing;
   slides: SlideItem[];
-  name: string;
-  profileImgUrl: string;
-  price: number;
-  rating: number;
-  Badge: ComponentType;
-  offersVideo: boolean;
+  Badge?: ComponentType;
+  offersVideo?: boolean;
   width?: string;
 }
 
 const ItemCard = ({
-  title,
-  name,
-  profileImgUrl,
-  price,
-  rating,
+  listing,
+  slides,
   Badge,
   offersVideo,
-  slides,
   width = "240px",
 }: Item) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -72,7 +68,7 @@ const ItemCard = ({
         <Slide index={index} key={index}>
           <div className="h-40 w-full relative cursor-pointer">
             <Image
-              alt={`${title} - image ${index + 1}`}
+              alt={`${listing.title} - image ${index + 1}`}
               src={item.url}
               fill
               className="rounded-md object-cover"
@@ -209,20 +205,20 @@ const ItemCard = ({
         <div className="flex items-center justify-between">
           <div className="flex gap-1 items-center">
             <Image
-              alt={name}
-              src={profileImgUrl}
+              alt={listing.user.username!}
+              src={listing.user.profilePicture!}
               width={27}
               height={27}
               className="object-cover rounded-full"
             />
             <span className="text-sm font-semibold text-opacity-85 hover:underline cursor-pointer">
-              {name}
+              {listing.user.username}
             </span>
           </div>
-          <Badge />
+          {/* <Badge /> */}
         </div>
         <Link href="#" className="hover:underline">
-          {title}
+          {listing.title}
         </Link>
         <div className="font-bold flex items-center gap-2">
           <svg
@@ -235,9 +231,9 @@ const ItemCard = ({
           >
             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
           </svg>
-          {rating} <span className="opacity-80">(1k+)</span>
+          {} <span className="opacity-80">(1k+)</span>
         </div>
-        <p className="font-semibold">From ${price}</p>
+        <p className="font-semibold">From ${listing.price?.toString()}</p>
         {offersVideo && (
           <p className="font-medium text-sm">
             <VideoCameraIcon className="w-5 h-5 inline-block mr-1" />

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
@@ -34,6 +36,11 @@ const CustomSwiper = <T,>({
   overlayRightClassName = "absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-5",
   swiperProps = {},
 }: CustomSwiperProps<T>) => {
+
+    if (!data || data.length === 0) {
+      return <div className="text-center py-4">No data available</div>;
+    }
+
   return (
     <div className="relative">
       <Swiper

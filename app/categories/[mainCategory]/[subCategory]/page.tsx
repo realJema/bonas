@@ -9,6 +9,7 @@ import Footer from "@/app/components/Footer";
 
 interface Props {
   params: { mainCategory: string; subCategory: string };
+  searchParams: { page: string };
 }
 
 interface FilterItem {
@@ -53,12 +54,14 @@ const filters: Filter[] = [
   },
 ];
 
-const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
+const CategoryPage = ({
+  params: { mainCategory, subCategory },
+  searchParams,
+}: Props) => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow pt-10">
         {/* <BreadCrumbs title={mainCategory} /> */}
-
         {/* Mobile filters */}
         <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
           {filters.map((filter, index) => (
@@ -71,7 +74,6 @@ const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
             />
           ))}
         </div>
-
         <div className="flex flex-col md:flex-row gap-8">
           {/* Desktop sidebar */}
           <aside className="hidden md:block md:w-64">
@@ -101,7 +103,7 @@ const CategoryPage = ({ params: { mainCategory, subCategory } }: Props) => {
             </p>
 
             {/* listings */}
-            <Listings />
+            <Listings page={searchParams.page} />
           </main>
         </div>
       </div>

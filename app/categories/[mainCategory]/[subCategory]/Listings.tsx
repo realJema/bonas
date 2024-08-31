@@ -1,10 +1,16 @@
 "use client";
 
 import ItemCard from "@/app/components/ItemCard";
+import Pagination from "@/app/components/Pagination";
 import JobListing from "@/app/entities/JobListing";
 import LevelBadge from "@/app/components/badges/Levelbadge";
 import TopRatedBadge from "@/app/components/badges/TopRatedBadge";
 import ProBadge from "@/app/components/badges/Probadge";
+
+
+interface Props {
+   page: string 
+}
 
 const listings: JobListing[] = [
   {
@@ -34,6 +40,30 @@ const listings: JobListing[] = [
     rating: 4.9,
     Badge: LevelBadge,
     offersVideo: false,
+  },
+  {
+    title: "I will design creative logo with all files in 72h",
+    slides: [
+      {
+        type: "image",
+        url: "https://fiverr-res.cloudinary.com/t_gig_cards_web,q_auto,f_auto/gigs/2625783/original/74b805306d145c306662ce5e2581284755b22781.png",
+      },
+      {
+        type: "image",
+        url: "https://fiverr-res.cloudinary.com/image/upload/t_gig_cards_web,q_auto,f_auto/v1/attachments/delivery/asset/8d17ec324a78b1172b24d712ae70052c-1718878237/Yunicu-Update.png",
+      },
+      {
+        type: "image",
+        url: "https://fiverr-res.cloudinary.com/image/upload/t_gig_cards_web,q_auto,f_auto/v1/attachments/delivery/asset/022229dec64267b83e2304d907bbf834-1717760445/Judo-Grid-1.png",
+      },
+    ],
+    name: "Bojan Sandic",
+    price: 120,
+    profileImgUrl:
+      "https://fiverr-res.cloudinary.com/t_profile_thumb,q_auto,f_auto/attachments/profile/photo/e52f2ae2e43bcb04886706346023c3dd-1524052716848/142fb2c5-2321-4fdb-9496-861e753d6e5a.jpg",
+    rating: 4.9,
+    Badge: ProBadge,
+    offersVideo: true,
   },
   {
     title: "I will create timeless business and modern minimalist logo",
@@ -199,26 +229,68 @@ const listings: JobListing[] = [
     Badge: ProBadge,
     offersVideo: false,
   },
+  {
+    title: "I will create timeless business and modern minimalist logo",
+    slides: [
+      {
+        type: "image",
+        url: "https://fiverr-res.cloudinary.com/t_gig_cards_web,q_auto,f_auto/gigs/67151721/original/b50ccf31d5f8d266fd9cfbb32dc956022ed31d05.jpg",
+      },
+      {
+        type: "image",
+        url: "https://fiverr-res.cloudinary.com/t_gig_cards_web,q_auto,f_auto/gigs2/67151721/original/b086852379519088cca393f5e9c8faf168241989.jpg",
+      },
+    ],
+    name: "Zonestudio",
+    price: 45,
+    profileImgUrl:
+      "https://fiverr-res.cloudinary.com/t_profile_thumb,q_auto,f_auto/attachments/profile/photo/2f7f1d428d0570ab44654f8c96c1f723-1576853089439/be17994b-204a-4be8-a280-34807e880ca2.jpg",
+    rating: 4.9,
+    Badge: TopRatedBadge,
+    offersVideo: false,
+  },
 ];
 
-const Listings = () => {
+const Listings = ({ page }: Props) => {
+
+  const currentPage = parseInt(page) || 1;
+   const pageSize = 9;
+   const totalItems = listings.length;
+
+   console.log("Current page:", currentPage);
+   console.log("Total items:", totalItems);
+
+   const startIndex = (currentPage - 1) * pageSize;
+   const endIndex = Math.min(startIndex + pageSize, totalItems);
+   const currentListings = listings.slice(startIndex, endIndex);
+
+
   return (
-    <div className="mt-10 grid md:grid-cols-3 gap-6">
-      {listings.map((item, index) => (
-        <div key={index} className="mt-6">
-          <ItemCard
-            Badge={item.Badge}
-            name={item.name}
-            rating={item.rating}
-            price={item.price}
-            profileImgUrl={item.profileImgUrl}
-            title={item.title}
-            slides={item.slides}
-            offersVideo={item.offersVideo}
-          />
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {currentListings.map((item, index) => (
+          <div key={index} className="mt-6">
+            <ItemCard
+              Badge={item.Badge}
+              name={item.name}
+              rating={item.rating}
+              price={item.price}
+              profileImgUrl={item.profileImgUrl}
+              title={item.title}
+              slides={item.slides}
+              offersVideo={item.offersVideo}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="mt-20">
+        <Pagination
+          itemCount={totalItems}
+          pageSize={pageSize}
+          currentPage={currentPage}
+        />
+      </div>
+    </>
   );
 };
 

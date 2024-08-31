@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
-
 import {
   Dialog,
   DialogContent,
@@ -49,11 +48,7 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
     resolver: zodResolver(RegisterSchema),
   });
 
-  const handleGoogleSignIn = () => {
-    signIn("google", {
-      callbackUrl: DEFAULT_LOGIN_REDIRECT,
-    });
-  };
+  
 
   const onSubmit = async (data: FormData) => {
     setError("");
@@ -76,6 +71,12 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleSignIn = () => {
+    signIn("google", {
+      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+    });
   };
 
   const toggleEmailForm = () => {

@@ -60,10 +60,13 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
         setError(result.error);
       } else if (result.success) {
         toast.success(result.success);
-        reset()
+        reset();
         setRegisteredEmail(data.email);
         setShowVerificationModal(true);
         onClose();
+
+        // Store the password in the local storage
+        localStorage.setItem("password", data.password);
       }
     } catch (error) {
       console.error("Registration error:", error);

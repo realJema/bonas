@@ -201,7 +201,7 @@ const ItemCard = ({
           )}
         </div>
       </CarouselProvider>
-      <div className="flex flex-col gap-1 mt-1">
+      <div className="flex flex-col gap-1 mt-1 p-1">
         <div className="flex items-center justify-between">
           <div className="flex gap-1 items-center">
             <Image
@@ -217,10 +217,10 @@ const ItemCard = ({
           </div>
           {/* <Badge /> */}
         </div>
-        <Link href="#" className="hover:underline">
-          {listing.title}
+        <Link href="#" className="hover:underline px-1.5 py-0.5">
+          {listing?.title}
         </Link>
-        <div className="font-bold flex items-center gap-2">
+        <div className="font-bold flex items-center gap-2 px-1 py-0.5">
           <svg
             className="flex-shrink-0 w-5 h-5 inline-block"
             xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +233,9 @@ const ItemCard = ({
           </svg>
           {} <span className="opacity-80">(1k+)</span>
         </div>
-        <p className="font-semibold">From ${listing.price?.toString()}</p>
+        <p className="font-semibold px-1 py-0.5">
+          From ${listing.price}
+        </p>
         {offersVideo && (
           <p className="font-medium text-sm">
             <VideoCameraIcon className="w-5 h-5 inline-block mr-1" />

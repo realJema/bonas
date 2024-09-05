@@ -22,9 +22,6 @@ export async function fetchAllJobListings(): Promise<
           { categoryId: jobsCategory.id },
           { category: { parentId: jobsCategory.id } },
         ],
-        images: {
-          some: {},
-        },
       },
       include: {
         category: true,

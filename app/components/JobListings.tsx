@@ -7,18 +7,13 @@ import ProBadge from "./badges/Probadge";
 import TopRatedBadge from "./badges/TopRatedBadge";
 import ListingSection from "./ListingSection";
 import { ExtendedListing } from "../entities/ExtendedListing";
+import { generateSlides } from "@/lib/generateSlides";
 
 interface Props {
   jobListings: ExtendedListing[];
 }
 
 const JobListings = ({ jobListings }: Props) => {
-  const generateSlides = (listing: ExtendedListing) => {
-    return listing.images.map((image) => ({
-      type: "image" as const,
-      url: image.imageUrl,
-    }));
-  };
 
   // const getBadgeComponent = (listing: ExtendedSerializableListing) => {
   //   if (listing.user.rating && listing.user.rating > 4.5) return TopRatedBadge;

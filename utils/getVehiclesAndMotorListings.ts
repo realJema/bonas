@@ -1,7 +1,7 @@
 import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 
-export async function fetchAllVehiclesAndMotorListings(): Promise<
+export async function getVehiclesAndMotorListings(): Promise<
   ExtendedListing[]
 > {
   "use server";
@@ -21,9 +21,6 @@ export async function fetchAllVehiclesAndMotorListings(): Promise<
           { categoryId: vehiclesAndMotorCategory.id },
           { category: { parentId: vehiclesAndMotorCategory.id } },
         ],
-        images: {
-          some: {},
-        },
       },
       include: {
         category: true,

@@ -7,15 +7,14 @@ import RealEstates from "./components/RealEstateListings";
 import Footer from "./components/Footer";
 import Navbar from "./Navbar";
 import prisma from "@/prisma/client";
-import { fetchAllJobListings } from "@/utils/fetchAllJobListings";
-import { fetchAllRealEstateListings } from "@/utils/fetchAllRealEstateListings";
-import { fetchAllVehiclesAndMotorListings } from "@/utils/fetchAllVehiclesAndMotorListings";
+import { fetchAllJobListings } from "@/utils/getJobListings";
+import { getRealEstateListings } from "@/utils/getRealEstateListings";
+import { getVehiclesAndMotorListings } from "@/utils/getVehiclesAndMotorListings";
 
 export default async function Home() {
   const jobListings = await fetchAllJobListings();
-  const realEstateListings = await fetchAllRealEstateListings()
-  const vehiclesAndMotorListings = await fetchAllVehiclesAndMotorListings()
-
+  const realEstateListings = await getRealEstateListings();
+  const vehiclesAndMotorListings = await getVehiclesAndMotorListings();
 
   return (
     <>
@@ -23,7 +22,9 @@ export default async function Home() {
       <div className="container mx-auto max-w-7xl px-10 md:px-4">
         <Hero />
         <PremiumContent />
-        <VehiculesAndMotor vehiclesAndMotorListings={vehiclesAndMotorListings} />
+        <VehiculesAndMotor
+          vehiclesAndMotorListings={vehiclesAndMotorListings}
+        />
         <JobListings jobListings={jobListings} />
         <RealEstates realEstateListings={realEstateListings} />
         <Footer />

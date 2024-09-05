@@ -1,21 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
-import VehiclesDropdown from "./dropdowns/VehiclesDropdown";
-import JobsDropdown from "./dropdowns/JobsDropdown";
-import ElectronicsDropdown from "./dropdowns/ElectronicsDropdown";
-import FashionDropdown from "./dropdowns/FashionDropdown";
-import HomeAndGardenDropdown from "./dropdowns/HomeAndGardenDropdown";
-import ServicesDropdown from "./dropdowns/ServicesDropdown";
-import RealEstateDropdown from "./dropdowns/RealEstate";
-import PetsDropdown from "./dropdowns/PetsDropdown";
-import HobbiesAndLeisureDropdown from "./dropdowns/HobbiesAndLeisureDropdown";
-import BusinessAndIndustrialDropdown from "./dropdowns/BusinessAndIndustrialDropdown";
-import ConsultingDropdown from "./dropdowns/ConsultingDropdown";
+import HeaderDropdown from "./dropdowns/HeaderDropdown";
 
-const Header = () => {
+interface Props {
+  categories: {
+    [key: string]: Array<{
+      title: string;
+      items: Array<{ name: string; href: string }>;
+    }>;
+  };
+}
+
+const Header = ({ categories }: Props) => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
@@ -23,22 +21,17 @@ const Header = () => {
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const headerItems = [
-    { title: "Vehicles", dropdown: <VehiclesDropdown /> },
-    { title: "Real Estate", dropdown: <RealEstateDropdown /> },
-    { title: "Jobs", dropdown: <JobsDropdown /> },
-    { title: "Electronics", dropdown: <ElectronicsDropdown /> },
-    { title: "Fashion", dropdown: <FashionDropdown /> },
-    { title: "Home & Garden", dropdown: <HomeAndGardenDropdown /> },
-    { title: "Services", dropdown: <ServicesDropdown /> },
-    { title: "Pets", dropdown: <PetsDropdown /> },
-    { title: "Hobbies & Leisure", dropdown: <HobbiesAndLeisureDropdown /> },
-    {
-      title: "Business & Industrial",
-      dropdown: <BusinessAndIndustrialDropdown />,
-    },
-    { title: "Consulting", dropdown: <ConsultingDropdown /> },
-    { title: "AI Services" },
-    { title: "Personal Growth" },
+    { title: "Vehicles" },
+    { title: "Real Estate" },
+    { title: "Jobs" },
+    { title: "Electronics" },
+    { title: "Fashion" },
+    { title: "Home & Garden" },
+    { title: "Services" },
+    { title: "Pets" },
+    { title: "Hobbies & Leisure" },
+    { title: "Business & Industrial" },
+    { title: "Job Seeker" },
   ];
 
   useEffect(() => {
@@ -87,6 +80,18 @@ const Header = () => {
     }, 300);
   };
 
+  const generateCategoryUrl = (category: string, subcategory?: string) => {
+    const encodedMainCategory = encodeURIComponent(category.toLowerCase().replace(/ /g, '-'));
+    if (subcategory) {
+      const encodedSubCategory = encodeURIComponent(subcategory.toLowerCase().replace(/ /g, '-'));
+      return `/categories/${encodedMainCategory}/${encodedSubCategory}`;
+    }
+    return `/categories/${encodedMainCategory}`;
+  };
+
+
+  
+
   return (
     <header className="hidden md:block border-b xl:px-0 relative">
       <div className="hidden sm:block container mx-auto md:max-w-7xl relative">
@@ -127,17 +132,12 @@ const Header = () => {
                 <button className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200">
                   {item.title}
                 </button>
-                {item.dropdown && activeDropdown === index && (
-                  <div
-                    className="absolute left-0 top-full z-20 w-full transition-opacity duration-300 ease-in-out"
-                    style={{
-                      opacity: activeDropdown === index ? 1 : 0,
-                      visibility:
-                        activeDropdown === index ? "visible" : "hidden",
-                    }}
-                  >
-                    {item.dropdown}
-                  </div>
+                {categories[item.title] && activeDropdown === index && (
+                  <HeaderDropdown
+                    mainCategory={item.title}
+                    categories={categories[item.title]}
+                    generateUrl={generateCategoryUrl}
+                  />
                 )}
               </div>
             ))}

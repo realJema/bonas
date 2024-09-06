@@ -60,11 +60,11 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
 
   console.log(`Main category: ${mainCategory}, sub-category: ${subCategory}`);
 
-  const listings = await getListings({
+  const { listings, totalCount } = await getListings({
     mainCategory,
     subCategory,
     page: parseInt(searchParams.page) || 1,
-    pageSize: 20,
+    pageSize: 9,
   });
 
   // console.log("listings: ", listings);
@@ -111,7 +111,11 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
             />
 
             {/* listings */}
-            <Listings page={searchParams.page} listings={listings} />
+            <Listings
+              page={searchParams.page}
+              listings={listings}
+              totalCount={totalCount}
+            />
           </main>
         </div>
       </div>

@@ -12,13 +12,16 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const pageCount = Math.ceil(itemCount / pageSize);
+  const pageCount = Math.max(1, Math.ceil(itemCount / pageSize));
   const displayCount = 9;
-  const startPage =
-    Math.floor((currentPage - 1) / displayCount) * displayCount + 1;
+  const startPage = Math.max(
+    1,
+    Math.min(
+      currentPage - Math.floor(displayCount / 2),
+      pageCount - displayCount + 1
+    )
+  );
   const endPage = Math.min(startPage + displayCount - 1, pageCount);
-
-  if (pageCount <= 1) return null;
 
   const changePage = (page: number) => {
     if (page < 1 || page > pageCount) return;
@@ -45,6 +48,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
     return pageNumbers;
   };
 
+  const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === pageCount;
   const isNoMoreListings = itemCount <= currentPage * pageSize;
 
@@ -52,12 +56,10 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
     <div className="flex items-center justify-center space-x-4">
       <button
         className={`w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center ${
-          currentPage === 1
-            ? "opacity-50 cursor-text"
-            : "hover:bg-gray-300"
+          isFirstPage ? "opacity-50 cursor-text" : "hover:bg-gray-300"
         }`}
         onClick={() => changePage(currentPage - 1)}
-        disabled={currentPage === 1}
+        disabled={isFirstPage}
       >
         <ArrowLeftIcon className="w-5 h-5" />
       </button>

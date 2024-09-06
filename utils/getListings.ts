@@ -8,12 +8,17 @@ interface GetListingsParams {
   pageSize: number;
 }
 
+interface GetListingsResult {
+  listings: ExtendedListing[];
+  totalCount: number;
+}
+
 export async function getListings({
   mainCategory,
   subCategory,
   page,
   pageSize,
-}: GetListingsParams): Promise<ExtendedListing[]> {
+}: GetListingsParams): Promise<GetListingsResult> {
   "use server";
 
   try {
@@ -38,7 +43,7 @@ export async function getListings({
 
     if (!mainCategoryRecord) {
       console.error(`Main category "${mainCategory}" not found.`);
-      return [];
+      return { listings: [], totalCount: 0 };
     }
 
     console.log(`Found main category: ${mainCategoryRecord.name}`);
@@ -102,35 +107,48 @@ export async function getListings({
       `Searching for listings in categories: ${categoryIds.join(", ")}`
     );
 
-    const listings = await prisma.listing.findMany({
-      where: {
-        categoryId: {
-          in: categoryIds,
+    // Fetch listings and total count in parallel
+    const [listings, totalCount] = await Promise.all([
+      prisma.listing.findMany({
+        where: {
+          categoryId: {
+            in: categoryIds,
+          },
         },
-      },
-      include: {
-        category: true,
-        user: true,
-        images: true,
-        reviews: true,
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+        include: {
+          category: true,
+          user: true,
+          images: true,
+          reviews: true,
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+      prisma.listing.count({
+        where: {
+          categoryId: {
+            in: categoryIds,
+          },
+        },
+      }),
+    ]);
 
-    console.log(`Found ${listings.length} listings`);
+    console.log(`Found ${listings.length} listings out of ${totalCount} total`);
 
-    return listings.map(
-      (listing): ExtendedListing => ({
-        ...listing,
-        price: listing.price?.toFixed(2) ?? "0.00",
-      })
-    );
+    return {
+      listings: listings.map(
+        (listing): ExtendedListing => ({
+          ...listing,
+          price: listing.price?.toFixed(2) ?? "0.00",
+        })
+      ),
+      totalCount,
+    };
   } catch (error) {
     console.error("Error fetching listings:", error);
-    return [];
+    return { listings: [], totalCount: 0 };
   }
 }

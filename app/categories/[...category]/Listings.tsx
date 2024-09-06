@@ -12,36 +12,31 @@ import Hero from "./Hero";
 
 
 interface Props {
-   page: string 
-   listings: ExtendedListing[]
+  page: string;
+  listings: ExtendedListing[];
+  totalCount: number;
 }
 
-
-
-const Listings = ({ page , listings }: Props) => {
-
+const Listings = ({ page, listings, totalCount }: Props) => {
   const currentPage = parseInt(page) || 1;
-   const pageSize = 9;
-   const totalItems = listings.length;
+  const pageSize = 9;
 
-   console.log("Current page:", currentPage);
-   console.log("Total items:", totalItems);
-
-   const startIndex = (currentPage - 1) * pageSize;
-   const endIndex = Math.min(startIndex + pageSize, totalItems);
-   const currentListings = listings.slice(startIndex, endIndex);
-
+  console.log("Current page:", currentPage);
+  console.log("Total items:", totalCount);
+  console.log("Items on this page:", listings.length);
 
   return (
     <>
       {/* description */}
-      <p className="text-lg text-gray-500 mt-4">{}</p>
+      <p className="text-lg text-gray-500 mt-4">
+        {}description of listing category will go here
+      </p>
 
       {/* category hero */}
       <Hero />
 
       <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentListings.map((listing, index) => (
+        {listings.map((listing, index) => (
           <div key={index} className="mt-6">
             <ItemCard listing={listing} slides={generateSlides(listing)} />
           </div>
@@ -49,7 +44,7 @@ const Listings = ({ page , listings }: Props) => {
       </div>
       <div className="mt-20">
         <Pagination
-          itemCount={totalItems}
+          itemCount={totalCount}
           pageSize={pageSize}
           currentPage={currentPage}
         />

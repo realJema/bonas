@@ -212,7 +212,7 @@ const ItemCard = ({
               className="object-cover rounded-full"
             />
             <span className="text-sm font-semibold text-opacity-85 hover:underline cursor-pointer">
-              {listing.user.username}
+              {listing.user.name}
             </span>
           </div>
           {/* <Badge /> */}

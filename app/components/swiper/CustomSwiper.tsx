@@ -16,49 +16,45 @@ interface CustomSwiperProps<T> {
   hasOverlayRight?: boolean;
   className?: string;
   slideClassName?: string;
-  overlayLeftClassName?: string;
-  overlayRightClassName?: string;
+  overlayLeftClassName?: boolean;
+  overlayRightClassName?: boolean;
   swiperProps?: Record<string, any>;
 }
 
 const CustomSwiper = <T,>({
   data,
   renderItem,
-  slidesPerView = "auto",
-  spaceBetween = 4,
+  spaceBetween = 3,
   onSwiper,
   onSlideChange,
   hasOverlayLeft = false,
-  hasOverlayRight = false,
-  className = "",
-  slideClassName = "",
-  overlayLeftClassName = "absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-5",
-  overlayRightClassName = "absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-5",
-  swiperProps = {},
+  hasOverlayRight = true,
 }: CustomSwiperProps<T>) => {
-
-    if (!data || data.length === 0) {
-      return <div className="text-center py-4">No data available</div>;
-    }
+  if (!data || data.length === 0) {
+    return <div className="text-center py-4">No data available</div>;
+  }
 
   return (
     <div className="relative">
       <Swiper
         spaceBetween={spaceBetween}
-        slidesPerView={slidesPerView}
+        slidesPerView='auto'
         onSwiper={onSwiper}
         onSlideChange={onSlideChange}
-        className={`custom-swiper ${className}`}
-        {...swiperProps}
+        className={`premium-swiper`}
       >
         {data.map((item, index) => (
-          <SwiperSlide key={index} className={`!w-auto ${slideClassName}`}>
-            {renderItem(item)}
+          <SwiperSlide key={index} className="!w-auto">
+            <div className="pr-4">{renderItem(item)}</div>
           </SwiperSlide>
         ))}
       </Swiper>
-      {hasOverlayLeft && <div className={overlayLeftClassName} />}
-      {hasOverlayRight && <div className={overlayRightClassName} />}
+      {hasOverlayLeft && (
+        <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-5" />
+      )}
+      {hasOverlayRight && (
+        <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10" />
+      )}
     </div>
   );
 };

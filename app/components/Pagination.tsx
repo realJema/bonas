@@ -8,7 +8,7 @@ interface Props {
   currentPage: number;
 }
 
-const Pagination = ({ itemCount, pageSize, currentPage }:Props) => {
+const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -45,6 +45,9 @@ const Pagination = ({ itemCount, pageSize, currentPage }:Props) => {
     return pageNumbers;
   };
 
+  const isLastPage = currentPage === pageCount;
+  const isNoMoreListings = itemCount <= currentPage * pageSize;
+
   return (
     <div className="flex items-center justify-center space-x-4">
       <button
@@ -61,12 +64,12 @@ const Pagination = ({ itemCount, pageSize, currentPage }:Props) => {
       {renderPageNumbers()}
       <button
         className={`w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center ${
-          currentPage === pageCount
+          isLastPage || isNoMoreListings
             ? "opacity-50 cursor-text"
             : "hover:bg-gray-300"
         }`}
         onClick={() => changePage(currentPage + 1)}
-        disabled={currentPage === pageCount}
+        disabled={isLastPage || isNoMoreListings}
       >
         <ArrowRightIcon className="w-5 h-5" />
       </button>

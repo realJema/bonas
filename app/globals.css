@@ -136,5 +136,18 @@
     .premium-swiper .swiper-slide:last-child {
       margin-right: 0 !important;
     }
+
+    .listing-swiper {
+      padding: 16px 0;
+    }
+
+    .listing-swiper .swiper-slide {
+      width: auto;
+      height: auto;
+    }
+
+    .listing-swiper .swiper-slide:last-child {
+      margin-right: 0 !important;
+    }
   }
 }

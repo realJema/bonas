@@ -8,14 +8,14 @@ const BreadCrumbs = ({
   mainCategory?: string;
 }) => {
   return (
-    <div className="py-5 space-x-3 font-bold text-xl capitalize mb-2 opacity-75">
+    <div className="py-5 space-x-3 font-medium text-xl mb-2">
       {mainCategory && (
         <svg
           width="13"
           height="12"
           viewBox="0 0 13 12"
           fill="none"
-          className="inline-block opacity-85 size-10"
+          className="inline-block opacity-85 size-4"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -25,7 +25,7 @@ const BreadCrumbs = ({
         </svg>
       )}
       <span>/</span>{" "}
-      <span className="">
+      <span className="capitalize">
         {mainCategory} / {subCategory}
       </span>
     </div>

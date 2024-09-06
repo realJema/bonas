@@ -4,9 +4,10 @@
  * @type {string[]}
  */
 export const publicRoutes = [
-    "/", 
-    "/categories/:mainCategory/:subCategory",
-    "/auth/new-verification"
+  "/",
+  "/categories/:mainCategory",
+  "/categories/:mainCategory/:subCategory",
+  "/auth/new-verification",
 ];
 
 /**

@@ -3,7 +3,7 @@ import { ExtendedListing } from "@/app/entities/ExtendedListing";
 
 interface GetListingsParams {
   mainCategory: string;
-  subCategory: string;
+  subCategory?: string;
   page: number;
   pageSize: number;
 }
@@ -11,6 +11,16 @@ interface GetListingsParams {
 interface GetListingsResult {
   listings: ExtendedListing[];
   totalCount: number;
+}
+
+interface CategoryWithChildren {
+  id: number;
+  name: string;
+  description: string | null;
+  parentId: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+  children: CategoryWithChildren[];
 }
 
 export async function getListings({
@@ -23,7 +33,9 @@ export async function getListings({
 
   try {
     console.log(
-      `Searching for main category: "${mainCategory}", sub-category: "${subCategory}"`
+      `Searching for main category: "${mainCategory}", sub-category: "${
+        subCategory || "None"
+      }"`
     );
 
     // Find the main category (case-insensitive, partial match)
@@ -49,6 +61,8 @@ export async function getListings({
     console.log(`Found main category: ${mainCategoryRecord.name}`);
 
     let categoryIds: number[] = [mainCategoryRecord.id];
+    let targetCategory: CategoryWithChildren =
+      mainCategoryRecord as CategoryWithChildren;
 
     // If subcategory is provided, find it within the main category's children or grandchildren
     if (subCategory) {
@@ -66,13 +80,23 @@ export async function getListings({
           ],
           name: { contains: subCategory, mode: "insensitive" },
         },
+        include: {
+          children: true,
+        },
       });
 
-      if (!subCategoryRecord) {
-        console.error(
+      if (subCategoryRecord) {
+        console.log(`Found sub-category: ${subCategoryRecord.name}`);
+        targetCategory = subCategoryRecord as CategoryWithChildren;
+        categoryIds = [
+          subCategoryRecord.id,
+          ...subCategoryRecord.children.map((c) => c.id),
+        ];
+      } else {
+        console.warn(
           `Sub-category "${subCategory}" not found under "${mainCategory}". Falling back to main category.`
         );
-        // Fall back to using the main category
+        // Fall back to using the main category and all its subcategories
         categoryIds = [
           mainCategoryRecord.id,
           ...mainCategoryRecord.children.map((c) => c.id),
@@ -80,27 +104,16 @@ export async function getListings({
             c.children.map((gc) => gc.id)
           ),
         ];
-      } else {
-        console.log(`Found sub-category: ${subCategoryRecord.name}`);
-        categoryIds = [subCategoryRecord.id];
-
-        // Include child categories if the found category is a subcategory
-        const childCategories = await prisma.category.findMany({
-          where: { parentId: subCategoryRecord.id },
-        });
-        categoryIds = [...categoryIds, ...childCategories.map((c) => c.id)];
       }
     } else {
       // If no subcategory, include all children and grandchildren
-      const allSubcategories = await prisma.category.findMany({
-        where: {
-          OR: [
-            { parentId: mainCategoryRecord.id },
-            { parent: { parentId: mainCategoryRecord.id } },
-          ],
-        },
-      });
-      categoryIds = [...categoryIds, ...allSubcategories.map((c) => c.id)];
+      categoryIds = [
+        mainCategoryRecord.id,
+        ...mainCategoryRecord.children.map((c) => c.id),
+        ...mainCategoryRecord.children.flatMap((c) =>
+          c.children.map((gc) => gc.id)
+        ),
+      ];
     }
 
     console.log(

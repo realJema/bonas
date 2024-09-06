@@ -23,11 +23,9 @@ const HeaderDropdown = ({ mainCategory, categories, generateUrl }: HeaderDropdow
         {categories.map((subcategory, index) => (
           <div key={index} className="mb-6">
             <h3 className="font-bold text-gray-900 mb-1">
-              <Link href={generateUrl(mainCategory, subcategory.title)} className="hover:text-gray-950">
                 {subcategory.title}
-              </Link>
             </h3>
-            <div className="ml-2">
+            <div>
               {subcategory.items.map((item, itemIndex) => (
                 <DropdownLink key={itemIndex} href={generateUrl(mainCategory, item.name)}>
                   {item.name}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
+import Link from 'next/link'
 
 interface Props {
   categories: {
@@ -81,15 +82,17 @@ const Header = ({ categories }: Props) => {
   };
 
   const generateCategoryUrl = (category: string, subcategory?: string) => {
-    const encodedMainCategory = encodeURIComponent(category.toLowerCase().replace(/ /g, '-'));
+    const encodedMainCategory = encodeURIComponent(
+      category.toLowerCase().replace(/ /g, "-")
+    );
     if (subcategory) {
-      const encodedSubCategory = encodeURIComponent(subcategory.toLowerCase().replace(/ /g, '-'));
+      const encodedSubCategory = encodeURIComponent(
+        subcategory.toLowerCase().replace(/ /g, "-")
+      );
       return `/categories/${encodedMainCategory}/${encodedSubCategory}`;
     }
     return `/categories/${encodedMainCategory}`;
   };
-
-
   
 
   return (
@@ -129,9 +132,12 @@ const Header = ({ categories }: Props) => {
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
               >
-                <button className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200">
-                  {item.title}
-                </button>
+              
+                <Link href={generateCategoryUrl(item.title)}>
+                  <button className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200">
+                    {item.title}
+                  </button>
+                </Link>
                 {categories[item.title] && activeDropdown === index && (
                   <HeaderDropdown
                     mainCategory={item.title}

@@ -3,9 +3,10 @@ import { format, formatDistanceToNow } from "date-fns";
 export function formatPrice(price: string | number): string {
   const numPrice = typeof price === "string" ? parseFloat(price) : price;
   const roundedPrice = Math.round(numPrice);
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "XAF",
+    minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(roundedPrice);
 }

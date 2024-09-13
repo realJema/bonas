@@ -19,7 +19,7 @@ const VehiculesAndMotor = ({ vehiclesAndMotorListings }: Props) => {
   };
 
   return (
-    <div className="mt-52 flex flex-col space-y-6 bg-[#fafafa]">
+    <div className="mt-52 flex flex-col bg-[#fafafa] rounded-md">
       <ListingSection
         heading="Vehicules and Motor"
         href="#"

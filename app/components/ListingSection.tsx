@@ -62,7 +62,7 @@ const ListingSection = ({
   };
 
   return (
-    <div className="flex flex-col space-y-6 mt-20">
+    <div className="flex flex-col space-y-6 mt-20 px-4 py-5">
       <Heading label={heading} />
       <div className="flex items-center gap-2 justify-between">
         <SubHeading label={subheading} />

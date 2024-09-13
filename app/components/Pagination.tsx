@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";

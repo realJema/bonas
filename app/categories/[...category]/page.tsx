@@ -2,10 +2,11 @@ import FilterDropdown from "./FilterDropdown";
 import Search from "./Search";
 
 import Footer from "@/app/components/Footer";
-import { getListings } from "@/utils/getListings";
 import Hero from "./Hero";
 import Listings from "./Listings";
 import BreadCrumbs from "./BreadCrumbs";
+import Loading from "./loading";
+import { Suspense } from "react";
 
 interface Props {
   params: { category: string[] };
@@ -54,74 +55,78 @@ const filters: Filter[] = [
   },
 ];
 
-const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
-  const mainCategory = category[0];
-  const subCategory = category[1] || "";
 
-  console.log(`Main category: ${mainCategory}, sub-category: ${subCategory}`);
+// Function to capitalize each word in a string
+// const capitalizeWords = (str: string): string => {
+//   return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+// };
 
-  const { listings, totalCount } = await getListings({
-    mainCategory,
-    subCategory,
-    page: parseInt(searchParams.page) || 1,
-    pageSize: 9,
-  });
+ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
+   const [mainCategory, subCategory, subSubCategory] =
+     category.map(decodeURIComponent);
+   const currentPage = parseInt(searchParams.page) || 1;
+   const pageSize = 9;
 
-  // console.log("listings: ", listings);
+   return (
+     <div className="flex flex-col min-h-screen">
+       <div className="flex-grow pt-10">
+         {/* Mobile filters */}
+         <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
+           {filters.map((filter, index) => (
+             <FilterDropdown
+               key={filter.id}
+               id={filter.id}
+               label={filter.label}
+               items={filter.items}
+               className={`flex-shrink-0 relative z-[${50 - index}]`}
+             />
+           ))}
+         </div>
+         <div className="flex flex-col md:flex-row gap-8">
+           {/* Desktop sidebar */}
+           <aside className="hidden md:block md:w-64">
+             <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+               <div className="flex flex-col space-y-6 pb-6">
+                 <Search />
+                 {filters.map((filter, index) => (
+                   <FilterDropdown
+                     key={filter.id}
+                     id={filter.id}
+                     label={filter.label}
+                     items={filter.items}
+                     className={`w-full relative z-[${50 - index}]`}
+                   />
+                 ))}
+               </div>
+             </div>
+           </aside>
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-grow pt-10">
-        {/* Mobile filters */}
-        <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
-          {filters.map((filter, index) => (
-            <FilterDropdown
-              key={filter.id}
-              id={filter.id}
-              label={filter.label}
-              items={filter.items}
-              className={`flex-shrink-0 relative z-[${50 - index}]`}
-            />
-          ))}
-        </div>
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Desktop sidebar */}
-          <aside className="hidden md:block md:w-64">
-            <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
-              <div className="flex flex-col space-y-6 pb-6">
-                <Search />
-                {filters.map((filter, index) => (
-                  <FilterDropdown
-                    key={filter.id}
-                    id={filter.id}
-                    label={filter.label}
-                    items={filter.items}
-                    className={`w-full relative z-[${50 - index}]`}
-                  />
-                ))}
-              </div>
-            </div>
-          </aside>
+           {/* Main content */}
+           <main className="flex-1 p-5">
+             <BreadCrumbs
+               mainCategory={mainCategory}
+               subCategory={subCategory}
+               subSubCategory={subSubCategory}
+             />
 
-          {/* Main content */}
-          <main className="flex-1 p-5">
-            <BreadCrumbs
-              mainCategory={mainCategory}
-              subCategory={subCategory}
-            />
+             <Hero />
 
-            {/* listings */}
-            <Listings
-              page={searchParams.page}
-              listings={listings}
-              totalCount={totalCount}
-            />
-          </main>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-};
+             {/* listings */}
+             <Suspense fallback={<Loading />}>
+               <Listings
+                 mainCategory={mainCategory}
+                 subCategory={subCategory}
+                 subSubCategory={subSubCategory}
+                 page={currentPage}
+                 pageSize={pageSize}
+               />
+             </Suspense>
+           </main>
+         </div>
+       </div>
+       <Footer />
+     </div>
+   );
+ };
 
-export default CategoryPage;
+ export default CategoryPage;

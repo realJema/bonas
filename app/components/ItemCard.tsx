@@ -215,7 +215,8 @@ const ItemCard = ({
               {listing.user.name}
             </span>
           </div>
-          {/* <Badge /> */}
+          {/* date posted */}
+          
         </div>
         <Link href="#" className="hover:underline px-1.5 py-0.5">
           {listing?.title}

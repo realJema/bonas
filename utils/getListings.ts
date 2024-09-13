@@ -1,9 +1,19 @@
 import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
+import { Image } from "@prisma/client";
+
+const DEFAULT_IMAGE: Image = {
+  id: -1,
+  imageUrl:
+    "https://plus.unsplash.com/premium_photo-1683746792239-6ce8cdd3ac78?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  listingId: -1,
+  createdAt: new Date(),
+};
 
 interface GetListingsParams {
   mainCategory: string;
   subCategory?: string;
+  subSubCategory?: string;
   page: number;
   pageSize: number;
 }
@@ -13,35 +23,27 @@ interface GetListingsResult {
   totalCount: number;
 }
 
-interface CategoryWithChildren {
-  id: number;
-  name: string;
-  description: string | null;
-  parentId: number | null;
-  createdAt: Date;
-  updatedAt: Date;
-  children: CategoryWithChildren[];
-}
-
 export async function getListings({
   mainCategory,
   subCategory,
+  subSubCategory,
   page,
   pageSize,
 }: GetListingsParams): Promise<GetListingsResult> {
-  "use server";
-
   try {
-    console.log(
-      `Searching for main category: "${mainCategory}", sub-category: "${
-        subCategory || "None"
-      }"`
-    );
+    console.log("--- getListings function start ---");
+    console.log("Received parameters:");
+    console.log(`mainCategory: "${mainCategory}"`);
+    console.log(`subCategory: "${subCategory || "None"}"`);
+    console.log(`subSubCategory: "${subSubCategory || "None"}"`);
+    console.log(`page: ${page}, pageSize: ${pageSize}`);
 
-    // Find the main category (case-insensitive, partial match)
+    let categoryIds: number[] = [];
+
+    // Find the main category
     const mainCategoryRecord = await prisma.category.findFirst({
       where: {
-        name: { contains: mainCategory, mode: "insensitive" },
+        name: { equals: mainCategory, mode: "insensitive" },
         parentId: null,
       },
       include: {
@@ -54,59 +56,61 @@ export async function getListings({
     });
 
     if (!mainCategoryRecord) {
-      console.error(`Main category "${mainCategory}" not found.`);
+      console.error(
+        `Main category "${mainCategory}" not found in the database.`
+      );
       return { listings: [], totalCount: 0 };
     }
 
-    console.log(`Found main category: ${mainCategoryRecord.name}`);
+    console.log(
+      `Found main category: ${mainCategoryRecord.name} (ID: ${mainCategoryRecord.id})`
+    );
 
-    let categoryIds: number[] = [mainCategoryRecord.id];
-    let targetCategory: CategoryWithChildren =
-      mainCategoryRecord as CategoryWithChildren;
-
-    // If subcategory is provided, find it within the main category's children or grandchildren
     if (subCategory) {
-      const subCategoryRecord = await prisma.category.findFirst({
-        where: {
-          OR: [
-            { id: { in: mainCategoryRecord.children.map((c) => c.id) } },
-            {
-              id: {
-                in: mainCategoryRecord.children.flatMap((c) =>
-                  c.children.map((gc) => gc.id)
-                ),
-              },
-            },
-          ],
-          name: { contains: subCategory, mode: "insensitive" },
-        },
-        include: {
-          children: true,
-        },
-      });
+      const subCategoryRecord = mainCategoryRecord.children.find(
+        (c) =>
+          c.name.toLowerCase() === decodeURIComponent(subCategory).toLowerCase()
+      );
 
       if (subCategoryRecord) {
-        console.log(`Found sub-category: ${subCategoryRecord.name}`);
-        targetCategory = subCategoryRecord as CategoryWithChildren;
-        categoryIds = [
-          subCategoryRecord.id,
-          ...subCategoryRecord.children.map((c) => c.id),
-        ];
+        console.log(
+          `Found sub-category: ${subCategoryRecord.name} (ID: ${subCategoryRecord.id})`
+        );
+
+        if (subSubCategory) {
+          // Check if subSubCategory exists in the description
+          const subSubCategoryItems =
+            subCategoryRecord.description?.split(", ") || [];
+          const subSubCategoryExists = subSubCategoryItems.some(
+            (item) =>
+              item.toLowerCase() ===
+              decodeURIComponent(subSubCategory).toLowerCase()
+          );
+
+          if (subSubCategoryExists) {
+            console.log(
+              `Found sub-sub-category: ${subSubCategory} in description`
+            );
+            categoryIds = [subCategoryRecord.id];
+          } else {
+            console.warn(
+              `Sub-sub-category "${subSubCategory}" not found in description. Falling back to sub-category.`
+            );
+            categoryIds = [subCategoryRecord.id];
+          }
+        } else {
+          categoryIds = [
+            subCategoryRecord.id,
+            ...subCategoryRecord.children.map((c) => c.id),
+          ];
+        }
       } else {
         console.warn(
-          `Sub-category "${subCategory}" not found under "${mainCategory}". Falling back to main category.`
+          `Sub-category "${subCategory}" not found. Falling back to main category.`
         );
-        // Fall back to using the main category and all its subcategories
-        categoryIds = [
-          mainCategoryRecord.id,
-          ...mainCategoryRecord.children.map((c) => c.id),
-          ...mainCategoryRecord.children.flatMap((c) =>
-            c.children.map((gc) => gc.id)
-          ),
-        ];
+        categoryIds = [mainCategoryRecord.id];
       }
     } else {
-      // If no subcategory, include all children and grandchildren
       categoryIds = [
         mainCategoryRecord.id,
         ...mainCategoryRecord.children.map((c) => c.id),
@@ -120,7 +124,6 @@ export async function getListings({
       `Searching for listings in categories: ${categoryIds.join(", ")}`
     );
 
-    // Fetch listings and total count in parallel
     const [listings, totalCount] = await Promise.all([
       prisma.listing.findMany({
         where: {
@@ -150,12 +153,14 @@ export async function getListings({
     ]);
 
     console.log(`Found ${listings.length} listings out of ${totalCount} total`);
+    console.log("--- getListings function end ---");
 
     return {
       listings: listings.map(
         (listing): ExtendedListing => ({
           ...listing,
           price: listing.price?.toFixed(2) ?? "0.00",
+          images: listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
         })
       ),
       totalCount,

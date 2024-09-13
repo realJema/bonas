@@ -4,17 +4,21 @@ import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
 import Link from 'next/link'
+import { useRouter } from "next/navigation";
 
 interface Props {
   categories: {
     [key: string]: Array<{
       title: string;
+      href: string;
       items: Array<{ name: string; href: string }>;
     }>;
   };
 }
 
+
 const Header = ({ categories }: Props) => {
+  const router = useRouter();
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
@@ -81,19 +85,9 @@ const Header = ({ categories }: Props) => {
     }, 300);
   };
 
-  const generateCategoryUrl = (category: string, subcategory?: string) => {
-    const encodedMainCategory = encodeURIComponent(
-      category.toLowerCase().replace(/ /g, "-")
-    );
-    if (subcategory) {
-      const encodedSubCategory = encodeURIComponent(
-        subcategory.toLowerCase().replace(/ /g, "-")
-      );
-      return `/categories/${encodedMainCategory}/${encodedSubCategory}`;
-    }
-    return `/categories/${encodedMainCategory}`;
-  };
-  
+    const handleCategoryClick = (url: string) => {
+      router.push(url);
+    };
 
   return (
     <header className="hidden md:block border-b xl:px-0 relative">
@@ -132,17 +126,23 @@ const Header = ({ categories }: Props) => {
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
               >
-              
-                <Link href={generateCategoryUrl(item.title)}>
-                  <button className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200">
-                    {item.title}
-                  </button>
-                </Link>
+                <button
+                  onClick={() =>
+                    handleCategoryClick(
+                      `/categories/${encodeURIComponent(
+                        item.title.toLowerCase()
+                      )}`
+                    )
+                  }
+                  className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200"
+                >
+                  {item.title}
+                </button>
                 {categories[item.title] && activeDropdown === index && (
                   <HeaderDropdown
                     mainCategory={item.title}
                     categories={categories[item.title]}
-                    generateUrl={generateCategoryUrl}
+                    onItemClick={handleCategoryClick}
                   />
                 )}
               </div>

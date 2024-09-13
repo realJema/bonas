@@ -1,21 +1,21 @@
 import React from "react";
 
-const BreadCrumbs = ({
-  subCategory,
-  mainCategory,
-}: {
-  subCategory: string;
-  mainCategory?: string;
-}) => {
+interface Props {
+  mainCategory: string;
+  subCategory?: string;
+  subSubCategory?: string;
+}
+
+const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
   return (
-    <div className="py-5 space-x-3 font-medium text-xl mb-2">
-      {mainCategory && (
+    <div className="py-5 font-medium text-xl mb-2 flex items-center">
+      {!subCategory && (
         <svg
           width="13"
           height="12"
           viewBox="0 0 13 12"
           fill="none"
-          className="inline-block opacity-85 size-4"
+          className="inline-block opacity-85 size-4 mr-2"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -24,9 +24,14 @@ const BreadCrumbs = ({
           />
         </svg>
       )}
-      <span>/</span>{" "}
       <span className="capitalize">
-        {mainCategory} / {subCategory}
+        {mainCategory}
+        {subCategory && (
+          <>
+            <span className="mx-2">/</span>
+            {subCategory} / {subSubCategory}
+          </>
+        )}
       </span>
     </div>
   );

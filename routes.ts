@@ -6,7 +6,7 @@
 export const publicRoutes = [
   "/",
   "/categories/:mainCategory",
-  "/categories/:mainCategory/:subCategory",
+  "/categories/:mainCategory/:subCategory/:subSubCategory",
   "/auth/new-verification",
 ];
 

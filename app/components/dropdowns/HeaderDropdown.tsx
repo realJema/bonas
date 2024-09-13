@@ -2,32 +2,51 @@ import React from "react";
 import DropdownWrapper from "./DropdownWrapper";
 import DropdownMasonry from "./DropdownMansory";
 import DropdownLink from "./DropdownLink";
-import Link from "next/link";
 
 interface HeaderDropdownProps {
   mainCategory: string;
   categories: Array<{
     title: string;
-    items: Array<{
-      name: string;
-      href: string;
-    }>;
+    href: string;
+    items: Array<{ name: string; href: string }>;
   }>;
-  generateUrl: (category: string, subcategory?: string) => string;
+  onItemClick: (url: string) => void;
 }
 
-const HeaderDropdown = ({ mainCategory, categories, generateUrl }: HeaderDropdownProps) => {
+const HeaderDropdown = ({
+  mainCategory,
+  categories,
+  onItemClick,
+}: HeaderDropdownProps) => {
   return (
     <DropdownWrapper>
       <DropdownMasonry>
         {categories.map((subcategory, index) => (
           <div key={index} className="mb-6">
+            {/* note: this h3 should not be a link */}
             <h3 className="font-bold text-gray-900 mb-1">
-                {subcategory.title}
+              {subcategory.title} 
             </h3>
             <div>
               {subcategory.items.map((item, itemIndex) => (
-                <DropdownLink key={itemIndex} href={generateUrl(mainCategory, item.name)}>
+                <DropdownLink
+                  key={itemIndex}
+                  href={`/categories/${encodeURIComponent(
+                    mainCategory.toLowerCase()
+                  )}/${encodeURIComponent(
+                    subcategory.title.toLowerCase()
+                  )}/${encodeURIComponent(item.name.toLowerCase())}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onItemClick(
+                      `/categories/${encodeURIComponent(
+                        mainCategory.toLowerCase()
+                      )}/${encodeURIComponent(
+                        subcategory.title.toLowerCase()
+                      )}/${encodeURIComponent(item.name.toLowerCase())}`
+                    );
+                  }}
+                >
                   {item.name}
                 </DropdownLink>
               ))}

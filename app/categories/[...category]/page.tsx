@@ -1,6 +1,5 @@
 import FilterDropdown from "./FilterDropdown";
 import Search from "./Search";
-
 import Footer from "@/app/components/Footer";
 import Hero from "./Hero";
 import Listings from "./Listings";
@@ -10,9 +9,15 @@ import { Suspense } from "react";
 
 interface Props {
   params: { category: string[] };
-  searchParams: { page: string };
+  searchParams: {
+    page?: string;
+    location?: string;
+    datePosted?: string;
+    "city-region"?: string;
+    "date-posted"?: string;
+    [key: string]: string | undefined;
+  };
 }
-
 interface FilterItem {
   name: string;
   value: string;
@@ -29,104 +34,113 @@ const filters: Filter[] = [
     id: "city-region",
     label: "City/Region",
     items: [
-      { name: "New York", value: "new-york" },
-      { name: "Los Angeles", value: "los-angeles" },
-      { name: "Chicago", value: "chicago" },
+      { name: "All Locations", value: "" },
+      { name: "Yaounde", value: "Yaounde" },
+      { name: "Lampa", value: "Lampa" },
+      { name: "Sankoutang", value: "Sankoutang" },
+      { name: "Bouaflé", value: "Bouaflé" },
+      { name: "Kedungtuban", value: "Kedungtuban" },
+      { name: "Kalapadua", value: "Kalapadua" },
+      { name: "San Pedro Apartado", value: "San Pedro Apartado" },
+      { name: "Kawangohari", value: "Kawangohari" },
+      { name: "Kelungkung", value: "Kelungkung" },
+      { name: "Guojiaba", value: "Guojiaba" },
+      { name: "Buzet", value: "Buzet" },
+      { name: "Trà My", value: "Trà My" },
+      { name: "Brandfort", value: "Brandfort" },
     ],
   },
   {
     id: "date-posted",
     label: "Date Posted",
     items: [
+      { name: "Date Posted", value: "" },
       { name: "Last 24 hours", value: "24h" },
       { name: "Last 7 days", value: "7d" },
       { name: "Last 30 days", value: "30d" },
     ],
   },
-  {
-    id: "condition",
-    label: "Condition",
-    items: [
-      { name: "New", value: "new" },
-      { name: "Used - Like New", value: "like-new" },
-      { name: "Used - Good", value: "good" },
-      { name: "Used - Fair", value: "fair" },
-    ],
-  },
 ];
 
+const CategoryPage = ({ params: { category }, searchParams }: Props) => {
+  console.log("query param from url location:", searchParams.location);
+  console.log("query param from url date:", searchParams.datePosted);
+  const [mainCategory, subCategory, subSubCategory] =
+    category.map(decodeURIComponent);
+  const currentPage = parseInt(searchParams.page || "1");
+  const pageSize = 9;
 
-// Function to capitalize each word in a string
-// const capitalizeWords = (str: string): string => {
-//   return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-// };
+  const location = searchParams["city-region"] || "";
+  const datePosted = searchParams["date-posted"] || "";
 
- const CategoryPage = ({ params: { category }, searchParams }: Props) => {
-   const [mainCategory, subCategory, subSubCategory] =
-     category.map(decodeURIComponent);
-   const currentPage = parseInt(searchParams.page) || 1;
-   const pageSize = 9;
+  const getSelectedValue = (id: string): string => {
+    return searchParams[id] || "";
+  };
 
-   return (
-     <div className="flex flex-col min-h-screen">
-       <div className="flex-grow pt-10">
-         {/* Mobile filters */}
-         <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
-           {filters.map((filter, index) => (
-             <FilterDropdown
-               key={filter.id}
-               id={filter.id}
-               label={filter.label}
-               items={filter.items}
-               className={`flex-shrink-0 relative z-[${50 - index}]`}
-             />
-           ))}
-         </div>
-         <div className="flex flex-col md:flex-row gap-8">
-           {/* Desktop sidebar */}
-           <aside className="hidden md:block md:w-64">
-             <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
-               <div className="flex flex-col space-y-6 pb-6">
-                 <Search />
-                 {filters.map((filter, index) => (
-                   <FilterDropdown
-                     key={filter.id}
-                     id={filter.id}
-                     label={filter.label}
-                     items={filter.items}
-                     className={`w-full relative z-[${50 - index}]`}
-                   />
-                 ))}
-               </div>
-             </div>
-           </aside>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-grow pt-10">
+        {/* Mobile filters */}
+        <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
+          {filters.map((filter, index) => (
+            <FilterDropdown
+              key={filter.id}
+              id={filter.id}
+              label={filter.label}
+              items={filter.items}
+              className={`flex-shrink-0 relative z-[${50 - index}]`}
+              selectedValue={getSelectedValue(filter.id)}
+            />
+          ))}
+        </div>
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Desktop sidebar */}
+          <aside className="hidden md:block md:w-64">
+            <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+              <div className="flex flex-col space-y-6 pb-6">
+                <Search />
+                {filters.map((filter, index) => (
+                  <FilterDropdown
+                    key={filter.id}
+                    id={filter.id}
+                    label={filter.label}
+                    items={filter.items}
+                    className={`w-full relative z-[${50 - index}]`}
+                    selectedValue={searchParams[filter.id] || ""}
+                  />
+                ))}
+              </div>
+            </div>
+          </aside>
 
-           {/* Main content */}
-           <main className="flex-1 p-5">
-             <BreadCrumbs
-               mainCategory={mainCategory}
-               subCategory={subCategory}
-               subSubCategory={subSubCategory}
-             />
+          {/* Main content */}
+          <main className="flex-1 p-5">
+            <BreadCrumbs
+              mainCategory={mainCategory}
+              subCategory={subCategory}
+              subSubCategory={subSubCategory}
+            />
 
-             <Hero />
+            <Hero />
 
-             {/* listings */}
-             <Suspense fallback={<Loading />}>
-               <Listings
-                 mainCategory={mainCategory}
-                 subCategory={subCategory}
-                 subSubCategory={subSubCategory}
-                 page={currentPage}
-                 pageSize={pageSize}
-               />
-             </Suspense>
-           </main>
-         </div>
-       </div>
-       <Footer />
-     </div>
-   );
- };
+            {/* listings */}
+            <Suspense fallback={<Loading />}>
+              <Listings
+                mainCategory={mainCategory}
+                subCategory={subCategory}
+                subSubCategory={subSubCategory}
+                page={currentPage}
+                pageSize={pageSize}
+                location={location}
+                datePosted={datePosted}
+              />
+            </Suspense>
+          </main>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
- export default CategoryPage;
+export default CategoryPage;

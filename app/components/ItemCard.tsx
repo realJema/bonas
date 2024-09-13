@@ -23,6 +23,7 @@ import dynamic from "next/dynamic";
 import type { ReactPlayerProps } from "react-player/types";
 import { Listing, Category, User } from "@prisma/client";
 import { ExtendedListing } from "../entities/ExtendedListing";
+import { formatPrice, formatDatePosted } from "@/utils/formatUtils";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 // Define SlideItem type
@@ -216,7 +217,9 @@ const ItemCard = ({
             </span>
           </div>
           {/* date posted */}
-          
+          <span className="text-sm text-gray-600">
+            {formatDatePosted(listing.createdAt)}
+          </span>
         </div>
         <Link href="#" className="hover:underline px-1.5 py-0.5">
           {listing?.title}
@@ -235,7 +238,7 @@ const ItemCard = ({
           {} <span className="opacity-80">(1k+)</span>
         </div>
         <p className="font-semibold px-1 py-0.5">
-          From ${listing.price}
+          <span className='font-normal'>from</span> {formatPrice(listing.price)}
         </p>
         {offersVideo && (
           <p className="font-medium text-sm">

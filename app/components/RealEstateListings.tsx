@@ -19,7 +19,7 @@ const RealEstates = ({ realEstateListings }: Props) => {
   };
 
   return (
-    <div className="mt-16">
+    <div className="mt-16 bg-[#fafafa]">
       <ListingSection
         heading="Real Estate Listings"
         href="#"

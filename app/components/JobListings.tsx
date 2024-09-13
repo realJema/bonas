@@ -26,7 +26,7 @@ const JobListings = ({ jobListings }: Props) => {
   // };
 
   return (
-    <div className="mt-16">
+    <div className="mt-16 bg-[#fafafa]">
       <ListingSection
         heading="Job Listing"
         href="#"

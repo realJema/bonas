@@ -1,4 +1,3 @@
-
 import React from "react";
 import ItemCard from "@/app/components/ItemCard";
 import Pagination from "@/app/components/Pagination";
@@ -12,6 +11,8 @@ interface Props {
   subSubCategory?: string;
   page: number;
   pageSize: number;
+  location?: string;
+  datePosted?: string;
 }
 
 const Listings = async ({
@@ -20,13 +21,27 @@ const Listings = async ({
   subSubCategory,
   page,
   pageSize,
+  location,
+  datePosted,
 }: Props) => {
+  console.log("Listings component received props:", {
+    mainCategory,
+    subCategory,
+    subSubCategory,
+    page,
+    pageSize,
+    location,
+    datePosted,
+  });
+
   const { listings, totalCount } = await getListings({
     mainCategory,
     subCategory,
     subSubCategory,
     page,
     pageSize,
+    location,
+    datePosted,
   });
 
   return (
@@ -43,11 +58,13 @@ const Listings = async ({
         ))}
       </div>
       <div className="mt-20">
-        <Pagination
-          itemCount={totalCount}
-          pageSize={pageSize}
-          currentPage={page}
-        />
+        {totalCount > pageSize && (
+          <Pagination
+            itemCount={totalCount}
+            pageSize={pageSize}
+            currentPage={page}
+          />
+        )}
       </div>
     </>
   );

@@ -135,11 +135,11 @@ const ItemCard = ({
   };
 
   return (
-    <Link href={`/listings/${listing.id}`}>
+    <Link
+      href={`/${listing.category.parentId}/${listing.category.name}/${listing.id}`}
+    >
       <div
-        className={`${width} transition-colors duration-200 rounded-md ${
-          isHovered ? "bg-gray-200" : ""
-        }`}
+        className={`${width} rounded-md ${isHovered ? "" : ""}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -205,7 +205,7 @@ const ItemCard = ({
             )}
           </div>
         </CarouselProvider>
-        <div className="flex flex-col gap-1 mt-1 p-1">
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex gap-1 items-center">
               <Image

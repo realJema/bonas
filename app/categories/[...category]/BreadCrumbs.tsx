@@ -1,4 +1,6 @@
 import React from "react";
+import { ChevronRight } from "lucide-react";
+import { BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 interface Props {
   mainCategory: string;
@@ -24,17 +26,29 @@ const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
           />
         </svg>
       )}
-      <span className="capitalize">
+      <span className="capitalize flex items-center">
         {mainCategory}
         {subCategory && (
-          <>
-            <span className="mx-2">/</span>
-            {subCategory} / {subSubCategory}
-          </>
+          <div className='flex items-center'>
+            <CustomSeparator />
+            {subCategory}
+            {subSubCategory && (
+              <div className='flex items-center'>
+                <CustomSeparator />
+                {subSubCategory}
+              </div>
+            )}
+          </div>
         )}
       </span>
     </div>
   );
 };
+
+const CustomSeparator = () => (
+  <span className="mx-3 inline-flex items-center">
+    <ChevronRight className="h-8 w-8 text-gray-700" />
+  </span>
+);
 
 export default BreadCrumbs;

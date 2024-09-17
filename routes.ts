@@ -7,7 +7,7 @@ export const publicRoutes = [
   "/",
   "/categories/:mainCategory",
   "/categories/:mainCategory/:subCategory/:subSubCategory",
-  "/listings/:listingId",
+  "/:mainCategoryId/:subCategory/:listingId",
   "/auth/new-verification",
 ];
 

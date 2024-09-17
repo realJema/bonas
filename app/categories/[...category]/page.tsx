@@ -124,7 +124,6 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
             <Hero />
 
             {/* listings */}
-            <Suspense fallback={<Loading />}>
               <Listings
                 mainCategory={mainCategory}
                 subCategory={subCategory}
@@ -134,7 +133,6 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
                 location={location}
                 datePosted={datePosted}
               />
-            </Suspense>
           </main>
         </div>
       </div>

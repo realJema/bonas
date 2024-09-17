@@ -23,7 +23,7 @@ const HeaderDropdown = ({
       <DropdownMasonry>
         {categories.map((subcategory, index) => (
           <div key={index} className="mb-6">
-            {/* add a link here too h3 should not be a link */}
+            {/* add a link here to h3 for sub categories*/}
             <h3 className="font-bold text-gray-900 mb-1">
               {subcategory.title} 
             </h3>

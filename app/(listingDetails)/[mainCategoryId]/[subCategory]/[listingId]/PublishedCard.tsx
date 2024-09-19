@@ -20,7 +20,7 @@ const PublishedCard = ({ datePosted, price, location }: Props) => {
   };
 
   return (
-    <div className="p-6 md:sticky md:top-[70px] bg-white shadow-md rounded-lg border border-gray-200">
+    <div className="p-6 md:sticky md:top-[50px] bg-white shadow-md rounded-lg border border-gray-200">
       <div className="flex flex-col space-y-4">
         <div className="flex-col md:flex-row items-center justify-between">
           <h2 className="font-bold">
@@ -57,6 +57,12 @@ const PublishedCard = ({ datePosted, price, location }: Props) => {
           <span>Show more</span>
           <ArrowRight className="h-4 w-4" />
         </Button>
+
+        <div className="mt-12 bg-gray-200 p-4 rounded-md">
+          <button className="border border-black text-black bg-white w-full py-2 rounded-md">
+            Contact Advertiser
+          </button>
+        </div>
       </div>
     </div>
   );

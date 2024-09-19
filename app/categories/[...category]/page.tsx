@@ -3,9 +3,9 @@ import Search from "./Search";
 import Footer from "@/app/components/Footer";
 import Hero from "./Hero";
 import Listings from "./Listings";
-import BreadCrumbs from "./BreadCrumbs";
 import Loading from "./loading";
 import { Suspense } from "react";
+import BreadCrumbs from "@/app/components/BreadCrumbs";
 
 interface Props {
   params: { category: string[] };

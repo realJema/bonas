@@ -5,6 +5,8 @@ import PublishedCard from "./PublishedCard";
 import Link from "next/link";
 import CategoryButton from "./CategoryButton";
 import Reviews from "./Reviews";
+import SearchReviews from "./SearchReviews";
+import ReviewCard, { ReviewCardProps } from "./ReviewCard";
 
 interface ImageData {
   id: number;
@@ -24,6 +26,32 @@ interface Props {
   listingImage: ImageData[];
   isFrench?: boolean; // New optional prop
 }
+
+const sampleReviews: ReviewCardProps[] = [
+  {
+    name: "John Doe",
+    location: "New York, USA",
+    createdAt: new Date("2023-06-15"),
+    rating: 5,
+    comment:
+      "Excellent service! The gig was completed quickly and the quality exceeded my expectations. I highly recommend this seller.",
+  },
+  {
+    name: "Jane Smith",
+    location: "London, UK",
+    createdAt: new Date("2023-07-02"),
+    rating: 4,
+    comment:
+      "Very good work overall. There were a few minor issues, but the seller was quick to address them. I would use their services again.",
+  },
+  {
+    name: "Alex Johnson",
+    location: "Sydney, Australia",
+    createdAt: new Date("2023-07-20"),
+    rating: 5,
+    // This review doesn't have a comment
+  },
+];
 
 const Gig = ({
   image,
@@ -126,21 +154,18 @@ const Gig = ({
               Lorem ipsum dolor sit amet consectetur adipisicing elit. At
               molestias architecto earum.
             </h2>
-
             <p className="text-gray-500 mb-5">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea ipsum
               itaque voluptatibus sed totam accusamus commodi delectus iure
               porro culpa! Necessitatibus expedita dolor nisi, eaque deserunt
               ipsam
             </p>
-
             {/* read more  */}
             <div className="mb-3">
               <Link href="#" className="text-black underline text-lg">
                 Read more
               </Link>
             </div>
-
             {/* categories */}
             <div className="flex gap-3">
               <CategoryButton label="Digital Marketing" />
@@ -149,7 +174,19 @@ const Gig = ({
             </div>
 
             {/* Reviews */}
-            <Reviews />
+            <div className="flex-col space-y-4 mt-6">
+              <Reviews />
+              {/* search reviews */}
+              <SearchReviews />
+              {/* sort reviews */}
+              <div>Sort By MostRelevant</div>
+              {/**use a shevron down icon dropdown or what you think is best from shadcn ui and include all recommemded sorting options */}
+              <div className="space-y-4">
+                {sampleReviews.map((review, index) => (
+                  <ReviewCard key={index} {...review} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

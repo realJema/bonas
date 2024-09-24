@@ -3,21 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
-import Link from 'next/link'
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { Category } from "@prisma/client";
+import axios from 'axios'
 
-interface Props {
-  categories: {
-    [key: string]: Array<{
-      title: string;
-      href: string;
-      items: Array<{ name: string; href: string }>;
-    }>;
-  };
-}
+type CategoryWithChildren = Category & {
+  children: (Category & {
+    children: Category[];
+  })[];
+};
 
-
-const Header = ({ categories }: Props) => {
+const Header = () => {
   const router = useRouter();
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
@@ -25,19 +23,31 @@ const Header = ({ categories }: Props) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const headerItems = [
-    { title: "Vehicles" },
-    { title: "Real Estate" },
-    { title: "Jobs" },
-    { title: "Electronics" },
-    { title: "Fashion" },
-    { title: "Home & Garden" },
-    { title: "Services" },
-    { title: "Pets" },
-    { title: "Hobbies & Leisure" },
-    { title: "Business & Industrial" },
-    { title: "Job Seeker" },
-  ];
+ const {
+   data: categories,
+   isLoading,
+   error,
+ } = useQuery<CategoryWithChildren[], Error>({
+   queryKey: ["categories"],
+   queryFn: async () => {
+     try {
+       const response = await axios.get<CategoryWithChildren[]>(
+         "/api/categories"
+       );
+       return response.data;
+     } catch (error) {
+       if (axios.isAxiosError(error)) {
+         throw new Error(
+           `Failed to fetch categories: ${
+             error.response?.data?.error || error.message
+           }`
+         );
+       }
+       throw error;
+     }
+   },
+   staleTime: 1000 * 60 * 5, // 5 minutes
+ });
 
   useEffect(() => {
     const checkScroll = () => {
@@ -85,9 +95,14 @@ const Header = ({ categories }: Props) => {
     }, 300);
   };
 
-    const handleCategoryClick = (url: string) => {
-      router.push(url);
-    };
+  const handleCategoryClick = (url: string) => {
+    router.push(url);
+  };
+
+  if (isLoading) return <div>Loading categories...</div>;
+  if (error) return <div>Error loading categories: {error.message}</div>;
+
+  console.log("fetched categories: ", categories);
 
   return (
     <header className="hidden md:block border-b xl:px-0 relative">
@@ -119,9 +134,9 @@ const Header = ({ categories }: Props) => {
             ref={scrollContainerRef}
             className="overflow-x-auto whitespace-nowrap scrollbar-hide px-6"
           >
-            {headerItems.map((item, index) => (
+            {categories?.map((item, index) => (
               <div
-                key={index}
+                key={item.id}
                 className="group inline-flex mr-6 last:mr-0"
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
@@ -130,18 +145,17 @@ const Header = ({ categories }: Props) => {
                   onClick={() =>
                     handleCategoryClick(
                       `/categories/${encodeURIComponent(
-                        item.title.toLowerCase()
+                        item.name.toLowerCase()
                       )}`
                     )
                   }
                   className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200"
                 >
-                  {item.title}
+                  {item.name}
                 </button>
-                {categories[item.title] && activeDropdown === index && (
+                {activeDropdown === index && (
                   <HeaderDropdown
-                    mainCategory={item.title}
-                    categories={categories[item.title]}
+                    mainCategory={item}
                     onItemClick={handleCategoryClick}
                   />
                 )}

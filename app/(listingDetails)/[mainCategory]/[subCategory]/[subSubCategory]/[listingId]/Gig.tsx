@@ -24,7 +24,8 @@ interface Props {
   datePosted: Date;
   price: string;
   listingImage: ImageData[];
-  isFrench?: boolean; // New optional prop
+  isFrench?: boolean;
+  category: string;
 }
 
 const sampleReviews: ReviewCardProps[] = [
@@ -62,8 +63,11 @@ const Gig = ({
   price,
   datePosted,
   listingImage,
-  isFrench = false, // Default to English
+  isFrench = false,
+  category,
 }: Props) => {
+  const categories = category.split(", ");
+
   return (
     <div>
       <div className="lg:grid lg:grid-cols-3 lg:gap-6">
@@ -167,10 +171,10 @@ const Gig = ({
               </Link>
             </div>
             {/* categories */}
-            <div className="flex gap-3">
-              <CategoryButton label="Digital Marketing" />
-              <CategoryButton label="SOE" />
-              <CategoryButton label="Digital Marketing" />
+            <div className="flex flex-wrap gap-3 mt-4">
+              {categories.map((cat, index) => (
+                <CategoryButton key={index} label={cat} />
+              ))}
             </div>
 
             {/* Reviews */}

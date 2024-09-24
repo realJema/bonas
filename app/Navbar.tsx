@@ -9,39 +9,10 @@ import { PostDropdownMenu } from "./components/PostDropdownMenu";
 import SearchInput from "./components/SearchInput";
 import Sidebar from "./components/Sidebar";
 import { UserProfile } from "./components/UserProfile";
-import { getCategories } from "@/utils/getCategories";
 
 const Navbar = async () => {
   const session = await auth();
 
-  // Fetch categories for each main category
-  const vehiclesCategories = await getCategories("Vehicles");
-  const realEstateCategories = await getCategories("Real Estate");
-  const jobsCategories = await getCategories("Jobs");
-  const electronicsCategories = await getCategories("Electronics");
-  const fashionCategories = await getCategories("Fashion");
-  const homeAndGardenCategories = await getCategories("Home & Garden");
-  const servicesCategories = await getCategories("Services");
-  const petsCategories = await getCategories("Pets");
-  const hobbiesAndLeisureCategories = await getCategories("Hobbies & Leisure");
-  const businessAndIndustrialCategories = await getCategories(
-    "Business & Industrial"
-  );
-  const jobSeekerCategories = await getCategories("Job Seeker");
-
-  const allCategories = {
-    Vehicles: vehiclesCategories,
-    "Real Estate": realEstateCategories,
-    Jobs: jobsCategories,
-    Electronics: electronicsCategories,
-    Fashion: fashionCategories,
-    "Home & Garden": homeAndGardenCategories,
-    Services: servicesCategories,
-    Pets: petsCategories,
-    "Hobbies & Leisure": hobbiesAndLeisureCategories,
-    "Business & Industrial": businessAndIndustrialCategories,
-    "Job Seeker": jobSeekerCategories,
-  };
 
   return (
     <header className="border-b h-16 bg-white w-full">
@@ -65,7 +36,9 @@ const Navbar = async () => {
         </Link>
 
         <div className="flex items-center gap-4">
-          <PostDropdownMenu />
+          <div className="hidden sm:block">
+            <PostDropdownMenu />
+          </div>
 
           <Button
             variant="ghost"
@@ -121,7 +94,7 @@ const Navbar = async () => {
         </div>
       </nav>
 
-      <Header categories={allCategories} />
+      <Header />
     </header>
   );
 };

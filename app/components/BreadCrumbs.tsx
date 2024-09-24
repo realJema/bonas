@@ -3,14 +3,14 @@ import { ChevronRight } from "lucide-react";
 import { BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 interface Props {
-  mainCategory: string;
+  mainCategory?: string;
   subCategory?: string;
   subSubCategory?: string;
 }
 
 const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
   return (
-    <div className="py-5 font-medium text-xl mb-2 flex items-center">
+    <div className="py-5 text-xl mb-2 flex items-center">
       {!subCategory && (
         <svg
           width="13"
@@ -26,7 +26,7 @@ const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
           />
         </svg>
       )}
-      <span className="capitalize flex items-center">
+      <span className="capitalize flex items-center opacity-75">
         {mainCategory}
         {subCategory && (
           <div className='flex items-center'>
@@ -47,7 +47,7 @@ const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
 
 const CustomSeparator = () => (
   <span className="mx-3 inline-flex items-center">
-    <ChevronRight className="h-8 w-8 text-gray-700" />
+    <ChevronRight className="h-8 w-6 text-gray-400" />
   </span>
 );
 

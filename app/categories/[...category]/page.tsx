@@ -79,7 +79,7 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex-grow pt-10">
+      <div className="flex-grow pt-5">
         {/* Mobile filters */}
         <div className="md:hidden flex overflow-x-auto space-x-6 pb-4">
           {filters.map((filter, index) => (
@@ -114,7 +114,7 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
           </aside>
 
           {/* Main content */}
-          <main className="flex-1 p-5">
+          <main className="flex-1 px-5 pb-0 pt-0">
             <BreadCrumbs
               mainCategory={mainCategory}
               subCategory={subCategory}

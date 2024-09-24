@@ -7,12 +7,17 @@ import Gig from "./Gig";
 import PublishedCard from "./PublishedCard";
 
 const ListingDetailsPage = async ({
-  params,
+  params: { mainCategory, subCategory, subSubCategory, listingId },
 }: {
-  params: { mainCategoryId: string; subCategory: string; listingId: string };
+  params: {
+    mainCategory: string;
+    subCategory: string;
+    subSubCategory: string;
+    listingId: string;
+  };
 }) => {
   const listing = await prisma.listing.findUnique({
-    where: { id: parseInt(params.listingId) },
+    where: { id: parseInt(listingId) },
     include: {
       user: true,
       category: {
@@ -31,7 +36,11 @@ const ListingDetailsPage = async ({
   return (
     <div className="">
       <div className="flex items-center justify-between w-full">
-        <BreadCrumbs mainCategory={params.subCategory} />
+        <BreadCrumbs
+          subCategory={decodeURIComponent(subCategory)}
+          mainCategory={decodeURIComponent(mainCategory)}
+          subSubCategory={decodeURIComponent(subSubCategory)}
+        />
         <IconRow />
       </div>
       <div className="mt-10">
@@ -43,8 +52,11 @@ const ListingDetailsPage = async ({
           username={listing.user.name!}
           price={listing.price!}
           datePosted={listing.createdAt}
+          category={listing.category.description!}
         />
       </div>
+
+      {/* {JSON.stringify(listing)} */}
     </div>
   );
 };

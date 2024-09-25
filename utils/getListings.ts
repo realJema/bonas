@@ -39,17 +39,17 @@ export async function getListings({
   maxPrice,
 }: GetListingsParams): Promise<GetListingsResult> {
   console.log("--- getListings function start ---");
-  console.log("Received parameters:", {
-    mainCategory,
-    subCategory,
-    subSubCategory,
-    page,
-    pageSize,
-    location,
-    datePosted,
-    minPrice,
-    maxPrice,
-  });
+  // console.log("Received parameters:", {
+  //   mainCategory,
+  //   subCategory,
+  //   subSubCategory,
+  //   page,
+  //   pageSize,
+  //   location,
+  //   datePosted,
+  //   minPrice,
+  //   maxPrice,
+  // });
 
   try {
     // Fetch the entire category tree for the main category
@@ -74,7 +74,7 @@ export async function getListings({
       },
     });
 
-    console.log(`Found ${categoryTree.length} categories in the tree`);
+    // console.log(`Found ${categoryTree.length} categories in the tree`);
 
     if (categoryTree.length === 0) {
       console.error(`Category "${mainCategory}" not found in the database.`);

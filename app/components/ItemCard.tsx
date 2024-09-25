@@ -204,7 +204,7 @@ const ItemCard = ({
         </div>
       </CarouselProvider>
       <Link href={buildListingUrl(listing)}>
-        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200">
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-40">
           <div className="flex items-center justify-between">
             <div className="flex gap-1 items-center">
               <Image

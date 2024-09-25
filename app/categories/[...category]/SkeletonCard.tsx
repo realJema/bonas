@@ -4,7 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const SkeletonCard = () => (
   <div className="flex flex-col gap-1 mt-1 p-1">
-    <Skeleton height={200} /> {/* Image placeholder */}
+    <Skeleton height={125} /> {/* Image placeholder */}
     <div className="flex items-center justify-between">
       <div className="flex gap-1 items-center">
         <Skeleton circle width={27} height={27} /> {/* User profile picture */}
@@ -18,7 +18,6 @@ const SkeletonCard = () => (
       <Skeleton width={100} /> {/* Rating */}
     </div>
     <Skeleton width={150} /> {/* Price */}
-    <Skeleton width={180} /> {/* Video consultation info */}
   </div>
 );
 

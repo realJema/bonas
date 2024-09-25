@@ -87,12 +87,4 @@ const AccountConfirmationContent = () => {
   return <EmailConfirm />;
 };
 
-const AccountConfirmationPage = () => {
-  return (
-    <Suspense fallback={<FullScreenLoader />}>
-      <AccountConfirmationContent />
-    </Suspense>
-  );
-};
-
-export default AccountConfirmationPage;
+export default AccountConfirmationContent;

@@ -1,5 +1,5 @@
 import { ComponentType } from "react";
-import { SlideItem } from "../components/premiumContent/premiumCard";
+import { SlideItem } from "../components/ItemCard";
 
 
 export default interface premiumContent {

@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendVerificationEmail(email: string, token: string) {
-  // const encryptedEmail = encryptEmail(email);
   const verificationLink = `${NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${token}`;
 
   try {

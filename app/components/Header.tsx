@@ -1,45 +1,53 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
-import VehiclesDropdown from "./dropdowns/VehiclesDropdown";
-import JobsDropdown from "./dropdowns/JobsDropdown";
-import ElectronicsDropdown from "./dropdowns/ElectronicsDropdown";
-import FashionDropdown from "./dropdowns/FashionDropdown";
-import HomeAndGardenDropdown from "./dropdowns/HomeAndGardenDropdown";
-import ServicesDropdown from "./dropdowns/ServicesDropdown";
-import RealEstateDropdown from "./dropdowns/RealEstate";
-import PetsDropdown from "./dropdowns/PetsDropdown";
-import HobbiesAndLeisureDropdown from "./dropdowns/HobbiesAndLeisureDropdown";
-import BusinessAndIndustrialDropdown from "./dropdowns/BusinessAndIndustrialDropdown";
-import ConsultingDropdown from "./dropdowns/ConsultingDropdown";
+import HeaderDropdown from "./dropdowns/HeaderDropdown";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { Category } from "@prisma/client";
+import axios from 'axios'
+
+type CategoryWithChildren = Category & {
+  children: (Category & {
+    children: Category[];
+  })[];
+};
 
 const Header = () => {
+  const router = useRouter();
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const headerItems = [
-    { title: "Vehicles", dropdown: <VehiclesDropdown /> },
-    { title: "Real Estate", dropdown: <RealEstateDropdown /> },
-    { title: "Jobs", dropdown: <JobsDropdown /> },
-    { title: "Electronics", dropdown: <ElectronicsDropdown /> },
-    { title: "Fashion", dropdown: <FashionDropdown /> },
-    { title: "Home & Garden", dropdown: <HomeAndGardenDropdown /> },
-    { title: "Services", dropdown: <ServicesDropdown /> },
-    { title: "Pets", dropdown: <PetsDropdown /> },
-    { title: "Hobbies & Leisure", dropdown: <HobbiesAndLeisureDropdown /> },
-    {
-      title: "Business & Industrial",
-      dropdown: <BusinessAndIndustrialDropdown />,
-    },
-    { title: "Consulting", dropdown: <ConsultingDropdown /> },
-    { title: "AI Services" },
-    { title: "Personal Growth" },
-  ];
+ const {
+   data: categories,
+   isLoading,
+   error,
+ } = useQuery<CategoryWithChildren[], Error>({
+   queryKey: ["categories"],
+   queryFn: async () => {
+     try {
+       const response = await axios.get<CategoryWithChildren[]>(
+         "/api/categories"
+       );
+       return response.data;
+     } catch (error) {
+       if (axios.isAxiosError(error)) {
+         throw new Error(
+           `Failed to fetch categories: ${
+             error.response?.data?.error || error.message
+           }`
+         );
+       }
+       throw error;
+     }
+   },
+   staleTime: 1000 * 60 * 5, // 5 minutes
+ });
 
   useEffect(() => {
     const checkScroll = () => {
@@ -87,6 +95,15 @@ const Header = () => {
     }, 300);
   };
 
+  const handleCategoryClick = (url: string) => {
+    router.push(url);
+  };
+
+  if (isLoading) return <HeaderSkeleton />;
+  if (error) return <div>Error loading categories: {error.message}</div>;
+
+  console.log("fetched categories: ", categories);
+
   return (
     <header className="hidden md:block border-b xl:px-0 relative">
       <div className="hidden sm:block container mx-auto md:max-w-7xl relative">
@@ -117,27 +134,30 @@ const Header = () => {
             ref={scrollContainerRef}
             className="overflow-x-auto whitespace-nowrap scrollbar-hide px-6"
           >
-            {headerItems.map((item, index) => (
+            {categories?.map((item, index) => (
               <div
-                key={index}
+                key={item.id}
                 className="group inline-flex mr-6 last:mr-0"
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
               >
-                <button className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200">
-                  {item.title}
+                <button
+                  onClick={() =>
+                    handleCategoryClick(
+                      `/categories/${encodeURIComponent(
+                        item.name.toLowerCase()
+                      )}`
+                    )
+                  }
+                  className="py-2.5 inline-flex items-center gap-x-2 font-medium text-gray-900 text-opacity-80 hover:text-gray-900 border-b-4 border-transparent hover:border-green-500 transition-colors duration-200"
+                >
+                  {item.name}
                 </button>
-                {item.dropdown && activeDropdown === index && (
-                  <div
-                    className="absolute left-0 top-full z-20 w-full transition-opacity duration-300 ease-in-out"
-                    style={{
-                      opacity: activeDropdown === index ? 1 : 0,
-                      visibility:
-                        activeDropdown === index ? "visible" : "hidden",
-                    }}
-                  >
-                    {item.dropdown}
-                  </div>
+                {activeDropdown === index && (
+                  <HeaderDropdown
+                    mainCategory={item}
+                    onItemClick={handleCategoryClick}
+                  />
                 )}
               </div>
             ))}
@@ -174,3 +194,29 @@ const Header = () => {
 };
 
 export default Header;
+
+import React from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const HeaderSkeleton = () => {
+  return (
+    <header className="hidden md:block border-b xl:px-0 relative h-14">
+      <div className="hidden sm:block container mx-auto md:max-w-7xl relative h-full">
+        <div className="relative h-full flex items-center justify-center">
+          <div className="overflow-x-auto whitespace-nowrap scrollbar-hide px-6">
+            {[...Array(10)].map((_, index) => (
+              <div key={index} className="inline-flex mr-6 last:mr-0">
+                <Skeleton width={100} height={18} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="sm:hidden p-4">
+        <Skeleton height={40} />
+      </div>
+    </header>
+  );
+};
+

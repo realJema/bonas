@@ -226,10 +226,10 @@ const PremiumContent = () => {
     }
   };
 
- const handleSlideChange = (swiper: SwiperType) => {
-   setIsBeginning(swiper.isBeginning);
-   setIsEnd(swiper.isEnd);
- };
+  const handleSlideChange = (swiper: SwiperType) => {
+    setIsBeginning(swiper.isBeginning);
+    setIsEnd(swiper.isEnd);
+  };
 
   return (
     <div className="mt-10">
@@ -282,7 +282,7 @@ const PremiumContent = () => {
         </div>
 
         <div className="flex-grow w-full relative mt-7">
-          <div className="absolute inset-0 -right-[2vw] overflow-visible">
+          <div className="absolute inset-0 -right-[2vw] lg:-right-[1.5vw] overflow-visible">
             <PremiumContentSwiper
               data={popularCategories}
               renderItem={(category) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { ComponentType, useRef, useState } from "react";
 import TopRatedBadge from "./badges/TopRatedBadge";
 import ProBadge from "./badges/Probadge";
 import LevelBadge from "./badges/Levelbadge";
@@ -8,39 +8,39 @@ import ItemCard from "./ItemCard";
 import CustomSwiper from "./swiper/CustomSwiper";
 import Heading from "./Heading";
 import SubHeading from "./SubHeading";
+import { Swiper as SwiperInstance } from "swiper";
 import { Swiper as SwiperType } from "swiper/types";
 import Link from "next/link";
+import { Listing, Category, User, Image } from "@prisma/client";
+import { ExtendedListing } from "../entities/ExtendedListing";
 
-interface Slide {
+interface SlideItem {
   type: "image" | "video";
   url: string;
-}
-
-interface Category {
-  title: string;
-  slides: Slide[];
-  name: string;
-  price: number;
-  profileImgUrl: string;
-  rating: number;
-  Badge: React.ComponentType<any>;
-  offersVideo: boolean;
 }
 
 interface ListingSectionProps {
   heading: string;
   href: string;
   subheading: string;
-  categories: Category[];
+  listings: ExtendedListing[];
+  generateSlides: (listing: ExtendedListing) => SlideItem[];
+  getBadgeComponent?: (
+    listing: ExtendedListing
+  ) => ComponentType<any>;
+  offersVideo?: (listing: ExtendedListing) => boolean;
 }
 
 const ListingSection = ({
   heading,
   href,
   subheading,
-  categories,
+  listings,
+  generateSlides,
+  getBadgeComponent,
+  offersVideo,
 }: ListingSectionProps) => {
-  const swiperRef = useRef<SwiperType | null>(null);
+  const swiperRef = useRef<SwiperInstance | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
@@ -62,7 +62,7 @@ const ListingSection = ({
   };
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-6 mt-20 px-4 py-5">
       <Heading label={heading} />
       <div className="flex items-center gap-2 justify-between">
         <SubHeading label={subheading} />
@@ -71,31 +71,26 @@ const ListingSection = ({
         </Link>
       </div>
 
-      <div className="relative w-full">
+    <div className="relative w-full">
         <CustomSwiper
-          data={categories}
-          renderItem={(item: Category) => (
-            <div className="w-[240px]">
+          data={listings}
+          renderItem={(listing: ExtendedListing) => (
+            <div className="w-[230px]">
               <ItemCard
-                title={item.title}
-                slides={item.slides}
-                name={item.name}
-                price={item.price}
-                profileImgUrl={item.profileImgUrl}
-                rating={item.rating}
-                Badge={item.Badge}
-                offersVideo={item.offersVideo}
+                listing={listing}
+                slides={generateSlides(listing)}
+                // Badge={getBadgeComponent(listing)}
+                // offersVideo={offersVideo(listing)}
               />
             </div>
           )}
-          hasOverlayRight={true}
-          overlayRightClassName="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10 xl:hidden"
-          className="vehicules-motor-swiper"
-          slideClassName="pr-4"
+          hasOverlayRight={false}
+          hasOverlayLeft={false}
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
             handleSlideChange(swiper);
           }}
+          spaceBetween={3}
           onSlideChange={handleSlideChange}
         />
 

@@ -5,6 +5,7 @@ import PrelineScript from "./components/PrelineScript";
 import AuthProvider from "./components/auth/Provider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import QueryClientProvider from "./QueryClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +22,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <QueryClientProvider>
         <AuthProvider>
           <main>{children}</main>
         </AuthProvider>
         <ToastContainer />
+        </QueryClientProvider>
       </body>
       <PrelineScript />
     </html>

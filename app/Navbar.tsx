@@ -1,4 +1,3 @@
-
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { EnvelopeIcon, HeartIcon } from "@heroicons/react/24/outline";
@@ -11,9 +10,9 @@ import SearchInput from "./components/SearchInput";
 import Sidebar from "./components/Sidebar";
 import { UserProfile } from "./components/UserProfile";
 
-
 const Navbar = async () => {
   const session = await auth();
+
 
   return (
     <header className="border-b h-16 bg-white w-full">
@@ -37,7 +36,9 @@ const Navbar = async () => {
         </Link>
 
         <div className="flex items-center gap-4">
-          <PostDropdownMenu />
+          <div className="hidden sm:block">
+            <PostDropdownMenu />
+          </div>
 
           <Button
             variant="ghost"

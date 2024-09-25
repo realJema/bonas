@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { newVerification } from "@/actions/new-verificatition";
 import { toast } from "react-toastify";
@@ -87,4 +87,12 @@ const AccountConfirmationContent = () => {
   return <EmailConfirm />;
 };
 
-export default AccountConfirmationContent;
+const AccountConfirmationPage = () => {
+  return (
+    <Suspense>
+      <AccountConfirmationContent />
+    </Suspense>
+  );
+};
+
+export default AccountConfirmationPage;

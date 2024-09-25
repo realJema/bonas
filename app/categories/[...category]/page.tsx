@@ -63,8 +63,8 @@ const filters: Filter[] = [
 ];
 
 const CategoryPage = ({ params: { category }, searchParams }: Props) => {
-  console.log("query param from url location:", searchParams.location);
-  console.log("query param from url date:", searchParams.datePosted);
+  // console.log("query param from url location:", searchParams.location);
+  // console.log("query param from url date:", searchParams.datePosted);
   const [mainCategory, subCategory, subSubCategory] =
     category.map(decodeURIComponent);
   const currentPage = parseInt(searchParams.page || "1");

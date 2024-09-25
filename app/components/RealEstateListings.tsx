@@ -18,11 +18,16 @@ const RealEstates = ({ realEstateListings }: Props) => {
     }));
   };
 
+  const getCategoryUrl = (category: string) => {
+    const encodedCategory = encodeURIComponent(category);
+    return `/categories/${encodedCategory}`;
+  };
+
   return (
     <div className="mt-16 bg-[#fafafa] rounded-md">
       <ListingSection
         heading="Real Estate Listings"
-        href="#"
+        href={getCategoryUrl("real estate")}
         subheading="Discover your dream home"
         listings={realEstateListings}
         generateSlides={generateSlides}

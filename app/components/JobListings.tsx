@@ -14,7 +14,6 @@ interface Props {
 }
 
 const JobListings = ({ jobListings }: Props) => {
-
   // const getBadgeComponent = (listing: ExtendedSerializableListing) => {
   //   if (listing.user.rating && listing.user.rating > 4.5) return TopRatedBadge;
   //   if (listing.user.isPro) return ProBadge;
@@ -25,11 +24,16 @@ const JobListings = ({ jobListings }: Props) => {
   //   return listing.offersVideoConsultation || false;
   // };
 
+  const getCategoryUrl = (category: string) => {
+    const encodedCategory = encodeURIComponent(category);
+    return `/categories/${encodedCategory}`;
+  };
+
   return (
     <div className="mt-16 bg-[#fafafa] rounded-md">
       <ListingSection
         heading="Job Listing"
-        href="#"
+        href={getCategoryUrl("jobs")}
         subheading="Find the perfect job opportunity for you"
         listings={jobListings}
         generateSlides={generateSlides}

@@ -18,11 +18,17 @@ const VehiculesAndMotor = ({ vehiclesAndMotorListings }: Props) => {
     }));
   };
 
+  const getCategoryUrl = (category: string) => {
+    const encodedCategory = encodeURIComponent(category);
+    return `/categories/${encodedCategory}`;
+  };
+
+
   return (
     <div className="mt-52 flex flex-col bg-[#fafafa] rounded-md">
       <ListingSection
-        heading="Vehicules and Motor"
-        href="#"
+        heading="Vehicles and Motor"
+        href={getCategoryUrl('vehicles')}
         subheading="Hand-vetted talent for all your professional needs"
         listings={vehiclesAndMotorListings}
         generateSlides={generateSlides}

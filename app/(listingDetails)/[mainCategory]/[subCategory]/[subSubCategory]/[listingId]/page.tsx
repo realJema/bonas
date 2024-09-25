@@ -50,7 +50,7 @@ const ListingDetailsPage = async ({
           location={listing.location!}
           listingImage={listing.images!}
           username={listing.user.name!}
-          price={listing.price!}
+          price={listing.price!.toString()}
           datePosted={listing.createdAt}
           category={listing.category.description!}
         />

@@ -6,6 +6,7 @@
 export const publicRoutes = [
   "/",
   "/categories/:mainCategory",
+  "/categories/:mainCategory/:subCategory",
   "/categories/:mainCategory/:subCategory/:subSubCategory",
   "/:mainCategory/:subCategory/:subSubCategory/:listingId",
   "/api/categories",

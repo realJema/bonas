@@ -22,7 +22,7 @@ const PublishedCard = ({ datePosted, price, location }: Props) => {
   return (
     <div className="p-6 md:sticky md:top-[50px] bg-white shadow-md rounded-lg border border-gray-200">
       <div className="flex flex-col space-y-4">
-        <div className="flex-col md:flex-row items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between">
           <h2 className="font-bold">
             Published: {getDaysSincePosting(datePosted)} days ago
           </h2>
@@ -53,7 +53,7 @@ const PublishedCard = ({ datePosted, price, location }: Props) => {
           </div>
         </div>
 
-        <Button className="w-full bg-black text-white hover:opacity-80 transition-opacity flex justify-between items-center">
+        <Button className="w-full py-4 bg-black text-white hover:opacity-80 transition-opacity flex justify-between items-center">
           <span>Show more</span>
           <ArrowRight className="h-4 w-4" />
         </Button>

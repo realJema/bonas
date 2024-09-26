@@ -153,6 +153,16 @@ const Gig = ({
               </div>
             </div>
           </div>
+
+          {/* PublishedCard for mobile to lg screens */}
+          <div className="lg:hidden mt-8 w-full sm:max-w-3xl">
+            <PublishedCard
+              location={location}
+              price={price}
+              datePosted={datePosted}
+            />
+          </div>
+
           <div className="flex-col gap-3 w-full max-w-xl mt-6">
             <h2 className="font-bold mb-1">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. At
@@ -194,8 +204,8 @@ const Gig = ({
           </div>
         </div>
 
-        {/* published card */}
-        <div className="lg:col-span-1 mt-8 md:mt-0">
+        {/* PublishedCard for lg screens and above */}
+        <div className="hidden lg:block lg:col-span-1">
           <PublishedCard
             location={location}
             price={price}

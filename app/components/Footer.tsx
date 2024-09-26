@@ -1,181 +1,67 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
+import { useCategoryStore } from "../store";
+import { useRouter } from "next/navigation";
+import FooterSkeleton from "./skeletons/FooterSkeleton";
 
 const Footer = () => {
+  const { categories, isLoading } = useCategoryStore();
+  const router = useRouter();
 
-  const categories = [
-    {
-      title: "Vehicles",
-      href: "#",
-      subcategories: [
-        { label: "Cars", href: "#" },
-        { label: "Motorbikes", href: "#" },
-        { label: "Bicycles", href: "#" },
-        { label: "Trucks", href: "#" },
-        { label: "Vans", href: "#" },
-        { label: "Auto Parts & Accessories", href: "#" },
-        { label: "Car Rentals", href: "#" },
-        { label: "Car Services", href: "#" },
-      ],
-    },
-    {
-      title: "Real Estate",
-      href: "#",
-      subcategories: [
-        { label: "For Sale", href: "#" },
-        { label: "For Rent", href: "#" },
-        { label: "Commercial Property", href: "#" },
-        { label: "Land & Plots", href: "#" },
-        { label: "Holiday Rentals", href: "#" },
-        { label: "Real Estate Agents", href: "#" },
-        { label: "Property Management", href: "#" },
-      ],
-    },
-    {
-      title: "Jobs",
-      href: "#",
-      subcategories: [
-        { label: "Full-Time", href: "#" },
-        { label: "Part-Time", href: "#" },
-        { label: "Freelance", href: "#" },
-        { label: "Internships", href: "#" },
-        { label: "Volunteer", href: "#" },
-        { label: "Remote", href: "#" },
-        { label: "Job Seekers", href: "#" },
-        { label: "Recruitment Agencies", href: "#" },
-      ],
-    },
-    {
-      title: "Electronics",
-      href: "#",
-      subcategories: [
-        { label: "Mobile Phones", href: "#" },
-        { label: "Laptops & Computers", href: "#" },
-        { label: "Home Appliances", href: "#" },
-        { label: "Audio & Headphones", href: "#" },
-        { label: "Cameras & Photography", href: "#" },
-        { label: "Gaming Consoles", href: "#" },
-        { label: "Smart Watches", href: "#" },
-        { label: "Wearable Tech", href: "#" },
-      ],
-    },
-    {
-      title: "Fashion",
-      href: "#",
-      subcategories: [
-        { label: "Men's Clothing", href: "#" },
-        { label: "Women's Clothing", href: "#" },
-        { label: "Footwear", href: "#" },
-        { label: "Accessories", href: "#" },
-        { label: "Jewelry", href: "#" },
-        { label: "Watches", href: "#" },
-        { label: "Bags & Purses", href: "#" },
-        { label: "Vintage Clothing", href: "#" },
-      ],
-    },
-    {
-      title: "Home & Garden",
-      href: "#",
-      subcategories: [
-        { label: "Furniture", href: "#" },
-        { label: "Home Decor", href: "#" },
-        { label: "Kitchen Appliances", href: "#" },
-        { label: "Garden Tools", href: "#" },
-        { label: "Outdoor Furniture", href: "#" },
-        { label: "Bedding & Linens", href: "#" },
-        { label: "Home Improvement", href: "#" },
-        { label: "DIY Materials", href: "#" },
-      ],
-    },
-    {
-      title: "Services",
-      href: "#",
-      subcategories: [
-        { label: "Cleaning Services", href: "#" },
-        { label: "Construction & Renovation", href: "#" },
-        { label: "Event Planning", href: "#" },
-        { label: "Tutoring", href: "#" },
-        { label: "Beauty Services", href: "#" },
-        { label: "Transportation", href: "#" },
-        { label: "Legal Services", href: "#" },
-        { label: "Accounting & Tax Services", href: "#" },
-        { label: "Health & Wellness", href: "#" },
-      ],
-    },
-    {
-      title: "Pets",
-      href: "#",
-      subcategories: [
-        { label: "Dogs", href: "#" },
-        { label: "Cats", href: "#" },
-        { label: "Birds", href: "#" },
-        { label: "Fish", href: "#" },
-        { label: "Small Animals", href: "#" },
-        { label: "Pet Supplies", href: "#" },
-        { label: "Pet Adoption", href: "#" },
-        { label: "Pet Services", href: "#" },
-      ],
-    },
-    {
-      title: "Hobbies & Leisure",
-      href: "#",
-      subcategories: [
-        { label: "Sports Equipment", href: "#" },
-        { label: "Books", href: "#" },
-        { label: "Musical Instruments", href: "#" },
-        { label: "Collectibles", href: "#" },
-        { label: "Photography", href: "#" },
-        { label: "Travel & Experiences", href: "#" },
-        { label: "Art Supplies", href: "#" },
-        { label: "Gaming", href: "#" },
-      ],
-    },
-    {
-      title: "Business & Industrial",
-      href: "#",
-      subcategories: [
-        { label: "For Sale", href: "#" },
-        { label: "Equipment", href: "#" },
-        { label: "Office Supplies", href: "#" },
-        { label: "Commercial Vehicles", href: "#" },
-        { label: "Raw Materials", href: "#" },
-        { label: "Machinery", href: "#" },
-        { label: "Business Services", href: "#" },
-        { label: "Industrial Supplies", href: "#" },
-      ],
-    },
-    {
-      title: "Job Seekers",
-      href: "#",
-      subcategories: [
-        { label: "Resumes & CVs", href: "#" },
-        { label: "Career Counseling", href: "#" },
-        { label: "Interview Preparation", href: "#" },
-        { label: "Skill Development", href: "#" },
-        { label: "Networking Events", href: "#" },
-        { label: "Job Fairs", href: "#" },
-        { label: "Professional Certifications", href: "#" },
-      ],
-    },
-  ];
+  const handleItemClick = (url: string) => {
+    router.push(url);
+  };
+
+  if (isLoading) {
+    return <FooterSkeleton />;
+  }
 
   return (
     <footer className="mt-20 container md:max-w-7xl py-10 px-4 sm:px-6 lg:px-8 mx-auto border-t">
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-10">
-        {categories.map((category, index) => (
-          <div key={index}>
+        {categories.map((category) => (
+          <div key={category.id}>
             <h4 className="text-sm font-bold text-gray-700 uppercase">
-              {category.title}
+              <Link
+                href={`/categories/${encodeURIComponent(
+                  category.name.toLowerCase()
+                )}`}
+                className="hover:underline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleItemClick(
+                    `/categories/${encodeURIComponent(
+                      category.name.toLowerCase()
+                    )}`
+                  );
+                }}
+              >
+                {category.name}
+              </Link>
             </h4>
             <div className="mt-3 grid space-y-3 text-[16px]">
-              {category.subcategories.map((subcategory, subIndex) => (
-                <p key={subIndex}>
+              {category.children.map((subcategory) => (
+                <p key={subcategory.id}>
                   <Link
                     className="inline-flex gap-x-2 text-gray-600 dark:hover:text-neutral-200 hover:underline hover:cursor-pointer"
-                    href={subcategory.href}
+                    href={`/categories/${encodeURIComponent(
+                      category.name.toLowerCase()
+                    )}/${encodeURIComponent(subcategory.name.toLowerCase())}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleItemClick(
+                        `/categories/${encodeURIComponent(
+                          category.name.toLowerCase()
+                        )}/${encodeURIComponent(
+                          subcategory.name.toLowerCase()
+                        )}`
+                      );
+                    }}
                   >
-                    {subcategory.label}
+                    {subcategory.name}
                   </Link>
                 </p>
               ))}
@@ -183,10 +69,9 @@ const Footer = () => {
           </div>
         ))}
 
+        {/* About section */}
         <div>
-          <h4 className="text-sm font-bold text-gray-700 uppercase">
-            About
-          </h4>
+          <h4 className="text-sm font-bold text-gray-700 uppercase">About</h4>
           <div className="mt-3 grid space-y-3 text-[16px]">
             <p>
               <Link
@@ -323,7 +208,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    
     </footer>
   );
 };

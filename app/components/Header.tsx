@@ -1,19 +1,11 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { Category } from "@prisma/client";
-import axios from 'axios'
-
-type CategoryWithChildren = Category & {
-  children: (Category & {
-    children: Category[];
-  })[];
-};
 
 const Header = () => {
   const router = useRouter();
@@ -22,32 +14,31 @@ const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { categories, setCategories } = useCategoryStore();
 
- const {
-   data: categories,
-   isLoading,
-   error,
- } = useQuery<CategoryWithChildren[], Error>({
-   queryKey: ["categories"],
-   queryFn: async () => {
-     try {
-       const response = await axios.get<CategoryWithChildren[]>(
-         "/api/categories"
-       );
-       return response.data;
-     } catch (error) {
-       if (axios.isAxiosError(error)) {
-         throw new Error(
-           `Failed to fetch categories: ${
-             error.response?.data?.error || error.message
-           }`
-         );
-       }
-       throw error;
-     }
-   },
-   staleTime: 1000 * 60 * 5, // 5 minutes
- });
+  const { isLoading, error } = useQuery<CategoryWithChildren[], Error>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get<CategoryWithChildren[]>(
+          "/api/categories"
+        );
+        setCategories(response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(
+            `Failed to fetch categories: ${
+              error.response?.data?.error || error.message
+            }`
+          );
+        }
+        throw error;
+      }
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
 
   useEffect(() => {
     const checkScroll = () => {
@@ -102,7 +93,7 @@ const Header = () => {
   if (isLoading) return <HeaderSkeleton />;
   if (error) return <div>Error loading categories: {error.message}</div>;
 
-  console.log("fetched categories: ", categories);
+  // console.log("fetched categories: ", categories);
 
   return (
     <header className="hidden md:block border-b xl:px-0 relative">
@@ -195,9 +186,9 @@ const Header = () => {
 
 export default Header;
 
-import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { CategoryWithChildren, useCategoryStore } from "../store";
 
 const HeaderSkeleton = () => {
   return (
@@ -219,4 +210,3 @@ const HeaderSkeleton = () => {
     </header>
   );
 };
-

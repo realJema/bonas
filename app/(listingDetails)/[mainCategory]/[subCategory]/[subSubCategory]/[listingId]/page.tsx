@@ -35,7 +35,7 @@ const ListingDetailsPage = async ({
 
   return (
     <div className="">
-      <div className="flex items-center justify-between w-full">
+      <div className="md:flex-row items-center justify-between w-full">
         <BreadCrumbs
           subCategory={decodeURIComponent(subCategory)}
           mainCategory={decodeURIComponent(mainCategory)}

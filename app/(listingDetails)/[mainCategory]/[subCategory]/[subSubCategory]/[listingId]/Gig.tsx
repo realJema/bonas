@@ -7,6 +7,7 @@ import CategoryButton from "./CategoryButton";
 import Reviews from "./Reviews";
 import SearchReviews from "./SearchReviews";
 import ReviewCard, { ReviewCardProps } from "./ReviewCard";
+import InfoRow from "./InfoRow";
 
 interface ImageData {
   id: number;
@@ -110,19 +111,12 @@ const Gig = ({
                   alt="User profile image"
                 />
               </div>
-              <div className="space-y-4">
-                <span className="font-medium">{username}</span>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <MapPin size={16} />
-                  <span>{location} /</span>
-                  <MessageCircle size={16} />
-                  <p>{isFrench ? "parle français" : "speaks English"}</p>
-                  <span>121 orders completed</span>
-                </div>
-                <button className="bg-white text-black text-opacity-75 border border-gray-200 px-4 py-2 rounded">
-                  Contact me
-                </button>
-              </div>
+              <InfoRow
+                isFrench={false}
+                location={location}
+                ordersCompleted={18}
+                username={username}
+              />
             </div>
 
             {/* Listing images */}

@@ -1,39 +1,54 @@
 "use client";
 
+import React, { Suspense } from "react";
 import { ExtendedListing } from "../entities/ExtendedListing";
-import LevelBadge from "./badges/Levelbadge";
-import ProBadge from "./badges/Probadge";
-import TopRatedBadge from "./badges/TopRatedBadge";
 import ListingSection from "./ListingSection";
+import SkeletonListingSection from "./skeletons/SkeletonListingSection";
 
 interface Props {
-  vehiclesAndMotorListings: ExtendedListing[];
+  vehiclesAndMotorListings: Promise<ExtendedListing[]>;
 }
 
+const getCategoryUrl = (category: string) => {
+  const encodedCategory = encodeURIComponent(category);
+  return `/categories/${encodedCategory}`;
+};
+
+const generateSlides = (listing: ExtendedListing) => {
+  return listing.images.map((image) => ({
+    type: "image" as const,
+    url: image.imageUrl,
+  }));
+};
+
 const VehiculesAndMotor = ({ vehiclesAndMotorListings }: Props) => {
-  const generateSlides = (listing: ExtendedListing) => {
-    return listing.images.map((image) => ({
-      type: "image" as const,
-      url: image.imageUrl,
-    }));
-  };
-
-  const getCategoryUrl = (category: string) => {
-    const encodedCategory = encodeURIComponent(category);
-    return `/categories/${encodedCategory}`;
-  };
-
-
   return (
     <div className="mt-52 flex flex-col bg-[#fafafa] rounded-md">
-      <ListingSection
-        heading="Vehicles and Motor"
-        href={getCategoryUrl('vehicles')}
-        subheading="Hand-vetted talent for all your professional needs"
-        listings={vehiclesAndMotorListings}
-        generateSlides={generateSlides}
-      />
+      <Suspense fallback={<SkeletonListingSection count={5} />}>
+        <VehiculesAndMotorContent
+          vehiclesAndMotorListingsPromise={vehiclesAndMotorListings}
+        />
+      </Suspense>
     </div>
+  );
+};
+
+const VehiculesAndMotorContent = async ({
+  vehiclesAndMotorListingsPromise,
+}: {
+  vehiclesAndMotorListingsPromise: Promise<ExtendedListing[]>;
+}) => {
+  const resolvedVehiclesAndMotorListings =
+    await vehiclesAndMotorListingsPromise;
+
+  return (
+    <ListingSection
+      heading="Vehicles and Motor"
+      href={getCategoryUrl("vehicles")}
+      subheading="Hand-vetted talent for all your professional needs"
+      listings={resolvedVehiclesAndMotorListings}
+      generateSlides={generateSlides}
+    />
   );
 };
 

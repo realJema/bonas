@@ -29,8 +29,8 @@ export default async function Home() {
   });
 
   const jobListings = getJobListings();
-  const realEstateListings = await getRealEstateListings();
-  const vehiclesAndMotorListings = await getVehiclesAndMotorListings();
+  const realEstateListings = getRealEstateListings();
+  const vehiclesAndMotorListings = getVehiclesAndMotorListings();
   
   
   const categories = [

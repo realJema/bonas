@@ -28,7 +28,7 @@ export default async function Home() {
     pageSize: 10,
   });
 
-  const jobListings = await getJobListings();
+  const jobListings = getJobListings();
   const realEstateListings = await getRealEstateListings();
   const vehiclesAndMotorListings = await getVehiclesAndMotorListings();
   

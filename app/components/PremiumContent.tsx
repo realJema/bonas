@@ -12,6 +12,7 @@ import Link from "next/link";
 import CategorySelectionItem from "./premiumContent/CategorySelectionItem";
 import { generateSlides } from "@/lib/generateSlides";
 import SkeletonCard from "../categories/[...category]/SkeletonCard";
+import SkeletonSwiper from "./swiper/SkeletonSwiper";
 
 interface SlideItem {
   type: "image" | "video";
@@ -116,13 +117,7 @@ const PremiumContent = ({
         <div className="flex-grow w-full relative mt-7">
           <div className="absolute inset-0 -right-[2vw] lg:-right-[1.5vw] overflow-visible">
             {isLoading ? (
-              <div className="flex gap-4">
-                {[...Array(4)].map((_, index) => (
-                  <div key={index} className="w-[230px]">
-                    <SkeletonCard />
-                  </div>
-                ))}
-              </div>
+              <SkeletonSwiper />
             ) : (
               <CustomSwiper
                 data={listings}

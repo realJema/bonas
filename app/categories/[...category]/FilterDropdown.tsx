@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronDown } from "lucide-react";
 
 interface FilterItem {
@@ -60,20 +61,22 @@ const FilterDropdown = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0">
-        <div className="space-y-2">
-          {items.map((item, index) => (
-            <Button
-              key={index}
-              variant="ghost"
-              className={`w-full justify-start ${
-                item.value === selectedValue ? "bg-accent" : ""
-              }`}
-              onClick={() => handleSelect(item.value)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </div>
+        <ScrollArea className="h-[300px] w-full rounded-md">
+          <div className="p-4">
+            {items.map((item, index) => (
+              <Button
+                key={index}
+                variant="ghost"
+                className={`w-full justify-start my-1 cursor-pointer hover:bg-accent ${
+                  item.value === selectedValue ? "bg-accent" : ""
+                }`}
+                onClick={() => handleSelect(item.value)}
+              >
+                {item.name}
+              </Button>
+            ))}
+          </div>
+        </ScrollArea>
       </PopoverContent>
     </Popover>
   );

@@ -40,9 +40,6 @@ const Loading = () => {
             <Skeleton width={300} height={20} /> {/* BreadCrumbs */}
             <Skeleton height={150} className="mt-4" /> {/* Hero */}
             {/* Listings */}
-            <p className="text-lg text-gray-500 mt-4">
-              <Skeleton width={300} />
-            </p>
             <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
                 <div key={index} className="mt-6">

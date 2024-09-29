@@ -1,5 +1,7 @@
 import { getListings } from "./getListings";
 
+export const maxDuration = 60;
+
 export async function getRealEstateListings() {
   "use server";
   const { listings } = await getListings({

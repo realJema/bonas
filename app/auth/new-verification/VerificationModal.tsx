@@ -58,7 +58,7 @@ const VerificationModal = ({
                 </span>
               </div>
               <p className="text-sm text-gray-500">
-                Click the link in the email to verify your account.
+                Click the link below to check your inbox or check manually.
               </p>
               <Button
                 className="w-full"

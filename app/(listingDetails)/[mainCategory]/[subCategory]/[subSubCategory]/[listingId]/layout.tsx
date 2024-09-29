@@ -10,7 +10,7 @@ const CategriesLayout = ({ children }: Props) => {
   return (
     <>
       <Navbar />
-      <main className="mt-12 container mx-auto px-10 md:px-4 md:max-w-7xl">
+      <main className="mt-12 container mx-auto px-5 md:px-4 md:max-w-7xl">
         {children}
       </main>
       <Footer />

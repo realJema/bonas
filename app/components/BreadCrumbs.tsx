@@ -1,6 +1,5 @@
 import React from "react";
-import { ChevronRight } from "lucide-react";
-import { BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { ChevronRight, Home } from "lucide-react";
 
 interface Props {
   mainCategory?: string;
@@ -10,45 +9,43 @@ interface Props {
 
 const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
   return (
-    <div className="py-5 text-xl mb-2 flex items-center">
-      {!subCategory && (
-        <svg
-          width="13"
-          height="12"
-          viewBox="0 0 13 12"
-          fill="none"
-          className="inline-block opacity-85 size-4 mr-2"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10.5521 11.7794H2.38575C2.23111 11.7794 2.0828 11.718 1.97337 11.6088C1.86395 11.4995 1.80236 11.3513 1.80212 11.1966V5.94663H0.052124L6.07737 0.46826C6.18479 0.370682 6.3247 0.31662 6.46981 0.31662C6.61493 0.31662 6.75484 0.370682 6.86225 0.46826L12.8866 5.94576H11.1366V11.1958C11.1364 11.3504 11.0748 11.4986 10.9654 11.6079C10.8559 11.7171 10.7076 11.7785 10.553 11.7785L10.5521 11.7794ZM7.05212 10.613H9.96937V4.87126L6.46937 1.68976L2.96937 4.87126V10.613H5.88575V7.11301H7.05212V10.613Z"
-            fill="#404145"
+    <nav aria-label="Breadcrumb" className="py-3 sm:py-4 md:py-5">
+      <ol className="flex flex-wrap items-center text-sm sm:text-base md:text-lg">
+        <li className="flex items-center">
+          <Home
+            className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500"
+            aria-hidden="true"
           />
-        </svg>
-      )}
-      <span className="capitalize flex items-center opacity-75">
-        {mainCategory}
-        {subCategory && (
-          <div className='flex items-center'>
+          <span className="sr-only">Home</span>
+        </li>
+        {mainCategory && (
+          <li className="flex items-center">
             <CustomSeparator />
-            {subCategory}
-            {subSubCategory && (
-              <div className='flex items-center'>
-                <CustomSeparator />
-                {subSubCategory}
-              </div>
-            )}
-          </div>
+            <span className="capitalize">{mainCategory}</span>
+          </li>
         )}
-      </span>
-    </div>
+        {subCategory && (
+          <li className="flex items-center">
+            <CustomSeparator />
+            <span className="capitalize">{subCategory}</span>
+          </li>
+        )}
+        {subSubCategory && (
+          <li className="flex items-center">
+            <CustomSeparator />
+            <span className="capitalize font-semibold">{subSubCategory}</span>
+          </li>
+        )}
+      </ol>
+    </nav>
   );
 };
 
 const CustomSeparator = () => (
-  <span className="mx-3 inline-flex items-center">
-    <ChevronRight className="h-8 w-6 text-gray-400" />
-  </span>
+  <ChevronRight
+    className="mx-2 h-4 w-4 sm:mx-3 sm:h-5 sm:w-5 text-gray-400 flex-shrink-0"
+    aria-hidden="true"
+  />
 );
 
 export default BreadCrumbs;

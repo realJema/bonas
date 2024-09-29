@@ -9,6 +9,7 @@ import PremiumContent from "./components/PremiumContent";
 import RealEstates from "./components/RealEstateListings";
 import VehiculesAndMotor from "./components/VehiculesAndMotor";
 import Navbar from "./Navbar";
+import { auth } from "@/auth";
 
 // Server Action
 async function fetchListingsForCategory(category: string) {
@@ -22,6 +23,7 @@ async function fetchListingsForCategory(category: string) {
 }
 
 export default async function Home() {
+  const session = await auth();
   const initialListings = await getListings({
     mainCategory: "Electronics",
     page: 1,
@@ -31,8 +33,7 @@ export default async function Home() {
   const jobListings = getJobListings();
   const realEstateListings = getRealEstateListings();
   const vehiclesAndMotorListings = getVehiclesAndMotorListings();
-  
-  
+
   const categories = [
     {
       label: "Electronics",
@@ -48,13 +49,11 @@ export default async function Home() {
     },
   ];
 
-
-
   return (
     <>
       <Navbar />
       <div className="container mx-auto max-w-7xl px-10 md:px-4">
-        <Hero />
+        <Hero username={session?.user?.name ?? undefined} />
         <PremiumContent
           initialListings={initialListings.listings}
           categories={categories}

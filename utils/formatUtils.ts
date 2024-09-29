@@ -25,3 +25,20 @@ export function formatDatePosted(date: Date): string {
     return format(date, "MMM d, yyyy");
   }
 }
+
+export function formatUsername(username: string) {
+  if (!username) return "";
+
+  const names = username.split(" ");
+  
+  if (names.length > 1) {
+    return `${capitalizeFirstLetter(names[0])} ${names[1][0].toUpperCase()}.`;
+  } else {
+    return capitalizeFirstLetter(names[0]);
+  }
+}
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+

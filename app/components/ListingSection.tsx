@@ -85,7 +85,7 @@ const ListingSection = ({
         </Swiper>
 
         {!isEnd && (
-          <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-20" />
+          <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10" />
         )}
 
         {!isBeginning && (

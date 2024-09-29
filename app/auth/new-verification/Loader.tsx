@@ -18,7 +18,7 @@ export default function FullScreenLoader({ message = "Verifying your account..."
           </div>
         </div>
         <h2 className="mt-8 text-2xl font-bold text-green-700">{message}</h2>
-        <p className="mt-2 text-gray-600 max-w-sm mx-auto">This may take a few moments. Please don&apos;t close this page.</p>
+        <p className="mt-2 text-gray-600 max-w-sm mx-auto">This may take a few moments. Please don&apos;t refresh this page.</p>
       </div>
       <div className="mt-16">
         <svg className="animate-spin h-8 w-8 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -76,6 +76,9 @@ const AccountConfirmationContent = () => {
           />
         </Progress.Root>
         <p className="mt-4 text-lg text-gray-600">Verifying...</p>
+        <p className="mt-2 text-gray-600 max-w-sm mx-auto">
+          This may take a few moments. Please don&apos;t refresh this page.
+        </p>
       </div>
     );
   }

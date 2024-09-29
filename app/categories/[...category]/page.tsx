@@ -88,7 +88,7 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
               id={filter.id}
               label={filter.label}
               items={filter.items}
-              className={`flex-shrink-0 relative z-[${50 - index}]`}
+              className={`flex-shrink-0 relative z-[${50 - index}] w-72`}
               selectedValue={getSelectedValue(filter.id)}
             />
           ))}
@@ -114,7 +114,7 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
           </aside>
 
           {/* Main content */}
-          <main className="flex-1 px-5 pb-0 pt-0">
+          <main className="flex-1 px-2 pb-0 pt-0">
             <BreadCrumbs
               mainCategory={mainCategory}
               subCategory={subCategory}

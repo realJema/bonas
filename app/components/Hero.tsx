@@ -70,7 +70,7 @@ const Hero = ({ username }: Props) => {
   return (
     <section className="hero mt-16 md:mt-24 xl:mt-16 h-full py-10 rounded-2xl text-white">
       <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8 px-8">
-        Welcome to Fiverr {username && <span>, {formatUsername(username)} 🎉</span>}
+        Welcome to Bonas {username && <span>, {formatUsername(username)} 🎉</span>}
       </h1>
 
       <div className="hidden xl:flex items-center gap-4 w-full px-8">

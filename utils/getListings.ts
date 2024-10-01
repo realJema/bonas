@@ -112,7 +112,7 @@ const getCachedListings = unstable_cache(
     }
   },
   ["listings"],
-  { revalidate: 600, tags: ["listings"] }
+  { revalidate: 300, tags: ["listings"] }
 );
 
 export async function getListings(

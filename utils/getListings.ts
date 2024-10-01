@@ -1,4 +1,4 @@
-
+import { unstable_cache } from 'next/cache';
 import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { Image } from "@prisma/client";
@@ -36,7 +36,8 @@ interface GetListingsResult {
 }
 
 
-export async function getListings({
+const getCachedListings = unstable_cache(
+  async ({
   mainCategory,
   subCategory,
   subSubCategory,
@@ -46,7 +47,7 @@ export async function getListings({
   datePosted,
   minPrice,
   maxPrice,
-}: GetListingsParams): Promise<GetListingsResult> {
+}: GetListingsParams): Promise<GetListingsResult> => {
   try {
     const whereClause: any = {};
 
@@ -110,6 +111,15 @@ export async function getListings({
     console.error("Error fetching listings:", error);
     return { listings: [], totalCount: 0 };
   }
+  },
+  ['listings'],
+  { revalidate: 300, tags: ['listings'] }
+);
+
+export async function getListings(
+  params: GetListingsParams
+): Promise<GetListingsResult> {
+  return getCachedListings(params);
 }
 
 // Helper function to get category IDs based on provided category parameters

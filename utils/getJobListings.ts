@@ -4,7 +4,7 @@ export const maxDuration = 60;
 
 export async function getJobListings() {
   "use server";
-  // Use the general getListings function to fetch job listings
+  // Using the general getListings function to fetch job listings
   const { listings } = await getListings({
     mainCategory: "Jobs",
     page: 1,

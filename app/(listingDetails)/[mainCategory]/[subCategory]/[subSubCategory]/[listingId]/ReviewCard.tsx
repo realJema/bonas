@@ -35,7 +35,7 @@ const ReviewCard = ({
   comment,
 }: ReviewCardProps) => {
   return (
-   <div className="w-full bg-white rounded-lg p-4 sm:p-6 mb-4 border border-gray-200 shadow-sm transition-shadow duration-300 hover:shadow-md">
+   <div className="w-full bg-white rounded-lg p-4 sm:p-6 mb-4 border border-gray-50">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex items-center mb-2 sm:mb-0">
           <div className="w-10 h-10 rounded-full bg-amber-700 flex items-center justify-center text-white font-bold text-lg mr-3 flex-shrink-0">

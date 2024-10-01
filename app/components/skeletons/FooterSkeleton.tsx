@@ -21,10 +21,6 @@ const FooterSkeleton = () => {
       </div>
       <div className="pt-5 mt-5 border-t border-gray-200 dark:border-neutral-700">
         <div className="sm:flex sm:justify-between sm:items-center">
-          <div className="flex items-center gap-x-3">
-            <Skeleton width={40} height={40} />
-            <Skeleton width={200} height={20} />
-          </div>
           <div className="pt-5 mt-5 border-t border-gray-200 dark:border-neutral-700">
             <div className="sm:flex sm:justify-between sm:items-center">
               <div className="flex items-center gap-x-3">

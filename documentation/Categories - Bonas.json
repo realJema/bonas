@@ -1,0 +1,265 @@
+{
+  "categories": [
+    {
+      "name": "Vehicles",
+      "subcategories": {
+        "Cars & Motorbikes": [
+          "Cars",
+          "Motorbikes",
+          "Bicycles",
+          "Scooters"
+        ],
+        "Commercial Vehicles": [
+          "Trucks",
+          "Vans",
+          "Heavy Machinery",
+          "Commercial Vehicles"
+        ],
+        "Auto Services & Parts": [
+          "Auto Parts & Accessories",
+          "Car Rentals",
+          "Car Services",
+          "Boat & Marine"
+        ]
+      }
+    },
+    {
+      "name": "Real Estate",
+      "subcategories": {
+        "Property Types": [
+          "For Sale",
+          "For Rent",
+          "Holiday Rentals",
+          "Shared Accommodations"
+        ],
+        "Commercial & Land": [
+          "Commercial Property",
+          "Land & Plots",
+          "Agricultural Land",
+          "Off-Grid Properties"
+        ],
+        "Services": [
+          "Real Estate Agents",
+          "Property Management",
+          "Landscaping Services",
+          "Interior Design"
+        ]
+      }
+    },
+    {
+      "name": "Jobs",
+      "subcategories": {
+        "Job Types": [
+          "Full-Time",
+          "Part-Time",
+          "Freelance",
+          "Internships",
+          "Volunteer",
+          "Remote",
+          "Temporary Positions"
+        ],
+        "Job Support": [
+          "Job Seekers",
+          "Recruitment Agencies",
+          "Career Counseling",
+          "Interview Preparation",
+          "Skill Development",
+          "Networking Events",
+          "Job Fairs"
+        ],
+        "Special Categories": [
+          "Government Jobs",
+          "Educational Institutions",
+          "Professional Certifications",
+          "Freelance Opportunities"
+        ]
+      }
+    },
+    {
+      "name": "Electronics",
+      "subcategories": {
+        "Mobile & Computing": [
+          "Mobile Phones",
+          "Laptops & Computers",
+          "Smart Watches",
+          "Wearable Tech"
+        ],
+        "Home & Entertainment": [
+          "Home Appliances",
+          "Televisions",
+          "Audio & Headphones",
+          "Gaming Consoles"
+        ],
+        "Energy & Accessories": [
+          "Generators & Inverters",
+          "Solar Panels",
+          "Camera Accessories",
+          "Audio Accessories"
+        ]
+      }
+    },
+    {
+      "name": "Fashion",
+      "subcategories": {
+        "Clothing": [
+          "Men's Clothing",
+          "Women's Clothing",
+          "Vintage Clothing",
+          "Custom Clothing"
+        ],
+        "Footwear & Accessories": [
+          "Footwear",
+          "Bags & Purses",
+          "Jewelry",
+          "Watches"
+        ],
+        "Specialty Wear": [
+          "Traditional Wear",
+          "Bridal Wear",
+          "Sportswear",
+          "Uniforms"
+        ]
+      }
+    },
+    {
+      "name": "Home & Garden",
+      "subcategories": {
+        "Furniture & Decor": [
+          "Furniture",
+          "Home Decor",
+          "Bedding & Linens",
+          "Outdoor Furniture"
+        ],
+        "Appliances & Tools": [
+          "Kitchen Appliances",
+          "Garden Tools",
+          "DIY Materials",
+          "Home Improvement"
+        ],
+        "Services": [
+          "Appliance Repair",
+          "Landscaping Services",
+          "Interior Design",
+          "Home Repairs"
+        ]
+      }
+    },
+    {
+      "name": "Services",
+      "subcategories": {
+        "Household Services": [
+          "Cleaning Services",
+          "Construction & Renovation",
+          "Home Repairs",
+          "Gardening"
+        ],
+        "Professional Services": [
+          "Event Planning",
+          "Tutoring",
+          "Beauty Services",
+          "Legal Services",
+          "Accounting & Tax Services"
+        ],
+        "Technical & Travel": [
+          "IT Support",
+          "Transportation",
+          "Travel & Tourism",
+          "Health & Wellness"
+        ]
+      }
+    },
+    {
+      "name": "Pets",
+      "subcategories": {
+        "Pet Types": [
+          "Dogs",
+          "Cats",
+          "Birds",
+          "Fish",
+          "Small Animals"
+        ],
+        "Pet Care": [
+          "Pet Supplies",
+          "Pet Services",
+          "Pet Adoption",
+          "Pet Training"
+        ],
+        "Pet Support": [
+          "Pet Boarding",
+          "Veterinary Services",
+          "Pet Grooming",
+          "Pet Insurance"
+        ]
+      }
+    },
+    {
+      "name": "Hobbies & Leisure",
+      "subcategories": {
+        "Sports & Fitness": [
+          "Sports Equipment",
+          "Fitness Equipment",
+          "Outdoor Activities",
+          "DIY Projects"
+        ],
+        "Creative Arts": [
+          "Books",
+          "Musical Instruments",
+          "Art Supplies",
+          "Photography"
+        ],
+        "Entertainment": [
+          "Collectibles",
+          "Gaming",
+          "Travel & Experiences",
+          "Gardening"
+        ]
+      }
+    },
+    {
+      "name": "Business & Industrial",
+      "subcategories": {
+        "Business Assets": [
+          "For Sale",
+          "Equipment",
+          "Machinery",
+          "Raw Materials"
+        ],
+        "Office & Supplies": [
+          "Office Supplies",
+          "Commercial Vehicles",
+          "Industrial Supplies",
+          "Wholesale"
+        ],
+        "Services & Opportunities": [
+          "Business Services",
+          "Franchise Opportunities",
+          "Supply Chain Services",
+          "Business Consulting"
+        ]
+      }
+    },
+    {
+      "name": "Job Seekers",
+      "subcategories": {
+        "Career Tools": [
+          "Resumes & CVs",
+          "Career Counseling",
+          "Interview Preparation",
+          "Skill Development"
+        ],
+        "Networking & Events": [
+          "Networking Events",
+          "Job Fairs",
+          "Workshops & Seminars",
+          "Mentorship Programs"
+        ],
+        "Additional Support": [
+          "Freelance Opportunities",
+          "Professional Certifications",
+          "Job Listings",
+          "Freelance Projects"
+        ]
+      }
+    }
+  ]
+}

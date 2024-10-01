@@ -25,6 +25,7 @@ import { Listing, Category, User } from "@prisma/client";
 import { ExtendedListing } from "../entities/ExtendedListing";
 import { formatPrice, formatDatePosted } from "@/utils/formatUtils";
 import { buildListingUrl } from "@/utils/categoryUtils";
+import { MapPinIcon } from "lucide-react";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 // Define SlideItem type
@@ -204,7 +205,7 @@ const ItemCard = ({
         </div>
       </CarouselProvider>
       <Link href={buildListingUrl(listing)}>
-        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-40 rounded-sm">
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-48 rounded-sm">
           <div className="flex items-center justify-between">
             <div className="flex gap-1 items-center">
               <Image
@@ -223,12 +224,14 @@ const ItemCard = ({
               {formatDatePosted(listing.createdAt)}
             </span>
           </div>
-          <h1 className="hover:underline px-1.5 py-0.5">
-            {listing?.title}
-          </h1>
+          <h2 className="hover:underline px-1.5 py-0.5">{listing?.title}</h2>
+          <div className="flex items-center text-xs text-gray-600 mt-1 px-1.5 py-0.5">
+            <MapPinIcon className="w-3 h-3 mr-1" />
+            <span className="truncate">{listing.location}</span>
+          </div>
           <div className="font-bold flex items-center gap-2 px-1 py-0.5">
             <svg
-              className="flex-shrink-0 w-5 h-5 inline-block"
+              className="flex-shrink-0 w-4 h-4 inline-block"
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"

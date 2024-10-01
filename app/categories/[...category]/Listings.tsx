@@ -5,6 +5,7 @@ import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { generateSlides } from "@/lib/generateSlides";
 import { getListings } from "@/utils/getListings";
 import SkeletonCard from "./SkeletonCard";
+import Hero from "./Hero";
 
 interface Props {
   mainCategory: string;
@@ -47,13 +48,15 @@ const Listings = async ({
 
   return (
     <>
-      <p className="text-lg text-gray-500 mt-4">
-        {/* description of listing category will go here */}
-      </p>
+      <h2 className="font-medium text-gray-500">
+        {totalCount} {totalCount === 1 ? "listing" : "listings"} found
+      </h2>
+
+      <Hero />
 
       {listings.length === 0 ? (
         <div className="mt-10 text-center text-gray-500 text-xl">
-          0 Results found
+          No listings found matching your criteria.
         </div>
       ) : (
         <>

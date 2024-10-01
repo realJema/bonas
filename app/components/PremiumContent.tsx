@@ -100,7 +100,7 @@ const PremiumContent = ({
         </div>
       </div>
       <div className="flex gap-5">
-        <div className="w-[265px] min-w-[250px] mt-7">
+        <div className="w-[265px] min-w-[240px] mt-7">
           <div className="col-span-3 flex flex-col gap-3">
             {categories.map((category) => (
               <CategorySelectionItem
@@ -122,7 +122,7 @@ const PremiumContent = ({
               <CustomSwiper
                 data={listings}
                 renderItem={(listing: ExtendedListing) => (
-                  <div className="w-[230px]">
+                  <div className="w-[235px]">
                     <ItemCard
                       listing={listing}
                       slides={generateSlides(listing)}

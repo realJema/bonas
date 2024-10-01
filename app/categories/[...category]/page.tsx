@@ -120,9 +120,7 @@ const CategoryPage = ({ params: { category }, searchParams }: Props) => {
               subCategory={subCategory}
               subSubCategory={subSubCategory}
             />
-
-            <Hero />
-
+            
             {/* listings */}
               <Listings
                 mainCategory={mainCategory}

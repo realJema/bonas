@@ -29,7 +29,6 @@ export const metadata: Metadata = {
     description:
       "Connect with buyers and sellers for the best deals in Cameroon. Explore jobs, housing, cars, services, and more!",
   },
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
 };
 

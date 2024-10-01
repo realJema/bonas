@@ -51,28 +51,39 @@ const Listings = async ({
         {/* description of listing category will go here */}
       </p>
 
-      <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Suspense
-          fallback={[...Array(pageSize)].map((_, index) => (
-            <SkeletonCard key={index} />
-          ))}
-        >
-          {listings.map((listing, index) => (
-            <div key={index} className="mt-6">
-              <ItemCard listing={listing} slides={generateSlides(listing)} />
-            </div>
-          ))}
-        </Suspense>
-      </div>
-      <div className="mt-20">
-        {totalCount > pageSize && (
-          <Pagination
-            itemCount={totalCount}
-            pageSize={pageSize}
-            currentPage={page}
-          />
-        )}
-      </div>
+      {listings.length === 0 ? (
+        <div className="mt-10 text-center text-gray-500 text-xl">
+          0 Results found
+        </div>
+      ) : (
+        <>
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Suspense
+              fallback={[...Array(pageSize)].map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            >
+              {listings.map((listing, index) => (
+                <div key={index} className="mt-6">
+                  <ItemCard
+                    listing={listing}
+                    slides={generateSlides(listing)}
+                  />
+                </div>
+              ))}
+            </Suspense>
+          </div>
+          <div className="mt-20">
+            {totalCount > pageSize && (
+              <Pagination
+                itemCount={totalCount}
+                pageSize={pageSize}
+                currentPage={page}
+              />
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 };

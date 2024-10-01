@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow } from "date-fns";
+import {  format, formatDistanceToNow, parseISO  } from "date-fns";
 
 export function formatPrice(price: string | number): string {
   const numPrice = typeof price === "string" ? parseFloat(price) : price;
@@ -11,7 +11,23 @@ export function formatPrice(price: string | number): string {
   }).format(roundedPrice);
 }
 
-export function formatDatePosted(date: Date): string {
+export function formatDatePosted(dateInput: Date | string | number): string {
+  let date: Date;
+
+  if (typeof dateInput === "string") {
+    // If it's an ISO string, parse it
+    date = parseISO(dateInput);
+  } else if (typeof dateInput === "number") {
+    // If it's a timestamp, create a new Date
+    date = new Date(dateInput);
+  } else if (dateInput instanceof Date) {
+    // If it's already a Date object, use it as is
+    date = dateInput;
+  } else {
+    // If it's none of the above, return an error message
+    return "Invalid date";
+  }
+
   const now = new Date();
   const diffInDays = Math.floor(
     (now.getTime() - date.getTime()) / (1000 * 3600 * 24)

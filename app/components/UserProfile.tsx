@@ -1,8 +1,5 @@
-// components/UserProfile.tsx
-"use client";
-
+'use client'
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Session } from "next-auth";
 import {
@@ -16,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
+import { formatUsername } from "@/utils/formatUsername";
 
 interface UserProfileProps {
   session: Session | null;
@@ -26,9 +24,31 @@ export function UserProfile({ session }: UserProfileProps) {
 
   if (!session?.user) return null;
 
-    const handleSignOut = async () => {
-      await signOut({ callbackUrl: "/" });
-    };
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
+
+  const formattedUsername = formatUsername(session.user.name);
+
+  const menuItems = [
+    {
+      label: "Profile",
+      href: `profile/${formattedUsername}`,
+      disabled: false,
+    },
+    { label: "Dashboard", href: "#", disabled: true },
+    { label: "Post a Request", href: "#", disabled: false },
+    { label: "Refer a Friend", href: "#", disabled: true },
+    {
+      label: "Settings",
+      href: `/profile/${formattedUsername}/settings`,
+      disabled: false,
+    },
+    { label: "Billing and payments", href: "#", disabled: true },
+    { label: "English", href: "#", disabled: false },
+    { label: "$ USD", href: "#", disabled: false },
+    { label: "Help & support", href: "#", disabled: false },
+  ];
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -60,39 +80,24 @@ export function UserProfile({ session }: UserProfileProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {["Profile", "Dashboard", "Post a Request", "Refer a Friend"].map(
-            (item) => (
-              <DropdownMenuItem key={item} asChild>
-                <Link
-                  href="#"
-                  className={
-                    item === "Refer a Friend"
-                      ? "text-green-500 cursor-pointer"
-                      : "cursor-pointer"
+          {menuItems.map((item) => (
+            <DropdownMenuItem key={item.label} asChild>
+              <Link
+                href={item.href}
+                className={`${
+                  item.disabled
+                    ? "cursor-text opacity-50"
+                    : item.label === "Refer a Friend"
+                    ? "text-green-500 cursor-pointer"
+                    : "cursor-pointer"
+                }`}
+                onClick={(e) => {
+                  if (item.disabled) {
+                    e.preventDefault();
                   }
-                >
-                  {item}
-                </Link>
-              </DropdownMenuItem>
-            )
-          )}
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {["Settings", "Billing and payments"].map((item) => (
-            <DropdownMenuItem key={item} asChild>
-              <Link className="cursor-pointer" href="#">
-                {item}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {["English", "$ USD", "Help & support"].map((item) => (
-            <DropdownMenuItem key={item} asChild>
-              <Link className="cursor-pointer" href="#">
-                {item}
+                }}
+              >
+                {item.label}
               </Link>
             </DropdownMenuItem>
           ))}

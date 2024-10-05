@@ -1,4 +1,3 @@
-import React from "react";
 import { auth } from "@/auth";
 
 const SettingsPage = async () => {

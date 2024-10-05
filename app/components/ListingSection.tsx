@@ -77,6 +77,7 @@ const ListingSection = ({
                   <ItemCard
                     listing={listing}
                     slides={generateSlides(listing)}
+                    titleAlign=''
                   />
                 </div>
               </div>

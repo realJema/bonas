@@ -54,8 +54,6 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
             reset()
             // onClose();
           } else {
-            // If no error or success message, assume successful login
-            // toast.success("You have been successfully logged in!");
             onClose();
             router.refresh();
           }
@@ -80,7 +78,7 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] h-[550px] md:max-w-4xl p-0">
+      <DialogContent className="sm:max-w-[500px] h-[600px] md:h-[650px] md:max-w-4xl xl:h-[700px] xl:max-w-5xl p-0 border-none">
         <div className="grid md:grid-cols-2">
           <ModalDescription />
           <div className="p-4 sm:p-7">
@@ -112,7 +110,7 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
 
             <div className="mt-5 space-y-6">
               {!showEmailForm ? (
-                <>
+                <div>
                   <Button
                     onClick={handleGoogleSignIn}
                     variant="outline"
@@ -161,7 +159,7 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
                   >
                     Continue with Email/Username
                   </Button>
-                </>
+                </div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="space-y-4">

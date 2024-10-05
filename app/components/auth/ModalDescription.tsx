@@ -1,7 +1,7 @@
 
 const ModalDescription = () => {
   return (
-    <div className="signinBg p-6 hidden md:block">
+    <div className="signinBg p-6 hidden md:block rounded-s-md">
       <h2 className="text-white text-3xl font-bold">Success starts here</h2>
       <div className="flex-col space-y-6 mt-7">
         {[

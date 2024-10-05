@@ -48,9 +48,11 @@ const Listings = async ({
 
   return (
     <>
-      <h2 className="font-medium text-gray-500">
-        {totalCount} {totalCount === 1 ? "listing" : "listings"} found
-      </h2>
+      {totalCount > 0 && (
+        <h2 className="font-medium text-gray-500">
+          {totalCount} {totalCount === 1 ? "listing" : "listings"} found
+        </h2>
+      )}
 
       <Hero />
 

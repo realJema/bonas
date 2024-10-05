@@ -17,7 +17,7 @@ export const register = async (data: FormData) => {
     return { error: "Invalid data" };
   }
 
-  const { email, password, name } = validatedFields.data;
+  const { email, password, name ,username } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
@@ -30,6 +30,7 @@ export const register = async (data: FormData) => {
     data: {
       name,
       email,
+      username,
       passwordHash: hashedPassword,
     },
   });

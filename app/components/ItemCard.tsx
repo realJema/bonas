@@ -42,6 +42,7 @@ interface Item {
   Badge?: ComponentType;
   offersVideo?: boolean;
   width?: string;
+  titleAlign?: string;
 }
 
 const ItemCard = ({
@@ -50,6 +51,7 @@ const ItemCard = ({
   Badge,
   offersVideo,
   width = "240px",
+  titleAlign = "",
 }: Item) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -205,7 +207,7 @@ const ItemCard = ({
         </div>
       </CarouselProvider>
       <Link href={buildListingUrl(listing)}>
-        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-48 rounded-sm">
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-44 rounded-sm">
           <div className="flex items-center justify-between">
             <div className="flex gap-1 items-center">
               <Image
@@ -224,7 +226,9 @@ const ItemCard = ({
               {formatDatePosted(listing.createdAt)}
             </span>
           </div>
-          <h2 className="hover:underline px-1.5 py-0.5">{listing?.title}</h2>
+          <h2 className={`hover:underline px-1.5 py-0.5 text-sm ${titleAlign}`}>
+            {listing?.title}
+          </h2>
           <div className="flex items-center text-xs text-gray-600 mt-1 px-1.5 py-0.5">
             <MapPinIcon className="w-3 h-3 mr-1" />
             <span className="truncate">{listing.location}</span>

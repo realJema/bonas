@@ -64,7 +64,7 @@ const AccountConfirmationContent = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-green-50 to-white">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white">
         <Progress.Root
           className="relative overflow-hidden bg-gray-200 rounded-full w-56 h-6"
           style={{ transform: "translateZ(0)" }}

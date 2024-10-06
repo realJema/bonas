@@ -27,7 +27,7 @@ const Header = ({ username }: Props) => {
   };
 
   return (
-    <header className="hidden border-b xl:px-0 md:block py-3 px-8">
+    <header className="hidden border-b xl:px-0 md:block py-3 px-8 bg-white">
       <div className="md:flex justify-between items-center container mx-auto px-5 md:px-8 md:max-w-7xl">
         <div className="flex space-x-6">
           {navLinks.map((link) => (

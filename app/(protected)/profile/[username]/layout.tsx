@@ -6,9 +6,7 @@ const ProfilePageLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Navbar displayHeader="hidden" />
-      <main>
-        {children}
-      </main>
+      <main className="bg-[#f7f7f7]">{children}</main>
       <Footer />
     </>
   );

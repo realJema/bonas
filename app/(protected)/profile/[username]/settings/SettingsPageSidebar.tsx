@@ -34,7 +34,7 @@ const SettingsPageSidebar = ({ username }: Props) => {
 
   return (
       <aside className="w-full md:w-60 md:min-h-screen border-b border-gray-200">
-        <nav className="sticky top-0 p-4">
+        <nav className="p-4">
           {settingsLinks.map((link) => (
             <Link
               key={link.href}

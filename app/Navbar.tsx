@@ -10,9 +10,12 @@ import SearchInput from "./components/SearchInput";
 import Sidebar from "./components/Sidebar";
 import { UserProfile } from "./components/UserProfile";
 
-const Navbar = async () => {
-  const session = await auth();
+interface Props {
+  displayHeader?: string
+}
 
+const Navbar = async ({displayHeader }:Props) => {
+  const session = await auth();
 
   return (
     <header className="border-b h-16 bg-white w-full">
@@ -94,7 +97,9 @@ const Navbar = async () => {
         </div>
       </nav>
 
-      <Header />
+      <div className={`${displayHeader}`}>
+        <Header />
+      </div>
     </header>
   );
 };

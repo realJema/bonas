@@ -48,7 +48,7 @@ const Header = ({ username }: Props) => {
         </div>
         <Button
           size="lg"
-          className="text-white rounded-md bg-green-500 hover:bg-green-500 transition-colors hover:opacity-75"
+          className="text-white rounded-md bg-green-500 hover:bg-green-500 transition-colors hover:opacity-75 px-4"
         >
           Start Selling
         </Button>

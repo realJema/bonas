@@ -8,7 +8,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   const formattedUsername = formatUsername(session!.user!.name);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen container mx-auto md:max-w-7xl">
+    <div className="flex flex-col lg:flex-row min-h-screen">
       <SettingsPageSidebar username={formattedUsername} />
       <main className="flex-grow">{children}</main>
     </div>

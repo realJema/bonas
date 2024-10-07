@@ -33,14 +33,14 @@ const SettingsPageSidebar = ({ username }: Props) => {
   const isActive = (path: string) => pathname === path;
 
   return (
-      <aside className="w-full md:w-60 md:min-h-screen border-b border-gray-200">
+      <aside className="w-full sm:w-60 lg:w-60 lg:min-h-screen border-b border-gray-200">
         <nav className="p-4">
           {settingsLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={classNames(
-                "block py-2 px-4 rounded transition-colors hover:bg-gray-100 text-base hover:text-black",
+                "block py-2 px-4 rounded transition-colors hover:bg-gray-100 text-base hover:text-black text-nowrap",
                 {
                   "text-black font-semibold": isActive(link.href),
                   "text-[#999999] font-medium": !isActive(link.href),

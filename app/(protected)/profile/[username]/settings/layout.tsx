@@ -10,7 +10,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   return (
     <>
       <Header username={formattedUsername} />
-      <main className="container mx-auto px-4 md:px-0 md:max-w-7xl">
+      <main className="container mx-auto px-0 md:px-0 md:max-w-7xl">
         {children}
       </main>
     </>

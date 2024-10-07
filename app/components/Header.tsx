@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { CategoryWithChildren, useCategoryStore } from "../store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,7 +9,11 @@ import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
 import HeaderSkeleton from "./skeletons/HeaderSkeleton";
 
-const Header = () => {
+interface Props {
+  className?: string;
+}
+
+const Header = ({ className }: Props) => {
   const router = useRouter();
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
@@ -39,7 +44,6 @@ const Header = () => {
     },
     staleTime: 1000 * 60 * 60,
   });
-
 
   useEffect(() => {
     const checkScroll = () => {
@@ -97,7 +101,7 @@ const Header = () => {
   // console.log("fetched categories: ", categories);
 
   return (
-    <header className="hidden md:block border-b xl:px-0 relative">
+    <header className="hidden md:block border-b xl:px-0 relative bg-white">
       <div className="hidden sm:block container mx-auto md:max-w-7xl relative">
         <div className="relative">
           {showLeftArrow && (

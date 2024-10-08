@@ -48,7 +48,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
 
       {/* Right Column (Form) */}
       <div className="w-full md:w-2/3">
-        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[600px]">
+        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[700px]">
           <div className="flex-grow space-y-8">
             <div>
               <label htmlFor="timeline" className="block font-bold mb-2 text-black text-lg">
@@ -80,26 +80,26 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
               </p>
               <div className="relative mt-1 rounded-md shadow-sm">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="text-gray-500 sm:text-sm">$</span>
+                  <span className="text-gray-500 sm:text-sm">XAF</span>
                 </div>
                 <input
                   type="text"
                   name="budget"
                   id="budget"
-                  className="block w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="0.00"
+                  className="block w-full rounded-md border-0 py-1.5 pl-12 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="0"
                   aria-describedby="price-currency"
                   value={budget}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (/^\d*\.?\d{0,2}$/.test(value) || value === '') {
+                    if (/^\d*$/.test(value) || value === '') {
                       setBudget(value);
                     }
                   }}
                   required
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span className="text-gray-500 sm:text-sm" id="price-currency">USD</span>
+                  <span className="text-gray-500 sm:text-sm" id="price-currency">XAF</span>
                 </div>
               </div>
             </div>

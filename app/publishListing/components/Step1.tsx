@@ -47,7 +47,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
 
       {/* Right Column (Form) */}
       <div className="w-full md:w-2/3">
-        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[600px]">
+        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[700px]">
           <div className="flex-grow space-y-8">
             <div>
               <label htmlFor="title" className="block font-bold mb-2 text-black text-lg">
@@ -80,9 +80,9 @@ export default function Step1({ onContinue, formData }: Step1Props) {
               <div className="relative">
                 <textarea
                   id="description"
-                  className="w-full border rounded-md p-2 h-32 text-black bg-gray-200"
+                  className="w-full border rounded-md p-2 h-64 text-black bg-gray-200"
                   placeholder="I need…"
-                  maxLength={2000}
+                  maxLength={5000}
                   required
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}

@@ -1,48 +1,74 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 interface Step2Props {
-  onContinue: (data: { category: string; address: string; town: string; tags: string[] }) => void;
+  onContinue: (data: { category: string; subcategories: string[]; address: string; town: string }) => void;
   onBack: () => void;
   formData: {
     category?: string;
+    subcategories?: string[];
     address?: string;
     town?: string;
-    tags?: string[];
   };
+}
+
+interface CategoryWithChildren {
+  id: string;
+  name: string;
+  children: {
+    id: string;
+    name: string;
+  }[];
 }
 
 export default function Step2({ onContinue, onBack, formData }: Step2Props) {
   const [category, setCategory] = useState<string>(formData.category || '');
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(formData.subcategories || []);
   const [address, setAddress] = useState<string>(formData.address || '');
   const [town, setTown] = useState<string>(formData.town || '');
-  const [selectedTags, setSelectedTags] = useState<string[]>(formData.tags || []);
+
+  const { isLoading, error, data: categories } = useQuery<CategoryWithChildren[], Error>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get<CategoryWithChildren[]>("/api/categories");
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(
+            `Failed to fetch categories: ${
+              error.response?.data?.error || error.message
+            }`
+          );
+        }
+        throw error;
+      }
+    },
+    staleTime: 1000 * 60 * 60, // 1 hour
+  });
 
   useEffect(() => {
     setCategory(formData.category || '');
+    setSelectedSubcategories(formData.subcategories || []);
     setAddress(formData.address || '');
     setTown(formData.town || '');
-    setSelectedTags(formData.tags || []);
   }, [formData]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onContinue({ category, address, town, tags: selectedTags });
+    onContinue({ category, subcategories: selectedSubcategories, address, town });
   };
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+  const toggleSubcategory = (subcategoryName: string) => {
+    setSelectedSubcategories(prev => 
+      prev.includes(subcategoryName)
+        ? prev.filter(name => name !== subcategoryName)
+        : [...prev, subcategoryName]
     );
   };
 
-  const categoryTags = {
-    'Web Development': ['Frontend', 'Backend', 'Full Stack', 'WordPress', 'E-commerce', 'React', 'Node.js', 'Angular', 'Vue.js', 'PHP', 'Python', 'Java', 'Ruby on Rails', 'ASP.NET', 'Database Design', 'API Development', 'Mobile Web'],
-    'Graphic Design': ['Logo Design', 'Branding', 'Illustration', 'UI/UX', 'Print Design', 'Packaging', 'Web Design', 'Icon Design', 'Infographics', 'Social Media Graphics', 'Album Cover Art', 'T-shirt Design', 'Banner Ads', 'Photo Editing', '3D Modeling'],
-    'Writing': ['Content Writing', 'Copywriting', 'Technical Writing', 'Creative Writing', 'Editing', 'Proofreading', 'Blog Posts', 'Article Writing', 'SEO Writing', 'Scriptwriting', 'Grant Writing', 'Resume Writing', 'Product Descriptions', 'Academic Writing', 'Ghostwriting'],
-    'Digital Marketing': ['SEO', 'Social Media Marketing', 'Content Marketing', 'Email Marketing', 'PPC Advertising', 'Influencer Marketing', 'Analytics', 'Marketing Strategy', 'Brand Management', 'Affiliate Marketing', 'Video Marketing', 'Mobile Marketing'],
-    'Video & Animation': ['Video Editing', 'Motion Graphics', '2D Animation', '3D Animation', 'Whiteboard Videos', 'Video Production', 'Visual Effects', 'Animated GIFs', 'Subtitles & Captions', 'Intro & Outro Videos', 'Character Animation'],
-    'Music & Audio': ['Voice Over', 'Mixing & Mastering', 'Music Composition', 'Sound Design', 'Podcast Editing', 'Jingles & Intros', 'Audio Editing', 'Singer-Songwriters', 'Sound Effects', 'Audio Branding'],
-  };
+  const selectedCategory = categories?.find(cat => cat.name === category);
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -72,7 +98,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
 
       {/* Right Column (Form) */}
       <div className="w-full md:w-2/3">
-        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[600px]">
+        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[700px]">
           <div className="flex-grow space-y-8">
             <div>
               <label htmlFor="category" className="block font-bold mb-2 text-black text-lg">
@@ -88,36 +114,45 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                 value={category}
                 onChange={(e) => {
                   setCategory(e.target.value);
-                  setSelectedTags([]);
+                  setSelectedSubcategories([]);
                 }}
               >
                 <option value="">Select a category</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Graphic Design">Graphic Design</option>
-                <option value="Writing">Writing</option>
-                {/* Add more options as needed */}
+                {isLoading ? (
+                  <option value="" disabled>Loading categories...</option>
+                ) : error ? (
+                  <option value="" disabled>Error loading categories</option>
+                ) : categories && categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>No categories available</option>
+                )}
               </select>
             </div>
 
-            {category && (
+            {selectedCategory && (
               <div>
-                <label className="block font-bold mb-2 text-black text-lg">Tags</label>
+                <label className="block font-bold mb-2 text-black text-lg">Subcategories</label>
                 <p className="text-sm text-gray-600 mb-2">
-                  Select tags that are relevant to your project.
+                  Select subcategories that are relevant to your project.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {categoryTags[category].map((tag: string) => (
+                  {selectedCategory.children.map((subcategory) => (
                     <button
-                      key={tag}
+                      key={subcategory.id}
                       type="button"
                       className={`px-3 py-1 rounded-full text-sm ${
-                        selectedTags.includes(tag)
+                        selectedSubcategories.includes(subcategory.name)
                           ? 'bg-blue-500 text-white'
                           : 'bg-gray-200 text-black'
                       }`}
-                      onClick={() => toggleTag(tag)}
+                      onClick={() => toggleSubcategory(subcategory.name)}
                     >
-                      {tag}
+                      {subcategory.name}
                     </button>
                   ))}
                 </div>

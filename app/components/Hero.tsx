@@ -6,6 +6,8 @@ import { Swiper as SwiperType } from "swiper";
 import HeroLink, { HeroLinkProps } from "./HeroLink";
 import HeroSwiper from "./swiper/HeroSwipper";
 import Navigation from "./swiper/Navigation";
+import Image from "next/image";
+import backgroundImage from "@/public/Banner-Desktop.webp";
 
 const heroLinksData: HeroLinkProps[] = [
   {
@@ -68,31 +70,47 @@ const Hero = ({ username }: Props) => {
   }, [swiper]);
 
   return (
-    <section className="hero mt-16 md:mt-24 xl:mt-16 h-full py-10 rounded-2xl text-white">
-      <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8 px-8">
-        Welcome to Bonas {username && <span>, {formatUsername(username)} 🎉</span>}
-      </h1>
+    <section className="hero mt-16 md:mt-24 xl:mt-16 h-full py-10 rounded-2xl text-white relative">
+      <Image
+        alt="Hero background"
+        src={backgroundImage}
+        placeholder="blur"
+        quality={100}
+        fill
+        sizes="100vw"
+        style={{
+          objectFit: "cover",
+          zIndex: -1,
+          borderRadius: "1rem",
+        }}
+      />
+      <div className="relative z-10">
+        <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8 px-8">
+          Welcome to Bonas{" "}
+          {username && <span>, {formatUsername(username)} 🎉</span>}
+        </h1>
 
-      <div className="hidden xl:flex items-center gap-4 w-full px-8">
-        {heroLinksData.map((linkData, index) => (
-          <HeroLink
-            className="bg-green-50 bg-opacity-20"
-            key={index}
-            {...linkData}
-          />
-        ))}
-      </div>
-      <div className="xl:hidden px-4 md:px-8">
-        <div className="flex justify-end mb-2.5">
-          <Navigation
-            bg="gray-100"
-            onNext={handleNext}
-            onPrev={handlePrev}
-            isBeginning={isBeginning}
-            isEnd={isEnd}
-          />
+        <div className="hidden xl:flex items-center gap-4 w-full px-8">
+          {heroLinksData.map((linkData, index) => (
+            <HeroLink
+              className="bg-green-50 bg-opacity-20"
+              key={index}
+              {...linkData}
+            />
+          ))}
         </div>
-        <HeroSwiper onSwiper={handleSwiper} slides={heroLinksData} />
+        <div className="xl:hidden px-4 md:px-8">
+          <div className="flex justify-end mb-2.5">
+            <Navigation
+              bg="gray-100"
+              onNext={handleNext}
+              onPrev={handlePrev}
+              isBeginning={isBeginning}
+              isEnd={isEnd}
+            />
+          </div>
+          <HeroSwiper onSwiper={handleSwiper} slides={heroLinksData} />
+        </div>
       </div>
     </section>
   );

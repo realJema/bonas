@@ -25,6 +25,7 @@ export const authRoutes = [
   "/profile/:username/settings/edit/security",
   "/profile/:username/settings/edit/notifications",
   "/profile/:username/settings/edit/business-information",
+  "/user-profile/:username/:category",
 ];
 
 /**

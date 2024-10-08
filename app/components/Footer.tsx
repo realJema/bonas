@@ -134,7 +134,7 @@ const Footer = () => {
       </div>
       <div className="pt-5 mt-5 border-t border-gray-200 dark:border-neutral-700">
         <div className="sm:flex sm:justify-between sm:items-center">
-          <div className="flex items-center gap-x-3">
+          <div className="hidden sm:flex items-center gap-x-3">
             <div>
               <Logo />
             </div>
@@ -144,7 +144,7 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex-col space-y-3 sm:flex sm:justify-between items-center">
             <div className="mt-3 sm:hidden">
               <Logo />
 

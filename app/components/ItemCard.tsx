@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   HeartIcon,
   VideoCameraIcon,
@@ -217,9 +218,12 @@ const ItemCard = ({
                 height={27}
                 className="object-cover rounded-full"
               />
-              <span className="text-sm font-semibold text-opacity-85 hover:underline cursor-pointer">
+              <Link
+                href={`/user-profile/${listing.user.username}/${listing.category.name}`}
+                className="text-sm font-semibold text-opacity-85 hover:underline cursor-pointer"
+              >
                 {listing.user.name}
-              </span>
+              </Link>
             </div>
             {/* date posted */}
             <span className="text-sm text-gray-600">

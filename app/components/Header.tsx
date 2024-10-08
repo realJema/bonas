@@ -9,11 +9,8 @@ import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
 import HeaderSkeleton from "./skeletons/HeaderSkeleton";
 
-interface Props {
-  className?: string;
-}
 
-const Header = ({ className }: Props) => {
+const Header = () => {
   const router = useRouter();
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);

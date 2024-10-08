@@ -4,7 +4,6 @@ import ProfileCard from "./UserProfileCard";
 import LearnmoreCard from "./LearnMoreCard";
 import DescriptionCard from "./DescriptionCard";
 import Header from "@/app/components/Header";
-import CustomSpinner from "@/app/components/CustomSpinner";
 
 interface Props {
   params: { username: string };
@@ -16,7 +15,7 @@ const UserProfilePage = async ({ params: { username } }: Props) => {
   return (
     <>
       <Header />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 container mx-auto px-0 pt-6 md:px-0 md:max-w-7xl">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 container mx-auto px-4 pt-6 md:px-0 md:max-w-7xl">
         <div className="lg:col-span-1 space-y-6">
           <ProfileCard
             name={session?.user?.name || ""}

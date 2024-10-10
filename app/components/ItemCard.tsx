@@ -141,7 +141,7 @@ const ItemCard = ({
 
   return (
     <div
-      className={`${width} rounded-md z-30 ${isHovered ? "" : ""}`}
+      className={`${width} rounded-md z-20 bg-[#FFE0B3] ${isHovered ? "" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

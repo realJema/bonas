@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import Image from 'next/image';
 import { MapPin, User, Pencil } from 'lucide-react';

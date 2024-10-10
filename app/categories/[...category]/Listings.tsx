@@ -26,15 +26,6 @@ const Listings = async ({
   location,
   datePosted,
 }: Props) => {
-  // console.log("Listings component received props:", {
-  //   mainCategory,
-  //   subCategory,
-  //   subSubCategory,
-  //   page,
-  //   pageSize,
-  //   location,
-  //   datePosted,
-  // });
 
   const { listings, totalCount } = await getListings({
     mainCategory,

@@ -82,7 +82,7 @@ const ItemCard = ({
               src={item.url}
               fill
               className="rounded-md object-cover"
-              sizes="240px"
+              sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
             />
             <div className="absolute top-2 right-2">
               <HeartIcon className="h-7 w-7 text-white fill-gray-800" />

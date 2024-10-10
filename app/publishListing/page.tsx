@@ -6,20 +6,19 @@ import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
 import FinalStep from "./components/FinalStep";
 import SuccessPage from "./components/SuccessPage";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "",
-    tags: [],
-    address: "",
-    town: "",
-    timeline: "",
-    budget: "",
+    category: "1", // Default category
+    price: "",
+    location: "",
   });
   const [isPublished, setIsPublished] = useState(false);
+  const router = useRouter();
 
   const handleContinue = (data: { [key: string]: any }) => {
     setFormData((prevData) => ({ ...prevData, ...data }));
@@ -30,8 +29,28 @@ export default function Home() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  const handlePublish = () => {
-    setIsPublished(true);
+  const handlePublish = async () => {
+    try {
+      const response = await fetch('/api/postListing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setIsPublished(true);
+        router.push('/success'); // Redirect to a success page
+      } else {
+        const data = await response.json();
+        console.error('Error publishing listing:', data.error);
+        // Handle error (e.g., show an error message to the user)
+      }
+    } catch (error) {
+      console.error('Error publishing listing:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   const handleReview = () => {

@@ -20,13 +20,13 @@ const UserProfilePage = async ({
 }: Props) => {
   const session = await auth();
 
-  const userId = session?.user?.id;
+  const userId = session?.user!.id;
   const pageSize = 9;
   const currentPage = parseInt(searchParams.page || "1");
 
   // Fetch user's listings
   const { listings, totalCount } = await getListingsByUserId({
-    userId: "01J66X60M7TKEBSPPZN07TJ5MG",
+    userId: userId || "",
     page: currentPage,
     pageSize: pageSize,
   });

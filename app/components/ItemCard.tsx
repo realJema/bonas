@@ -44,6 +44,8 @@ interface Item {
   offersVideo?: boolean;
   width?: string;
   titleAlign?: string;
+  itemCardBg?: string;
+  itemCardImageHieght?: string;
 }
 
 const ItemCard = ({
@@ -53,6 +55,8 @@ const ItemCard = ({
   offersVideo,
   width = "240px",
   titleAlign = "",
+  itemCardBg = "",
+  itemCardImageHieght = ""
 }: Item) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -72,7 +76,7 @@ const ItemCard = ({
     if (item.type === "image") {
       return (
         <Slide index={index} key={index}>
-          <div className="h-40 w-full relative cursor-pointer">
+          <div className={`h-40 ${itemCardImageHieght} w-full relative cursor-pointer`}>
             <Image
               alt={`${listing.title} - image ${index + 1}`}
               src={item.url}
@@ -141,7 +145,9 @@ const ItemCard = ({
 
   return (
     <div
-      className={`${width} rounded-md z-20 bg-[#FFE0B3] ${isHovered ? "" : ""}`}
+      className={`${width} rounded-md z-20 ${itemCardBg} ${
+        isHovered ? "" : ""
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

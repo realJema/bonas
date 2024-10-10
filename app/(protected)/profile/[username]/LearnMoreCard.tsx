@@ -21,12 +21,7 @@ const LearnmoreCard = ({
         <span className="w-2 h-2 bg-green-500 rounded-full mt-2 md:mt-3"></span>
       </div>
       <div className="flex justify-center mb-4">
-        <Image
-          src="/path-to-your-center-image.svg"
-          alt="Learn illustration"
-          width={120}
-          height={120}
-        />
+      
       </div>
       <h3 className="text-xl font-bold mb-2">{title}</h3>
       <p className="text-gray-600 mb-4">{description}</p>

@@ -9,6 +9,7 @@ import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
 import HeaderSkeleton from "./skeletons/HeaderSkeleton";
 
+import PostButton from './PostButton';
 
 const Header = () => {
   const router = useRouter();
@@ -181,6 +182,9 @@ const Header = () => {
       </div>
       <div className="sm:hidden p-4">
         <SearchInput onSearch={(searchText) => console.log(searchText)} />
+      </div>
+      <div className="absolute top-0 right-0 m-4">
+        <PostButton />
       </div>
     </header>
   );

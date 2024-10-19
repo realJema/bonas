@@ -9,7 +9,6 @@ import SearchInput from "./SearchInput";
 import HeaderDropdown from "./dropdowns/HeaderDropdown";
 import HeaderSkeleton from "./skeletons/HeaderSkeleton";
 
-import PostButton from './PostButton';
 
 const Header = () => {
   const router = useRouter();
@@ -28,6 +27,7 @@ const Header = () => {
           "/api/categories"
         );
         setCategories(response.data);
+        // console.log('all categories: ', response.data)
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -96,7 +96,6 @@ const Header = () => {
   if (isLoading) return <HeaderSkeleton />;
   if (error) return <div>Error loading categories: {error.message}</div>;
 
-  // console.log("fetched categories: ", categories);
 
   return (
     <header className="hidden md:block border-b xl:px-0 relative bg-white">
@@ -182,9 +181,6 @@ const Header = () => {
       </div>
       <div className="sm:hidden p-4">
         <SearchInput onSearch={(searchText) => console.log(searchText)} />
-      </div>
-      <div className="absolute top-0 right-0 m-4">
-        <PostButton />
       </div>
     </header>
   );

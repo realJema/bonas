@@ -1,19 +1,34 @@
-import {  format, formatDistanceToNow, parseISO  } from "date-fns";
+import {
+  format,
+  formatDistanceToNow,
+  formatDistanceToNowStrict,
+  parseISO,
+} from "date-fns";
 
-export function formatPrice(price: string | number): string {
+
+export function formatPrice(price: string | number | null): string {
+  if (price === null || price === "" || price === "0.00" || price === 0) {
+    return "Price not available";
+  }
   const numPrice = typeof price === "string" ? parseFloat(price) : price;
   const roundedPrice = Math.round(numPrice);
   return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "XAF",
+    style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(roundedPrice);
+  }).format(roundedPrice) + " FCFA";
+}
+
+export function getDisplayPrice(price: string | null, budget: number | null): string {
+  if (price && price !== "" && price !== "0.00") {
+    // If price is a string, we need to format it consistently
+    return formatPrice(price);
+  }
+  return formatPrice(budget);
 }
 
 export function formatDatePosted(dateInput: Date | string | number): string {
   let date: Date;
-
   if (typeof dateInput === "string") {
     // If it's an ISO string, parse it
     date = parseISO(dateInput);
@@ -34,14 +49,15 @@ export function formatDatePosted(dateInput: Date | string | number): string {
   );
 
   if (diffInDays < 1) {
-    return formatDistanceToNow(date, { addSuffix: true });
+    // Use formatDistanceToNowStrict for more precise output without "about"
+    const distance = formatDistanceToNowStrict(date, { addSuffix: false });
+    return `${distance} ago`;
   } else if (diffInDays < 7) {
     return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
   } else {
     return format(date, "MMM d, yyyy");
   }
 }
-
 export function formatUsername(username: string) {
   if (!username) return "";
 

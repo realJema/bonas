@@ -34,7 +34,7 @@ const UserProfilePage = async ({
   return (
     <>
       <Header />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 container mx-auto px-4 pt-6 md:px-0 md:max-w-7xl">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 container mx-auto px-4 pt-6 md:max-w-7xl">
         <div className="lg:col-span-1 space-y-6 p-2 px-4 sm:px-10 md:px-8 md:py-5">
           <ProfileCard
             name={session?.user?.name || ""}

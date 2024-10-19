@@ -10,6 +10,7 @@ export const publicRoutes = [
   "/categories/:mainCategory/:subCategory/:subSubCategory",
   "/:mainCategory/:subCategory/:subSubCategory/:listingId",
   "/api/categories",
+  "/api/postListing",
   "/auth/new-verification",
 ];
 
@@ -25,7 +26,8 @@ export const authRoutes = [
   "/profile/:username/settings/edit/security",
   "/profile/:username/settings/edit/notifications",
   "/profile/:username/settings/edit/business-information",
-  "/user-profile/:username/:category",
+  "/profile/user-dashboard/:username",
+  "/profile/user-dashboard/:username/:category",
 ];
 
 /**

@@ -2,7 +2,7 @@ export function formatUsername(name: string | null | undefined): string {
   if (!name) {
     return '';
   }
-  const trimmedName = name.trim();
+  const trimmedName = name.trim().toLowerCase();
   
   const formattedName = trimmedName.replace(/\s+/g, '_');
   

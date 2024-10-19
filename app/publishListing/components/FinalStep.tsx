@@ -1,18 +1,9 @@
+import { ListingFormData } from '@/schemas/interfaces';
 import { useState } from 'react';
 
-interface FormData {
-  title: string;
-  category: string;
-  address: string;
-  town: string;
-  tags: string[];
-  description: string;
-  budget: string;
-  timeline: string;
-}
 
 interface FinalStepProps {
-  formData: FormData;
+  formData: ListingFormData;
   onBack: () => void;
   onPublish: () => void;
 }
@@ -60,26 +51,20 @@ export default function FinalStep({ formData, onBack, onPublish }: FinalStepProp
                   <h3 className="font-bold text-black">Category:</h3>
                   <p className="text-black">{formData.category}</p>
                 </div>
-                <div>
-                  <h3 className="font-bold text-black">Address:</h3>
-                  <p className="text-black">{formData.address}</p>
-                </div>
-                <div>
-                  <h3 className="font-bold text-black">Town:</h3>
-                  <p className="text-black">{formData.town}</p>
+
+                <div className="col-span-2">
+                  <h3 className="font-bold text-black">Location:</h3>
+                  <p className="text-black">{formData.location}</p>
                 </div>
                 <div className="col-span-2">
                   <h3 className="font-bold text-black">Subcategories:</h3>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {formData.subcategories &&
-                      formData.subcategories.map((subcategory, index) => (
-                        <span
-                          key={index}
-                          className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
-                        >
-                          {subcategory}
-                        </span>
-                      ))}
+                    <p className="bg-blue-100 text-gray-800 text-sm font-semibold px-2.5 py-0.5 rounded">
+                      {formData.subcategory}
+                    </p>
+                    <p className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                      {formData.subSubcategory}
+                    </p>
                   </div>
                 </div>
                 <div className="col-span-2">

@@ -1,8 +1,9 @@
+import { ListingFormData } from '@/schemas/interfaces';
 import { useState, useEffect } from 'react';
 
 interface Step1Props {
   onContinue: (data: { title: string; description: string }) => void;
-  formData: { title: string; description: string };
+  formData: ListingFormData;
 }
 
 export default function Step1({ onContinue, formData }: Step1Props) {
@@ -90,6 +91,8 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                 <span className="absolute right-2 bottom-2 text-sm text-gray-400">{description.length}/2000</span>
               </div>
             </div>
+
+            {/* add image here and preview under it , make sure to use next/Image */}
           </div>
           <div className="mt-8 md:mt-auto text-right">
             <button

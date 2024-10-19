@@ -33,7 +33,7 @@ export function UserProfile({ session }: UserProfileProps) {
   const menuItems = [
     {
       label: "Profile",
-      href: `profile/${formattedUsername}`,
+      href: `/profile/user-dashboard/${formattedUsername}`,
       disabled: false,
     },
     { label: "Dashboard", href: "#", disabled: true },

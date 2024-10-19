@@ -1,9 +1,10 @@
+import {ListingFormData} from '@/schemas/interfaces';
 import { useState, useEffect, FormEvent } from 'react';
 
 interface Step3Props {
   onContinue: (data: { timeline: string; budget: string }) => void;
   onBack: () => void;
-  formData: { timeline?: string; budget?: string };
+  formData: ListingFormData;
 }
 
 export default function Step3({ onContinue, onBack, formData }: Step3Props) {
@@ -28,7 +29,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
           Timeline & Budget
         </h1>
         <p className="text-lg mb-2 text-gray-700">
-          Let's set your project expectations.
+          Let&apos;s set your project expectations.
         </p>
         <a href="#" className="text-sm text-blue-600 hover:underline">
           How does the matching thing work?
@@ -57,8 +58,8 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
               <p className="text-sm text-gray-600 mb-2">
                 How long do you expect your project to take?
               </p>
-              <select 
-                id="timeline" 
+              <select
+                id="timeline"
                 className="w-full border rounded-md p-2 text-black bg-gray-200"
                 required
                 value={timeline}
@@ -76,7 +77,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                 Project Budget
               </label>
               <p className="text-sm text-gray-600 mb-2">
-                What's your estimated budget for this project?
+                What&apos;s your estimated budget for this project?
               </p>
               <div className="relative mt-1 rounded-md shadow-sm">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">

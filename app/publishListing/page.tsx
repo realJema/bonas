@@ -7,21 +7,21 @@ import Step3 from "./components/Step3";
 import FinalStep from "./components/FinalStep";
 import SuccessPage from "./components/SuccessPage";
 import { useRouter } from 'next/navigation';
+import {ListingFormData} from "@/schemas/interfaces";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "1", // Default category
-    price: "",
-    location: "",
-  });
+  const [formData, setFormData] = useState({} as ListingFormData);
   const [isPublished, setIsPublished] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleContinue = (data: { [key: string]: any }) => {
-    setFormData((prevData) => ({ ...prevData, ...data }));
+    setFormData((prevData) => ({
+      ...prevData,
+      ...data,
+    }));
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 4));
   };
 
@@ -29,29 +29,35 @@ export default function Home() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  const handlePublish = async () => {
-    try {
-      const response = await fetch('/api/postListing', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+const handlePublish = async () => {
+  try {
+    setIsPublishing(true);
+    setError(null);
 
-      if (response.ok) {
-        setIsPublished(true);
-        router.push('/success'); // Redirect to a success page
-      } else {
-        const data = await response.json();
-        console.error('Error publishing listing:', data.error);
-        // Handle error (e.g., show an error message to the user)
-      }
-    } catch (error) {
-      console.error('Error publishing listing:', error);
-      // Handle error (e.g., show an error message to the user)
+    const response = await fetch("/api/postListing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+       body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to create listing");
     }
-  };
+
+    const listing = await response.json();
+    setIsPublished(true);
+  } catch (error) {
+    console.error("Error publishing listing:", error);
+    setError(
+      error instanceof Error ? error.message : "An unexpected error occurred"
+    );
+  } finally {
+    setIsPublishing(false);
+  }
+};
 
   const handleReview = () => {
     setIsPublished(false);

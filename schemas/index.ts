@@ -30,3 +30,22 @@ export const RegisterSchema = z.object({
         "Username must begin with a letter and can include numbers and underscores",
     }),
 });
+
+export const ListingSchema = z.object({
+  title: z
+    .string()
+    .min(3, { message: "Title must be at least 3 characters long" })
+    .max(255, { message: "Title must be at most 255 characters long" }),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters long" }),
+  category: z.string(),
+  subcategory: z.string().optional(),
+  subSubcategory: z.string().optional(),
+  price: z.string().transform((val) => parseFloat(val)),
+  location: z.string(),
+  timeline: z.string().optional(),
+  budget: z.string().transform((val) => parseFloat(val)),
+});
+
+export type ListingInput = z.infer<typeof ListingSchema>;

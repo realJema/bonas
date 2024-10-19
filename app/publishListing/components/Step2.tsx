@@ -1,74 +1,69 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { ListingFormData } from '@/schemas/interfaces';
 
 interface Step2Props {
-  onContinue: (data: { category: string; subcategories: string[]; address: string; town: string }) => void;
+  onContinue: (data: {
+    category: string;
+    subcategory?: string;
+    subSubcategory?: string;
+    location: string;
+  }) => void;
   onBack: () => void;
-  formData: {
-    category?: string;
-    subcategories?: string[];
-    address?: string;
-    town?: string;
-  };
+  formData: ListingFormData
 }
 
-interface CategoryWithChildren {
+interface Category {
   id: string;
   name: string;
-  children: {
-    id: string;
-    name: string;
-  }[];
+  children?: Category[];
 }
 
 export default function Step2({ onContinue, onBack, formData }: Step2Props) {
-  const [category, setCategory] = useState<string>(formData.category || '');
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(formData.subcategories || []);
-  const [address, setAddress] = useState<string>(formData.address || '');
-  const [town, setTown] = useState<string>(formData.town || '');
+  const [category, setCategory] = useState<string>(formData.category || "");
+  const [subcategory, setSubcategory] = useState<string>(
+    formData.subcategory || ""
+  );
+  const [subSubcategory, setSubSubcategory] = useState<string>(
+    formData.subSubcategory || ""
+  );
+  const [location, setLocation] = useState<string>(formData.location || "");
 
-  const { isLoading, error, data: categories } = useQuery<CategoryWithChildren[], Error>({
+  const town = location.split(", ")[0];
+  const address = location.split(", ")[1] || "";
+
+  const handleTownChange = (newTown: string) => {
+    setLocation(`${newTown}, ${address}`);
+  };
+
+  const handleAddressChange = (newAddress: string) => {
+    setLocation(`${town}, ${newAddress}`);
+  };
+
+  const {
+    isLoading,
+    error,
+    data: categories,
+  } = useQuery<Category[], Error>({
     queryKey: ["categories"],
     queryFn: async () => {
-      try {
-        const response = await axios.get<CategoryWithChildren[]>("/api/categories");
-        return response.data;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          throw new Error(
-            `Failed to fetch categories: ${
-              error.response?.data?.error || error.message
-            }`
-          );
-        }
-        throw error;
-      }
+      const response = await axios.get<Category[]>("/api/categories");
+      return response.data;
     },
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  useEffect(() => {
-    setCategory(formData.category || '');
-    setSelectedSubcategories(formData.subcategories || []);
-    setAddress(formData.address || '');
-    setTown(formData.town || '');
-  }, [formData]);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onContinue({ category, subcategories: selectedSubcategories, address, town });
+    const location = `${town}, ${address}`;
+    onContinue({ category, subcategory, subSubcategory, location });
   };
 
-  const toggleSubcategory = (subcategoryName: string) => {
-    setSelectedSubcategories(prev => 
-      prev.includes(subcategoryName)
-        ? prev.filter(name => name !== subcategoryName)
-        : [...prev, subcategoryName]
-    );
-  };
-
-  const selectedCategory = categories?.find(cat => cat.name === category);
+  const selectedCategory = categories?.find((cat) => cat.name === category);
+  const selectedSubcategory = selectedCategory?.children?.find(
+    (subcat) => subcat.name === subcategory
+  );
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -98,45 +93,41 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
 
       {/* Right Column (Form) */}
       <div className="w-full md:w-2/3">
-        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[700px]">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col h-auto md:h-[700px]"
+        >
           <div className="flex-grow space-y-8">
             <div>
-              <label htmlFor="category" className="block font-bold mb-2 text-black text-lg">
+              <label
+                htmlFor="category"
+                className="block font-bold mb-2 text-black text-lg"
+              >
                 Select a category
               </label>
               <p className="text-sm text-gray-600 mb-2">
                 Choose the category that best fits your project.
               </p>
-              <select 
-                id="category" 
-                className="w-full border rounded-md p-2 text-black bg-gray-200"
-                required
+              <select
                 value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-                  setSelectedSubcategories([]);
-                }}
+                onChange={(e) => setCategory(e.target.value)}
+                className="border rounded-md p-2 text-black bg-gray-200"
+                required
               >
                 <option value="">Select a category</option>
-                {isLoading ? (
-                  <option value="" disabled>Loading categories...</option>
-                ) : error ? (
-                  <option value="" disabled>Error loading categories</option>
-                ) : categories && categories.length > 0 ? (
-                  categories.map((cat) => (
-                    <option key={cat.id} value={cat.name}>
-                      {cat.name}
-                    </option>
-                  ))
-                ) : (
-                  <option value="" disabled>No categories available</option>
-                )}
+                {categories?.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {selectedCategory && (
+            {/* {selectedCategory && (
               <div>
-                <label className="block font-bold mb-2 text-black text-lg">Subcategories</label>
+                <label className="block font-bold mb-2 text-black text-lg">
+                  Subcategories
+                </label>
                 <p className="text-sm text-gray-600 mb-2">
                   Select subcategories that are relevant to your project.
                 </p>
@@ -147,8 +138,8 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                       type="button"
                       className={`px-3 py-1 rounded-full text-sm ${
                         selectedSubcategories.includes(subcategory.name)
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-black'
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-black"
                       }`}
                       onClick={() => toggleSubcategory(subcategory.name)}
                     >
@@ -157,11 +148,45 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                   ))}
                 </div>
               </div>
+            )} */}
+             <div className="flex-col space-x-6 sm:flex-row gap-4">
+            {selectedCategory?.children && (
+              <select
+                value={subcategory}
+                onChange={(e) => setSubcategory(e.target.value)}
+                className="border rounded-md p-2 text-black bg-gray-200"
+              >
+                <option value="">Select a subcategory</option>
+                {selectedCategory.children.map((subcat) => (
+                  <option key={subcat.id} value={subcat.name}>
+                    {subcat.name}
+                  </option>
+                ))}
+              </select>
             )}
+
+            {selectedSubcategory?.children && (
+              <select
+                value={subSubcategory}
+                onChange={(e) => setSubSubcategory(e.target.value)}
+                className="border rounded-md p-2 text-black bg-gray-200"
+              >
+                <option value="">Select a sub-subcategory</option>
+                {selectedSubcategory.children.map((subsubcat) => (
+                  <option key={subsubcat.id} value={subsubcat.name}>
+                    {subsubcat.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            </div>
 
             <div className="flex flex-col md:flex-row md:space-x-4">
               <div className="flex-grow mb-4 md:mb-0">
-                <label htmlFor="address" className="block font-bold mb-2 text-black text-lg">
+                <label
+                  htmlFor="address"
+                  className="block font-bold mb-2 text-black text-lg"
+                >
                   Address
                 </label>
                 <input
@@ -171,19 +196,22 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                   placeholder="Enter your address"
                   required
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => handleAddressChange(e.target.value)}
                 />
               </div>
               <div className="w-full md:w-1/3">
-                <label htmlFor="town" className="block font-bold mb-2 text-black text-lg">
+                <label
+                  htmlFor="town"
+                  className="block font-bold mb-2 text-black text-lg"
+                >
                   Town
                 </label>
-                <select 
-                  id="town" 
+                <select
+                  id="town"
                   className="w-full border rounded-md p-2 text-black bg-gray-200"
                   required
                   value={town}
-                  onChange={(e) => setTown(e.target.value)}
+                  onChange={(e) => handleTownChange(e.target.value)}
                 >
                   <option value="">Select a town</option>
                   <option value="New York">New York</option>

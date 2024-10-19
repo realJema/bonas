@@ -24,9 +24,15 @@ import dynamic from "next/dynamic";
 import type { ReactPlayerProps } from "react-player/types";
 import { Listing, Category, User } from "@prisma/client";
 import { ExtendedListing } from "../entities/ExtendedListing";
-import { formatPrice, formatDatePosted } from "@/utils/formatUtils";
+import {
+  formatPrice,
+  formatDatePosted,
+  getDisplayPrice,
+} from "@/utils/formatUtils";
 import { buildListingUrl } from "@/utils/categoryUtils";
 import { MapPinIcon } from "lucide-react";
+import { formatUsername } from "@/utils/formatUsername";
+import { useRouter } from "next/navigation";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 // Define SlideItem type
@@ -56,13 +62,14 @@ const ItemCard = ({
   width = "240px",
   titleAlign = "",
   itemCardBg = "",
-  itemCardImageHieght = ""
+  itemCardImageHieght = "",
 }: Item) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const playerRef = useRef<ReactPlayerProps>(null);
+  const router  = useRouter()
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -76,7 +83,9 @@ const ItemCard = ({
     if (item.type === "image") {
       return (
         <Slide index={index} key={index}>
-          <div className={`h-40 ${itemCardImageHieght} w-full relative cursor-pointer`}>
+          <div
+            className={`h-[150px] ${itemCardImageHieght} w-full relative cursor-pointer`}
+          >
             <Image
               alt={`${listing.title} - image ${index + 1}`}
               src={item.url}
@@ -93,7 +102,7 @@ const ItemCard = ({
     } else {
       return (
         <Slide index={index} key={index}>
-          <div className="h-40 w-full relative cursor-pointer">
+          <div className="h-[150px] w-full relative cursor-pointer">
             <ReactPlayer
               ref={playerRef}
               url={item.url}
@@ -142,6 +151,8 @@ const ItemCard = ({
       );
     }
   };
+
+  const formattedUsername = formatUsername(listing.user.name);
 
   return (
     <div
@@ -214,21 +225,28 @@ const ItemCard = ({
         </div>
       </CarouselProvider>
       <Link href={buildListingUrl(listing)}>
-        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-44 rounded-sm">
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-52 rounded-sm">
           <div className="flex items-center justify-between">
             <div className="flex gap-1 items-center">
-              <Image
-                alt={listing.user.username!}
-                src={listing.user.profilePicture!}
-                width={27}
-                height={27}
-                className="object-cover rounded-full"
-              />
+              {listing.user.profilePicture && (
+                <Image
+                  alt={listing.user.username!}
+                  src={listing.user.profilePicture}
+                  width={27}
+                  height={27}
+                  className="object-cover rounded-full"
+                  onClick={() =>
+                    router.push(
+                      `/profile/user-profile/${listing.user.username}/${listing.category?.name}`
+                    )
+                  }
+                />
+              )}
               <Link
-                href={`/user-profile/${listing.user.username}/${listing.category.name}`}
-                className="text-sm font-semibold text-opacity-85 hover:underline cursor-pointer"
+                href={`/profile/user-profile/${listing.user.username}/${listing.category?.name}`}
+                className="text-sm font-semibold text-gray-700 text-opacity-85 hover:underline cursor-pointer"
               >
-                {listing.user.name}
+                {listing.user.username ?? formattedUsername}
               </Link>
             </div>
             {/* date posted */}
@@ -236,14 +254,16 @@ const ItemCard = ({
               {formatDatePosted(listing.createdAt)}
             </span>
           </div>
-          <h2 className={`hover:underline px-1.5 py-0.5 text-sm ${titleAlign}`}>
+          <h2
+            className={`hover:underline text-base font-medium line-clamp-2 ${titleAlign}`}
+          >
             {listing?.title}
           </h2>
-          <div className="flex items-center text-xs text-gray-600 mt-1 px-1.5 py-0.5">
+          <div className="flex items-center text-xs text-gray-600 mt-1 py-0.5">
             <MapPinIcon className="w-3 h-3 mr-1" />
             <span className="truncate">{listing.location}</span>
           </div>
-          <div className="font-bold flex items-center gap-2 px-1 py-0.5">
+          <div className="font-bold flex items-center gap-2 py-0.5">
             <svg
               className="flex-shrink-0 w-4 h-4 inline-block"
               xmlns="http://www.w3.org/2000/svg"
@@ -256,10 +276,12 @@ const ItemCard = ({
             </svg>
             {} <span className="opacity-80">(1k+)</span>
           </div>
-          <p className="font-semibold px-1 py-0.5 mb-3">
-            <span className="font-normal">from</span>{" "}
-            {formatPrice(listing.price)}
+
+          <p className="font-semibold py-0.5 mb-3">
+            <span className="font-normal">from </span>
+            {getDisplayPrice(listing.price, listing.budget)}
           </p>
+
           {offersVideo && (
             <p className="font-medium text-sm">
               <VideoCameraIcon className="w-5 h-5 inline-block mr-1" />

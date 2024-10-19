@@ -1,24 +1,44 @@
 import { ListingFormData } from '@/schemas/interfaces';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 interface Step1Props {
-  onContinue: (data: { title: string; description: string }) => void;
+  onContinue: (data: { title: string; description: string; profileImage?: string }) => void;
   formData: ListingFormData;
 }
 
 export default function Step1({ onContinue, formData }: Step1Props) {
   const [title, setTitle] = useState(formData.title || '');
   const [description, setDescription] = useState(formData.description || '');
+  const [profileImage, setProfileImage] = useState<string>(formData.profileImage || '');
+  const [previewImage, setPreviewImage] = useState<string | null>(formData.profileImage || null);
+
 
   useEffect(() => {
     setTitle(formData.title || '');
     setDescription(formData.description || '');
+     setProfileImage(formData.profileImage || '');
+    setPreviewImage(formData.profileImage || null);
   }, [formData]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onContinue({ title, description });
   };
+
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const file = e.target.files?.[0];
+     if (file) {
+       // Convert to base64 for preview
+       const reader = new FileReader();
+       reader.onloadend = () => {
+         const base64String = reader.result as string;
+         setProfileImage(base64String);
+         setPreviewImage(base64String);
+       };
+       reader.readAsDataURL(file);
+     }
+   };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -48,14 +68,61 @@ export default function Step1({ onContinue, formData }: Step1Props) {
 
       {/* Right Column (Form) */}
       <div className="w-full md:w-2/3">
-        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[700px]">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col h-auto md:h-[700px]"
+        >
           <div className="flex-grow space-y-8">
+            {/* Image Upload Section */}
             <div>
-              <label htmlFor="title" className="block font-bold mb-2 text-black text-lg">
+              <label
+                htmlFor="profileImage"
+                className="block font-bold mb-2 text-black text-lg"
+              >
+                Profile Image
+              </label>
+              <p className="text-sm text-gray-600 mb-2">
+                Upload a profile image to personalize your listing
+              </p>
+              <div className="space-y-4">
+                <input
+                  type="file"
+                  id="profileImage"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="profileImage"
+                  className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                >
+                  Choose Image
+                </label>
+
+                {/* Image Preview */}
+                {previewImage && (
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200">
+                    <Image
+                      src={previewImage}
+                      alt="Profile preview"
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="title"
+                className="block font-bold mb-2 text-black text-lg"
+              >
                 Give your project brief a title
               </label>
               <p className="text-sm text-gray-600 mb-2">
-                Keep it short and simple – this will help us match you to the right category.
+                Keep it short and simple – this will help us match you to the
+                right category.
               </p>
               <div className="relative">
                 <input
@@ -68,15 +135,21 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
-                <span className="absolute right-2 top-2 text-sm text-gray-400">{title.length}/70</span>
+                <span className="absolute right-2 top-2 text-sm text-gray-400">
+                  {title.length}/70
+                </span>
               </div>
             </div>
             <div>
-              <label htmlFor="description" className="block font-bold mb-2 text-black text-lg">
+              <label
+                htmlFor="description"
+                className="block font-bold mb-2 text-black text-lg"
+              >
                 What are you looking to get done?
               </label>
               <p className="text-sm text-gray-600 mb-2">
-                This will help get your brief to the right talent. Specifics help here.
+                This will help get your brief to the right talent. Specifics
+                help here.
               </p>
               <div className="relative">
                 <textarea
@@ -88,11 +161,11 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
-                <span className="absolute right-2 bottom-2 text-sm text-gray-400">{description.length}/2000</span>
+                <span className="absolute right-2 bottom-2 text-sm text-gray-400">
+                  {description.length}/2000
+                </span>
               </div>
             </div>
-
-            {/* add image here and preview under it , make sure to use next/Image */}
           </div>
           <div className="mt-8 md:mt-auto text-right">
             <button

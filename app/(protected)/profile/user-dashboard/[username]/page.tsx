@@ -69,7 +69,7 @@ const UserProfilePage = async ({
           <div>
             {listings.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-4 px-10 sm:px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4 px-10 sm:px-4">
                   {listings.map((listing, index) => (
                     <ItemCard
                       key={listing.id}

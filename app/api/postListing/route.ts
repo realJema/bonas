@@ -1,13 +1,15 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
+import { CreateListingInput, CreateListingSchema } from "@/schemas";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 export async function POST(request: Request) {
   try {
     // 1. Get authenticated session
     const session = await auth();
 
-    // 2. Check if user is authenticated and has an ID
+    // 2. Check if user is authenticated and has an email
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: "Unauthorized - Please sign in" },
@@ -24,50 +26,77 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // 4. Parse request body
+    // 4. Parse and validate request body
     const body = await request.json();
-    console.log("Received body:", body);
+    console.log("Received body:", body); // Add this for debugging
 
-    const { title, description, category, location, timeline, budget } = body;
+    try {
+      const validatedData = CreateListingSchema.parse(body);
 
-    // 5. Validate required fields
-    if (!title || !description || !category) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      // 5. Get category ID
+      const categoryData = await prisma.category.findFirst({
+        where: { name: validatedData.category },
+        select: { id: true },
+      });
+
+      if (!categoryData) {
+        return NextResponse.json(
+          { error: `Category '${validatedData.category}' not found` },
+          { status: 400 }
+        );
+      }
+
+      // 6. Handle profile image if provided
+      if (validatedData.profileImage) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { profilePicture: validatedData.profileImage },
+        });
+      }
+
+      // 7. Create listing with verified user ID
+      const listing = await prisma.listing.create({
+        data: {
+          title: validatedData.title,
+          description: validatedData.description,
+          location: validatedData.location,
+          timeline: validatedData.timeline,
+          budget: validatedData.budget,
+          categoryId: categoryData.id,
+          userId: user.id,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              profilePicture: true,
+              username: true,
+            },
+          },
+          category: true,
+        },
+      });
+
+      return NextResponse.json(listing, { status: 201 });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          {
+            error: "Validation failed",
+            details: error.errors.map((err) => ({
+              path: err.path.join("."),
+              message: err.message,
+            })),
+          },
+          { status: 400 }
+        );
+      }
+      throw error;
     }
-
-    // 6. Get category ID
-    const categoryData = await prisma.category.findFirst({
-      where: { name: category },
-      select: { id: true },
-    });
-
-    if (!categoryData) {
-      return NextResponse.json(
-        { error: `Category '${category}' not found` },
-        { status: 400 }
-      );
-    }
-
-    // 7. Create listing with verified user ID
-  const listing = await prisma.listing.create({
-    data: {
-        title,
-        description,
-        location,
-        timeline,
-        budget: parseFloat(budget),
-        categoryId: categoryData.id,
-        userId: user.id,
-    },
-  });
-
-    return NextResponse.json(listing, { status: 201 });
   } catch (error) {
     console.error("Error creating listing:", error);
-
     return NextResponse.json(
       { error: "Failed to create listing" },
       { status: 500 }
@@ -75,10 +104,11 @@ export async function POST(request: Request) {
   }
 }
 
-// import { NextResponse } from "next/server";
-// import prisma from "@/prisma/client";
 // import { auth } from "@/auth";
-// import { ListingSchema } from "@/schemas";
+// import prisma from "@/prisma/client";
+// import { CreateListingInput, CreateListingSchema } from "@/schemas";
+// import { NextResponse } from "next/server";
+// import { z } from "zod";
 
 // export async function POST(request: Request) {
 //   try {
@@ -104,94 +134,72 @@ export async function POST(request: Request) {
 
 //     // 4. Parse and validate request body
 //     const body = await request.json();
-//     console.log("Received body:", body);
+//     let validatedData: CreateListingInput;
 
-//     // 5. Validate with Zod schema
-//     const validatedData = ListingSchema.safeParse(body);
-
-//     if (!validatedData.success) {
-//       return NextResponse.json(
-//         { error: "Invalid input", details: validatedData.error.errors },
-//         { status: 400 }
-//       );
+//     try {
+//       validatedData = CreateListingSchema.parse(body);
+//     } catch (error) {
+//       if (error instanceof z.ZodError) {
+//         return NextResponse.json({ error: error.errors }, { status: 400 });
+//       }
+//       throw error;
 //     }
 
-//     const {
-//       title,
-//       description,
-//       category,
-//       subcategories,
-//       location,
-//       timeline,
-//       budget,
-//       price,
-//     } = validatedData.data;
-
-//     // 6. Get category ID
+//     // 5. Get category ID
 //     const categoryData = await prisma.category.findFirst({
-//       where: { name: category },
-//       include: {
-//         children: {
-//           where: {
-//             name: {
-//               in: subcategories || [],
-//             },
-//           },
-//           select: { id: true },
-//         },
-//       },
+//       where: { name: validatedData.category },
+//       select: { id: true },
 //     });
 
 //     if (!categoryData) {
 //       return NextResponse.json(
-//         { error: `Category '${category}' not found` },
+//         { error: `Category '${validatedData.category}' not found` },
 //         { status: 400 }
 //       );
 //     }
 
-//     // 7. Create listing with verified user ID and category
+//     // 6. Handle profile image if provided
+//     if (validatedData.profileImage) {
+//       await prisma.user.update({
+//         where: { id: user.id },
+//         data: { profilePicture: validatedData.profileImage },
+//       });
+//     }
+
+//     // 7. Create listing with verified user ID
 //     const listing = await prisma.listing.create({
 //       data: {
-//         title,
-//         description,
-//         location,
-//         timeline,
-//         budget,
-//         price,
+//         title: validatedData.title,
+//         description: validatedData.description,
+//         location: validatedData.location,
+//         timeline: validatedData.timeline,
+//         budget: validatedData.budget,
 //         categoryId: categoryData.id,
 //         userId: user.id,
 //       },
 //       include: {
-//         category: true,
 //         user: {
 //           select: {
+//             id: true,
 //             name: true,
 //             email: true,
-//             image: true,
+//             profilePicture: true,
+//             username: true,
 //           },
 //         },
-//         images: true,
+//         category: true,
 //       },
 //     });
 
 //     return NextResponse.json(listing, { status: 201 });
 //   } catch (error) {
 //     console.error("Error creating listing:", error);
-
-//     if (error instanceof Error) {
-//       return NextResponse.json(
-//         { error: "Failed to create listing", message: error.message },
-//         { status: 500 }
-//       );
-//     }
-
 //     return NextResponse.json(
 //       { error: "Failed to create listing" },
 //       { status: 500 }
 //     );
 //   }
 // }
-
 
 // import { auth } from "@/auth";
 // import prisma from "@/prisma/client";
@@ -223,15 +231,7 @@ export async function POST(request: Request) {
 //     const body = await request.json();
 //     console.log("Received body:", body);
 
-//     const {
-//       title,
-//       description,
-//       category,
-//       subcategories,
-//       location,
-//       timeline,
-//       budget,
-//     } = body;
+//     const { title, description, category, location, timeline, budget } = body;
 
 //     // 5. Validate required fields
 //     if (!title || !description || !category) {
@@ -244,16 +244,7 @@ export async function POST(request: Request) {
 //     // 6. Get category ID
 //     const categoryData = await prisma.category.findFirst({
 //       where: { name: category },
-//       include: {
-//         children: {
-//           where: {
-//             name: {
-//               in: subcategories || [],
-//             },
-//           },
-//           select: { id: true },
-//         },
-//       },
+//       select: { id: true },
 //     });
 
 //     if (!categoryData) {
@@ -263,9 +254,9 @@ export async function POST(request: Request) {
 //       );
 //     }
 
-//     // 7. Create listing with verified user ID and subcategories
-//     const listing = await prisma.listing.create({
-//       data: {
+//     // 7. Create listing with verified user ID
+//   const listing = await prisma.listing.create({
+//     data: {
 //         title,
 //         description,
 //         location,
@@ -273,14 +264,8 @@ export async function POST(request: Request) {
 //         budget: parseFloat(budget),
 //         categoryId: categoryData.id,
 //         userId: user.id,
-//         subcategories: {
-//           connect: categoryData.children.map((child) => ({ id: child.id })),
-//         },
-//       },
-//       include: {
-//         subcategories: true,
-//       },
-//     });
+//     },
+//   });
 
 //     return NextResponse.json(listing, { status: 201 });
 //   } catch (error) {

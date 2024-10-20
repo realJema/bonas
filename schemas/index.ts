@@ -31,7 +31,7 @@ export const RegisterSchema = z.object({
     }),
 });
 
-export const ListingSchema = z.object({
+export const CreateListingSchema = z.object({
   title: z
     .string()
     .min(3, { message: "Title must be at least 3 characters long" })
@@ -42,10 +42,16 @@ export const ListingSchema = z.object({
   category: z.string(),
   subcategory: z.string().optional(),
   subSubcategory: z.string().optional(),
-  price: z.string().transform((val) => parseFloat(val)),
   location: z.string(),
   timeline: z.string().optional(),
   budget: z.string().transform((val) => parseFloat(val)),
+  profileImage: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val.startsWith('https://res.cloudinary.com/'),
+      "Invalid image URL. Must be a Cloudinary URL"
+    )
 });
 
-export type ListingInput = z.infer<typeof ListingSchema>;
+export type CreateListingInput = z.infer<typeof CreateListingSchema>;

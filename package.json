@@ -41,6 +41,7 @@
     "lucide-react": "^0.436.0",
     "next": "14.2.5",
     "next-auth": "^5.0.0-beta.20",
+    "next-cloudinary": "^6.15.0",
     "nodemailer": "^6.9.14",
     "prisma": "^5.3.1",
     "pure-react-carousel": "^1.30.1",

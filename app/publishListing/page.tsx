@@ -34,20 +34,32 @@ const handlePublish = async () => {
     setIsPublishing(true);
     setError(null);
 
+    
+    console.log("Sending formData:", formData);
     const response = await fetch("/api/postListing", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-       body: JSON.stringify(formData),
+      body: JSON.stringify(formData),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to create listing");
+      if (data.details) {
+        // Handle validation errors
+        const errorMessage = data.details
+          .map(
+            (err: { path: string; message: string }) =>
+              `${err.path}: ${err.message}`
+          )
+          .join(", ");
+        throw new Error(errorMessage);
+      }
+      throw new Error(data.error || "Failed to create listing");
     }
 
-    const listing = await response.json();
     setIsPublished(true);
   } catch (error) {
     console.error("Error publishing listing:", error);
@@ -58,6 +70,36 @@ const handlePublish = async () => {
     setIsPublishing(false);
   }
 };
+
+// const handlePublish = async () => {
+//   try {
+//     setIsPublishing(true);
+//     setError(null);
+
+//     const response = await fetch("/api/postListing", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//        body: JSON.stringify(formData),
+//     });
+
+//     if (!response.ok) {
+//       const errorData = await response.json();
+//       throw new Error(errorData.error || "Failed to create listing");
+//     }
+
+//     const listing = await response.json();
+//     setIsPublished(true);
+//   } catch (error) {
+//     console.error("Error publishing listing:", error);
+//     setError(
+//       error instanceof Error ? error.message : "An unexpected error occurred"
+//     );
+//   } finally {
+//     setIsPublishing(false);
+//   }
+// };
 
   const handleReview = () => {
     setIsPublished(false);

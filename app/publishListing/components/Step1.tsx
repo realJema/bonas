@@ -1,4 +1,5 @@
 import { ListingFormData } from '@/schemas/interfaces';
+import { CldUploadWidget } from 'next-cloudinary';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
@@ -8,16 +9,20 @@ interface Step1Props {
 }
 
 export default function Step1({ onContinue, formData }: Step1Props) {
-  const [title, setTitle] = useState(formData.title || '');
-  const [description, setDescription] = useState(formData.description || '');
-  const [profileImage, setProfileImage] = useState<string>(formData.profileImage || '');
-  const [previewImage, setPreviewImage] = useState<string | null>(formData.profileImage || null);
-
+  const [title, setTitle] = useState(formData.title || "");
+  const [description, setDescription] = useState(formData.description || "");
+  const [profileImage, setProfileImage] = useState<string>(
+    formData.profileImage || ""
+  );
+  const [previewImage, setPreviewImage] = useState<string | null>(
+    formData.profileImage || null
+  );
+ const [publicId , setPublicId] = useState('');
 
   useEffect(() => {
-    setTitle(formData.title || '');
-    setDescription(formData.description || '');
-     setProfileImage(formData.profileImage || '');
+    setTitle(formData.title || "");
+    setDescription(formData.description || "");
+    setProfileImage(formData.profileImage || "");
     setPreviewImage(formData.profileImage || null);
   }, [formData]);
 
@@ -26,19 +31,13 @@ export default function Step1({ onContinue, formData }: Step1Props) {
     onContinue({ title, description });
   };
 
-   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-     const file = e.target.files?.[0];
-     if (file) {
-       // Convert to base64 for preview
-       const reader = new FileReader();
-       reader.onloadend = () => {
-         const base64String = reader.result as string;
-         setProfileImage(base64String);
-         setPreviewImage(base64String);
-       };
-       reader.readAsDataURL(file);
-     }
-   };
+  // Handle Cloudinary upload success
+  const handleUploadSuccess = (result: any) => {
+    const imageUrl = result.info.secure_url;
+    console.log('img: ', imageUrl)
+    setProfileImage(imageUrl);
+    setPreviewImage(imageUrl);
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -85,19 +84,20 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                 Upload a profile image to personalize your listing
               </p>
               <div className="space-y-4">
-                <input
-                  type="file"
-                  id="profileImage"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-                <label
-                  htmlFor="profileImage"
-                  className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                <CldUploadWidget
+                  uploadPreset="lymdepzy" 
+                  onSuccess={handleUploadSuccess}
                 >
-                  Choose Image
-                </label>
+                  {({ open }) => (
+                    <button
+                      type="button"
+                      onClick={() => open()}
+                      className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                    >
+                      Choose Image
+                    </button>
+                  )}
+                </CldUploadWidget>
 
                 {/* Image Preview */}
                 {previewImage && (

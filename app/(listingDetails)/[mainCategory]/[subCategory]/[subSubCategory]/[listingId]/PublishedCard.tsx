@@ -5,7 +5,7 @@ import { Clock, MapPin, Check, ArrowRight } from "lucide-react";
 
 interface Props {
   datePosted: Date;
-  price: string;
+  price: string | number | null;
   location: string;
 }
 

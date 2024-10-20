@@ -46,11 +46,11 @@ const ListingDetailsPage = async ({
       <div className="mt-10">
         <Gig
           description={listing.description}
-          image={listing.user.profilePicture!}
+          image={listing.user.profilePicture || ''}
           location={listing.location!}
           listingImage={listing.images!}
           username={listing.user.name!}
-          price={listing.price!.toString()}
+          price={listing.price?.toString() || listing.budget}
           datePosted={listing.createdAt}
           category={listing.category.description!}
         />

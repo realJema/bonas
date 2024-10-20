@@ -11,4 +11,5 @@ export interface ListingFormData {
   budget: string;
   address: string;
   town: string;
+  listingImages?: string[];
 }

@@ -49,9 +49,18 @@ export const CreateListingSchema = z.object({
     .string()
     .optional()
     .refine(
-      (val) => !val || val.startsWith('https://res.cloudinary.com/'),
+      (val) => !val || val.startsWith("https://res.cloudinary.com/"),
       "Invalid image URL. Must be a Cloudinary URL"
-    )
+    ),
+  listingImages: z
+    .array(z.string())
+    .min(1, "At least one listing image is required")
+    .max(5, "Maximum 5 images allowed")
+    .refine(
+      (urls) =>
+        urls.every((url) => url.startsWith("https://res.cloudinary.com/")),
+      "Invalid image URL. Must be Cloudinary URLs"
+    ),
 });
 
 export type CreateListingInput = z.infer<typeof CreateListingSchema>;

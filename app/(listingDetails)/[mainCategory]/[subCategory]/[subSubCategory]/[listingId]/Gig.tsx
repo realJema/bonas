@@ -23,7 +23,7 @@ interface Props {
   username: string;
   location: string;
   datePosted: Date;
-  price: string;
+  price: string | number | null;
   listingImage: ImageData[];
   isFrench?: boolean;
   category: string;

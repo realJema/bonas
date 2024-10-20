@@ -1,24 +1,48 @@
-import {ListingFormData} from '@/schemas/interfaces';
-import { useState, useEffect, FormEvent } from 'react';
+import { ListingFormData } from "@/schemas/interfaces";
+import { useState, useEffect, FormEvent } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import Image from "next/image";
+import { X } from "lucide-react";
 
 interface Step3Props {
-  onContinue: (data: { timeline: string; budget: string }) => void;
+  onContinue: (data: {
+    timeline: string;
+    budget: string;
+    listingImages: string[];
+  }) => void;
   onBack: () => void;
   formData: ListingFormData;
 }
 
 export default function Step3({ onContinue, onBack, formData }: Step3Props) {
-  const [timeline, setTimeline] = useState<string>(formData.timeline || '');
-  const [budget, setBudget] = useState<string>(formData.budget || '');
+  const [timeline, setTimeline] = useState<string>(formData.timeline || "");
+  const [budget, setBudget] = useState<string>(formData.budget || "");
+  const [listingImages, setListingImages] = useState<string[]>(
+    formData.listingImages || []
+  );
 
   useEffect(() => {
-    setTimeline(formData.timeline || '');
-    setBudget(formData.budget || '');
+    setTimeline(formData.timeline || "");
+    setBudget(formData.budget || "");
+    setListingImages(formData.listingImages || []);
   }, [formData]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onContinue({ timeline, budget });
+    onContinue({ timeline, budget, listingImages });
+  };
+
+  // Handle Cloudinary upload success
+  const handleUploadSuccess = (result: any) => {
+    const imageUrl = result.info.secure_url;
+    setListingImages((prev) => [...prev, imageUrl]);
+  };
+
+  // Handle image removal
+  const handleRemoveImage = (indexToRemove: number) => {
+    setListingImages((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   return (
@@ -35,7 +59,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
           How does the matching thing work?
         </a>
         <div className="mt-8 hidden md:block">
-          {/* SVG drawing of a person */}
+          {/* person SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -49,10 +73,17 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
 
       {/* Right Column (Form) */}
       <div className="w-full md:w-2/3">
-        <form onSubmit={handleSubmit} className="flex flex-col h-auto md:h-[700px]">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col h-auto md:h-[700px]"
+        >
           <div className="flex-grow space-y-8">
+            {/* Timeline Field */}
             <div>
-              <label htmlFor="timeline" className="block font-bold mb-2 text-black text-lg">
+              <label
+                htmlFor="timeline"
+                className="block font-bold mb-2 text-black text-lg"
+              >
                 Project Timeline
               </label>
               <p className="text-sm text-gray-600 mb-2">
@@ -72,8 +103,13 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                 <option value="More than 6 months">More than 6 months</option>
               </select>
             </div>
+
+            {/* Budget Field */}
             <div>
-              <label htmlFor="budget" className="block font-bold mb-2 text-black text-lg">
+              <label
+                htmlFor="budget"
+                className="block font-bold mb-2 text-black text-lg"
+              >
                 Project Budget
               </label>
               <p className="text-sm text-gray-600 mb-2">
@@ -93,18 +129,81 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                   value={budget}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (/^\d*$/.test(value) || value === '') {
+                    if (/^\d*$/.test(value) || value === "") {
                       setBudget(value);
                     }
                   }}
                   required
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span className="text-gray-500 sm:text-sm" id="price-currency">XAF</span>
+                  <span
+                    className="text-gray-500 sm:text-sm"
+                    id="price-currency"
+                  >
+                    XAF
+                  </span>
                 </div>
               </div>
             </div>
+
+            {/* Listing Images Field */}
+            <div>
+              <label className="block font-bold mb-2 text-black text-lg">
+                Listing Images
+              </label>
+              <p className="text-sm text-gray-600 mb-2">
+                Upload up to 5 images for your listing (minimum 1 required)
+              </p>
+
+              {/* Upload Button */}
+              {listingImages.length < 5 && (
+                <CldUploadWidget
+                  uploadPreset="lymdepzy"
+                  onSuccess={handleUploadSuccess}
+                >
+                  {({ open }) => (
+                    <button
+                      type="button"
+                      onClick={() => open()}
+                      className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors mb-4"
+                    >
+                      Add Image ({listingImages.length}/5)
+                    </button>
+                  )}
+                </CldUploadWidget>
+              )}
+
+              {/* Images Preview Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                {listingImages.map((image, index) => (
+                  <div key={index} className="relative group">
+                    <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                      <Image
+                        src={image}
+                        alt={`Listing image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {listingImages.length === 0 && (
+                <p className="text-red-500 text-sm mt-2">
+                  Please upload at least one image for your listing
+                </p>
+              )}
+            </div>
           </div>
+
+          {/* Navigation Buttons */}
           <div className="mt-8 md:mt-auto flex flex-col md:flex-row justify-between">
             <button
               type="button"
@@ -116,6 +215,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
             <button
               type="submit"
               className="bg-black text-white px-8 py-3 rounded text-lg font-semibold"
+              disabled={listingImages.length === 0}
             >
               Continue →
             </button>

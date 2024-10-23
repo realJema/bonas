@@ -34,8 +34,8 @@ const UserProfilePage = async ({
   return (
     <>
       <Header />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 container mx-auto px-4 pt-6 md:max-w-7xl">
-        <div className="lg:col-span-1 space-y-6 p-2 px-4 sm:px-10 md:px-8 md:py-5">
+      <div className="grid grid-cols-1 lg:grid-cols-4 container mx-auto px-4 pt-6 md:max-w-7xl">
+        <div className="lg:col-span-1 space-y-6 p-2 md:py-5 mt-3">
           <ProfileCard
             name={session?.user?.name || ""}
             username={username}
@@ -59,7 +59,7 @@ const UserProfilePage = async ({
             />
           </div>
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           {totalCount > 0 && (
             <h2 className="font-medium text-gray-500 px-10 sm:px-4">
               {totalCount} {totalCount === 1 ? "listing" : "listings"} found
@@ -69,7 +69,7 @@ const UserProfilePage = async ({
           <div>
             {listings.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4 px-10 sm:px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4 px-4 sm:px-4">
                   {listings.map((listing, index) => (
                     <ItemCard
                       key={listing.id}
@@ -83,6 +83,8 @@ const UserProfilePage = async ({
                           : ""
                       }
                       itemCardImageHieght="h-56 sm:h-40"
+                       canEditListing={true}
+                       className='mt-3'
                     />
                   ))}
                 </div>

@@ -11,6 +11,8 @@ export const publicRoutes = [
   "/:mainCategory/:subCategory/:subSubCategory/:listingId",
   "/api/categories",
   "/api/postListing",
+  "/api/postListing/:listingId",
+  "/api/towns",
   "/auth/new-verification",
 ];
 

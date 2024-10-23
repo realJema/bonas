@@ -1,4 +1,4 @@
-import { Category, Image, Listing, User , Review} from "@prisma/client";
+import { Category, Image, Listing, User , Review } from "@prisma/client";
 
 type SerializableListing = Omit<Listing, "price"> & { price: string };
 

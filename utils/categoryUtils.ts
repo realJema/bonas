@@ -65,3 +65,5 @@ export const buildListingUrl = (listing: {
     subCategory
   )}/${encodeURIComponent(subSubCategory)}/${listing.id}`;
 };
+
+

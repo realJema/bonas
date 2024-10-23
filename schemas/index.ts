@@ -64,3 +64,35 @@ export const CreateListingSchema = z.object({
 });
 
 export type CreateListingInput = z.infer<typeof CreateListingSchema>;
+
+export const UpdateListingSchema = z.object({
+  title: z
+    .string()
+    .min(3, "Title must be at least 3 characters long")
+    .max(100, "Title must be at most 100 characters long"),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters long"),
+  location: z.string().min(1, "Location is required"),
+  timeline: z.string().min(1, "Timeline is required"),
+    budget: z.union([
+    z.number(),
+    z.string().transform((val) => {
+      const parsed = parseFloat(val);
+      if (isNaN(parsed)) throw new Error("Invalid budget number");
+      return parsed;
+    }),
+  ]),
+  category: z.string().min(1, "Category is required"),
+  listingImages: z
+    .array(z.string())
+    .min(1, "At least one listing image is required")
+    .max(5, "Maximum 5 images allowed")
+    .refine(
+      (urls) =>
+        urls.every((url) => url.startsWith("https://res.cloudinary.com/")),
+      "Invalid image URL. Must be Cloudinary URLs"
+    ),
+});
+
+export type UpdateListingInput = z.infer<typeof UpdateListingSchema>;

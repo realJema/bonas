@@ -8,7 +8,11 @@ export async function GET() {
       include: {
         children: {
           include: {
-            children: true,
+            children: {
+              include: {
+                children: true,
+              },
+            },
           },
         },
       },
@@ -18,7 +22,7 @@ export async function GET() {
     const mainCategories = allCategories.filter(
       (category) => category.parentId === null
     );
-    
+
     return NextResponse.json(mainCategories);
   } catch (error) {
     console.error("Error fetching categories:", error);

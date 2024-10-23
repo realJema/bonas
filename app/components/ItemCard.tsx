@@ -2,10 +2,10 @@
 
 import React from "react";
 import {
-  HeartIcon,
+  // HeartIcon,
   VideoCameraIcon,
   PlayIcon,
-  PauseIcon,
+  // PauseIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -30,9 +30,19 @@ import {
   getDisplayPrice,
 } from "@/utils/formatUtils";
 import { buildListingUrl } from "@/utils/categoryUtils";
-import { MapPinIcon } from "lucide-react";
+import { MapPinIcon, Pencil, PauseIcon, HeartIcon } from "lucide-react";
 import { formatUsername } from "@/utils/formatUsername";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import UpdateListingForm from "../(protected)/profile/user-dashboard/[username]/UpdateListingForm";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 // Define SlideItem type
@@ -51,7 +61,9 @@ interface Item {
   width?: string;
   titleAlign?: string;
   itemCardBg?: string;
+  className?: string;
   itemCardImageHieght?: string;
+  canEditListing?: boolean;
 }
 
 const ItemCard = ({
@@ -63,13 +75,16 @@ const ItemCard = ({
   titleAlign = "",
   itemCardBg = "",
   itemCardImageHieght = "",
+  canEditListing = false,
+  className
 }: Item) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const playerRef = useRef<ReactPlayerProps>(null);
-  const router  = useRouter()
+  const router = useRouter();
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -77,6 +92,11 @@ const ItemCard = ({
 
   const handleMute = () => {
     setIsMuted(!isMuted);
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditModalOpen(false);
+    // refresh the listing data here or update the local state
   };
 
   const renderSlide = (item: SlideItem, index: number) => {
@@ -156,7 +176,7 @@ const ItemCard = ({
 
   return (
     <div
-      className={`${width} rounded-md z-20 ${itemCardBg} ${
+      className={`${width} rounded-md z-20 relative ${itemCardBg} ${className} ${
         isHovered ? "" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -229,18 +249,19 @@ const ItemCard = ({
           <div className="flex items-center justify-between">
             <div className="flex gap-1 items-center">
               {listing.user.profilePicture && (
-                <Image
-                  alt={listing.user.username!}
-                  src={listing.user.profilePicture}
-                  width={27}
-                  height={27}
-                  className="object-cover rounded-full"
-                  onClick={() =>
-                    router.push(
-                      `/profile/user-profile/${listing.user.username}/${listing.category?.name}`
-                    )
-                  }
-                />
+                <div className="h-10 w-10 rounded-full relative">
+                  <Image
+                    alt={listing.user.username!}
+                    src={listing.user.profilePicture}
+                    fill
+                    className="object-cover rounded-full"
+                    onClick={() =>
+                      router.push(
+                        `/profile/user-profile/${listing.user.username}/${listing.category?.name}`
+                      )
+                    }
+                  />
+                </div>
               )}
               <Link
                 href={`/profile/user-profile/${listing.user.username}/${listing.category?.name}`}
@@ -290,6 +311,32 @@ const ItemCard = ({
           )}
         </div>
       </Link>
+
+      {/* edit dialog */}
+
+      {canEditListing && (
+        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+          <DialogTrigger asChild>
+            <button className="absolute -top-4 left-0 bg-white rounded-full p-1.5 shadow-md z-20">
+              <Pencil className="h-5 w-5 text-gray-600" />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl md:max-w-2xl">
+            <ScrollArea className="max-h-[90vh] px-1">
+              <div className="p-6">
+                <DialogHeader>
+                  <DialogTitle>Update Listing</DialogTitle>
+                </DialogHeader>
+              </div>
+              <UpdateListingForm
+                listing={listing}
+                onSuccess={handleEditSuccess}
+                onCancel={() => setIsEditModalOpen(false)}
+              />
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

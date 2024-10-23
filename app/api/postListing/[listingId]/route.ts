@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-import { CreateListingInput, CreateListingSchema } from "@/schemas";
+import { UpdateListingSchema } from "@/schemas";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -20,8 +20,14 @@ export async function PUT(
       );
     }
 
-    // 3. Get listing ID from params
+    // 3. Get listing ID from params and validate
     const listingId = parseInt(params.listingId);
+    if (isNaN(listingId)) {
+      return NextResponse.json(
+        { error: "Invalid listing ID" },
+        { status: 400 }
+      );
+    }
 
     // 4. Get user from database
     const user = await prisma.user.findUnique({
@@ -50,9 +56,9 @@ export async function PUT(
 
     // 6. Parse and validate request body
     const body = await request.json();
-    const validatedData = CreateListingSchema.parse(body);
+    const validatedData = UpdateListingSchema.parse(body);
 
-    // 7. Get category ID if category is being updated
+    // 7. Get category ID if provided
     let categoryId = existingListing.categoryId;
     if (validatedData.category) {
       const categoryData = await prisma.category.findFirst({
@@ -70,29 +76,30 @@ export async function PUT(
     }
 
     // 8. Update listing and images in a transaction
-    const updatedListing = await prisma.$transaction(async (prisma) => {
+    const updatedListing = await prisma.$transaction(async (tx) => {
       // 8.1 Update the main listing
-      const listing = await prisma.listing.update({
+      const listing = await tx.listing.update({
         where: { id: listingId },
         data: {
           title: validatedData.title,
           description: validatedData.description,
           location: validatedData.location,
           timeline: validatedData.timeline,
-          budget: validatedData.budget,
+          budget: validatedData.budget as number, 
           categoryId: categoryId,
+          updatedAt: new Date(),
         },
       });
 
       // 8.2 Update images if provided
       if (validatedData.listingImages?.length > 0) {
         // Delete existing images
-        await prisma.image.deleteMany({
+        await tx.image.deleteMany({
           where: { listingId: listingId },
         });
 
         // Create new images
-        await prisma.image.createMany({
+        await tx.image.createMany({
           data: validatedData.listingImages.map((imageUrl) => ({
             listingId: listingId,
             imageUrl: imageUrl,
@@ -101,7 +108,7 @@ export async function PUT(
       }
 
       // 8.3 Return updated listing with relations
-      return prisma.listing.findUnique({
+      return tx.listing.findUnique({
         where: { id: listingId },
         include: {
           user: {

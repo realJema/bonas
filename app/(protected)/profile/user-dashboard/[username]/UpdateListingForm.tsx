@@ -192,8 +192,8 @@ export default function UpdateListingForm({
   return (
     <Dialog modal={false} open={openModal} onOpenChange={onOpenChangeModal}>
       <DialogTrigger asChild>
-        <button className="absolute -top-4 left-0 bg-white rounded-full p-1.5 shadow-md z-20">
-          <Pencil className="h-5 w-5 text-gray-600" />
+        <button className="absolute -top-4 left-0 bg-white rounded-full p-1.5 hover:bg-gray-100 shadow-md z-20">
+          <Pencil className="h-4 w-4 text-gray-600" />
         </button>
       </DialogTrigger>
       <DialogContent

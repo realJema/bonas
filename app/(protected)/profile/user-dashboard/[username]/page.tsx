@@ -31,6 +31,7 @@ const UserProfilePage = async ({
     pageSize: pageSize,
   });
 
+
   return (
     <>
       <Header />
@@ -83,8 +84,9 @@ const UserProfilePage = async ({
                           : ""
                       }
                       itemCardImageHieght="h-56 sm:h-40"
-                       canEditListing={true}
-                       className='mt-3'
+                      canEditListing={true}
+                      canDeleteListing={true}
+                      className="mt-3"
                     />
                   ))}
                 </div>

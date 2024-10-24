@@ -274,7 +274,7 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[500px] h-[600px] md:h-[650px] md:max-w-4xl xl:h-[700px] xl:max-w-5xl p-0 border-none">
+        <DialogContent className="sm:max-w-[500px] h-[600px] md:h-[650px] md:max-w-4xl xl:max-w-5xl p-0 border-none">
           <div className="grid md:grid-cols-2">
             {currentPhase === "username" ? (
               <div className="relative h-[200px] md:h-full">

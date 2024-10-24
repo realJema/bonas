@@ -30,18 +30,24 @@ import {
   getDisplayPrice,
 } from "@/utils/formatUtils";
 import { buildListingUrl } from "@/utils/categoryUtils";
-import { MapPinIcon, Pencil, PauseIcon, HeartIcon } from "lucide-react";
+import { MapPinIcon, Pencil, PauseIcon, HeartIcon, Trash2 } from "lucide-react";
 import { formatUsername } from "@/utils/formatUsername";
 import { useRouter } from "next/navigation";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import UpdateListingForm from "../(protected)/profile/user-dashboard/[username]/UpdateListingForm";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "react-toastify";
+import { deleteListing } from "@/actions/deleteListing";
+import DeleteListingDialog from "../(protected)/profile/user-dashboard/[username]/DeleteListingDialog";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -64,6 +70,7 @@ interface Item {
   className?: string;
   itemCardImageHieght?: string;
   canEditListing?: boolean;
+  canDeleteListing?: boolean;
 }
 
 const ItemCard = ({
@@ -76,13 +83,15 @@ const ItemCard = ({
   itemCardBg = "",
   itemCardImageHieght = "",
   canEditListing = false,
-  className
+  canDeleteListing = false,
+  className,
 }: Item) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const playerRef = useRef<ReactPlayerProps>(null);
   const router = useRouter();
 
@@ -96,7 +105,6 @@ const ItemCard = ({
 
   const handleEditSuccess = () => {
     setIsEditModalOpen(false);
-    // refresh the listing data here or update the local state
   };
 
   const renderSlide = (item: SlideItem, index: number) => {
@@ -312,16 +320,27 @@ const ItemCard = ({
         </div>
       </Link>
 
-      {/* edit dialog */}
+      {/* Add delete and edit controls */}
 
+      {canDeleteListing && (
+        <DeleteListingDialog
+          listingId={listing.id}
+          username={listing.user.username ?? formatUsername(listing.user.name)}
+          onDeleteSuccess={() => {
+            router.refresh();
+          }}
+        />
+      )}
+
+      {/* edit dialog */}
       {canEditListing && (
-          <UpdateListingForm
-                listing={listing}
-                onSuccess={handleEditSuccess}
-                onCancel={() => setIsEditModalOpen(false)}
-                openModal={isEditModalOpen}
-                onOpenChangeModal={setIsEditModalOpen}
-          />
+        <UpdateListingForm
+          listing={listing}
+          onSuccess={handleEditSuccess}
+          onCancel={() => setIsEditModalOpen(false)}
+          openModal={isEditModalOpen}
+          onOpenChangeModal={setIsEditModalOpen}
+        />
       )}
     </div>
   );

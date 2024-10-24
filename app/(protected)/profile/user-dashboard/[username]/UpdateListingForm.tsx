@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { X, Pencil } from "lucide-react";
-import { useQuery , useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
@@ -55,8 +55,8 @@ export default function UpdateListingForm({
   openModal,
   onOpenChangeModal,
 }: Props) {
-   const router = useRouter();
-   const queryClient = useQueryClient();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
     isLoading,
@@ -72,14 +72,14 @@ export default function UpdateListingForm({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data: towns, isLoading: isLoadingTowns } = useQuery<Towns[]>({
-      queryKey: ["towns"],
-      queryFn: async () => {
-        const response = await axios.get<Towns[]>("/api/towns");
-        return response.data;
-      },
-      staleTime: 1000 * 60 * 60, // Cache for 1 hour
-    });
+  const { data: towns, isLoading: isLoadingTowns } = useQuery<Towns[]>({
+    queryKey: ["towns"],
+    queryFn: async () => {
+      const response = await axios.get<Towns[]>("/api/towns");
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 60, // Cache for 1 hour
+  });
 
   const [formData, setFormData] = useState<FormData>({
     title: listing.title,
@@ -104,8 +104,6 @@ export default function UpdateListingForm({
       [name]: value,
     }));
   };
-
-  
 
   const handleUploadSuccess = (result: any) => {
     const imageUrl = result.info.secure_url;
@@ -157,16 +155,14 @@ export default function UpdateListingForm({
 
       await response.json();
 
-       router.refresh();
+      router.refresh();
 
-       // Invalidate and refetch queries
-       await queryClient.invalidateQueries({
-         predicate: (query) =>
-           query.queryKey[0] === "listings" ||
-           (query.queryKey[0] === "listing" &&
-             query.queryKey[1] === listing.id),
-       });
-
+      // Invalidate and refetch queries
+      await queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "listings" ||
+          (query.queryKey[0] === "listing" && query.queryKey[1] === listing.id),
+      });
 
       toast.success("Listing updated successfully");
 
@@ -194,12 +190,7 @@ export default function UpdateListingForm({
   );
 
   return (
-    <Dialog
-      // modal={false}
-
-      open={openModal}
-      onOpenChange={onOpenChangeModal}
-    >
+    <Dialog modal={false} open={openModal} onOpenChange={onOpenChangeModal}>
       <DialogTrigger asChild>
         <button className="absolute -top-4 left-0 bg-white rounded-full p-1.5 shadow-md z-20">
           <Pencil className="h-5 w-5 text-gray-600" />
@@ -207,9 +198,10 @@ export default function UpdateListingForm({
       </DialogTrigger>
       <DialogContent
         onInteractOutside={(event) => event.preventDefault()}
-        className="max-w-3xl md:max-w-2xl"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        className="max-w-2xl md:max-w-4xl shadow-xl"
       >
-        <ScrollArea className="max-h-[90vh] px-1">
+        <ScrollArea className="max-h-[90vh] px-6">
           <div className="p-6">
             <DialogHeader>
               <DialogTitle>Update Listing</DialogTitle>
@@ -230,7 +222,7 @@ export default function UpdateListingForm({
                 required
                 value={formData.title}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
               />
             </div>
 
@@ -248,7 +240,7 @@ export default function UpdateListingForm({
                 rows={4}
                 value={formData.description}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
               />
             </div>
 
@@ -265,7 +257,7 @@ export default function UpdateListingForm({
           required
           value={formData.category}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
         >
           <option value="">Select a category</option>
           {categories?.map((cat) => (
@@ -289,7 +281,7 @@ export default function UpdateListingForm({
                   id="subcategory"
                   value={formData.subcategory}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 >
                   <option value="">Select a subcategory</option>
                   {selectedCategory.children.map((subcat) => (
@@ -314,7 +306,7 @@ export default function UpdateListingForm({
                   id="subSubcategory"
                   value={formData.subSubcategory}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 >
                   <option value="">Select a sub-subcategory</option>
                   {selectedSubcategory.children.map((subsubcat) => (
@@ -340,7 +332,7 @@ export default function UpdateListingForm({
                   required
                   value={formData.town}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 >
                   <option value="">Select a town</option>
                   <option value="New York">New York</option>
@@ -363,7 +355,7 @@ export default function UpdateListingForm({
                   value={formData.town}
                   onChange={handleChange}
                   disabled={isLoadingTowns}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 >
                   <option value="">Select a town</option>
                   {towns?.map((town) => (
@@ -372,7 +364,9 @@ export default function UpdateListingForm({
                     </option>
                   ))}
                   {isLoadingTowns && (
-                    <p className="mt-1 text-sm text-gray-500">Loading towns...</p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Loading towns...
+                    </p>
                   )}
                 </select>
               </div>
@@ -391,7 +385,7 @@ export default function UpdateListingForm({
                   required
                   value={formData.address}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 />
               </div>
             </div>
@@ -410,7 +404,7 @@ export default function UpdateListingForm({
                   required
                   value={formData.timeline}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 >
                   <option value="">Select a timeline</option>
                   <option value="Less than 1 month">Less than 1 month</option>
@@ -440,7 +434,7 @@ export default function UpdateListingForm({
                         handleChange(e);
                       }
                     }}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                   />
                 </div>
               )}
@@ -465,7 +459,7 @@ export default function UpdateListingForm({
                       handleChange(e);
                     }
                   }}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 />
               </div>
             )}
@@ -494,7 +488,7 @@ export default function UpdateListingForm({
                       <button
                         type="button"
                         onClick={() => open()}
-                        className="mt-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        className="mt-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                       >
                         Add Image ({formData.listingImages?.length || 0}/5)
                       </button>
@@ -531,14 +525,14 @@ export default function UpdateListingForm({
                 type="button"
                 onClick={onCancel}
                 disabled={isSubmitting}
-                className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-text"
+                className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-50 disabled:cursor-text"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-text"
+                className="inline-flex justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-50 disabled:cursor-text"
               >
                 {isSubmitting ? (
                   <span className="flex items-center">

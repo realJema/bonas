@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ListingFormData } from '@/schemas/interfaces';
+import { Towns } from "@prisma/client";
+
 
 interface Step2Props {
   onContinue: (data: {
@@ -40,6 +42,15 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
   const handleAddressChange = (newAddress: string) => {
     setLocation(`${town}, ${newAddress}`);
   };
+
+   const { data: towns, isLoading: isLoadingTowns } = useQuery<Towns[]>({
+     queryKey: ["towns"],
+     queryFn: async () => {
+       const response = await axios.get<Towns[]>("/api/towns");
+       return response.data;
+     },
+     staleTime: 1000 * 60 * 60, // Cache for 1 hour
+   });
 
   const {
     isLoading,
@@ -149,36 +160,36 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                 </div>
               </div>
             )} */}
-             <div className="flex-col space-x-6 sm:flex-row gap-4">
-            {selectedCategory?.children && (
-              <select
-                value={subcategory}
-                onChange={(e) => setSubcategory(e.target.value)}
-                className="border rounded-md p-2 text-black bg-gray-200"
-              >
-                <option value="">Select a subcategory</option>
-                {selectedCategory.children.map((subcat) => (
-                  <option key={subcat.id} value={subcat.name}>
-                    {subcat.name}
-                  </option>
-                ))}
-              </select>
-            )}
+            <div className="flex-col space-x-6 sm:flex-row gap-4">
+              {selectedCategory?.children && (
+                <select
+                  value={subcategory}
+                  onChange={(e) => setSubcategory(e.target.value)}
+                  className="border rounded-md p-2 text-black bg-gray-200"
+                >
+                  <option value="">Select a subcategory</option>
+                  {selectedCategory.children.map((subcat) => (
+                    <option key={subcat.id} value={subcat.name}>
+                      {subcat.name}
+                    </option>
+                  ))}
+                </select>
+              )}
 
-            {selectedSubcategory?.children && (
-              <select
-                value={subSubcategory}
-                onChange={(e) => setSubSubcategory(e.target.value)}
-                className="border rounded-md p-2 text-black bg-gray-200"
-              >
-                <option value="">Select a sub-subcategory</option>
-                {selectedSubcategory.children.map((subsubcat) => (
-                  <option key={subsubcat.id} value={subsubcat.name}>
-                    {subsubcat.name}
-                  </option>
-                ))}
-              </select>
-            )}
+              {selectedSubcategory?.children && (
+                <select
+                  value={subSubcategory}
+                  onChange={(e) => setSubSubcategory(e.target.value)}
+                  className="border rounded-md p-2 text-black bg-gray-200"
+                >
+                  <option value="">Select a sub-subcategory</option>
+                  {selectedSubcategory.children.map((subsubcat) => (
+                    <option key={subsubcat.id} value={subsubcat.name}>
+                      {subsubcat.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div className="flex flex-col md:flex-row md:space-x-4">
@@ -214,10 +225,16 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                   onChange={(e) => handleTownChange(e.target.value)}
                 >
                   <option value="">Select a town</option>
-                  <option value="New York">New York</option>
-                  <option value="Los Angeles">Los Angeles</option>
-                  <option value="Chicago">Chicago</option>
-                  {/* Add more cities as needed */}
+                  {towns?.map((town) => (
+                    <option key={town.id} value={town.name || ""}>
+                      {town.name} {town.region && `(${town.region})`}
+                    </option>
+                  ))}
+                  {isLoadingTowns && (
+                    <p className="mt-1 text-sm text-gray-500">
+                      Loading towns...
+                    </p>
+                  )}
                 </select>
               </div>
             </div>

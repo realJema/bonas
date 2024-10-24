@@ -315,13 +315,13 @@ const ItemCard = ({
       {/* edit dialog */}
 
       {canEditListing && (
-              <UpdateListingForm
+          <UpdateListingForm
                 listing={listing}
                 onSuccess={handleEditSuccess}
                 onCancel={() => setIsEditModalOpen(false)}
                 openModal={isEditModalOpen}
                 onOpenChangeModal={setIsEditModalOpen}
-              />
+          />
       )}
     </div>
   );

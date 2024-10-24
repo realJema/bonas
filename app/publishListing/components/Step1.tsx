@@ -1,10 +1,14 @@
-import { ListingFormData } from '@/schemas/interfaces';
-import { CldUploadWidget } from 'next-cloudinary';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { ListingFormData } from "@/schemas/interfaces";
+import { CldUploadWidget } from "next-cloudinary";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 interface Step1Props {
-  onContinue: (data: { title: string; description: string; profileImage?: string }) => void;
+  onContinue: (data: {
+    title: string;
+    description: string;
+    profileImage?: string;
+  }) => void;
   formData: ListingFormData;
 }
 
@@ -17,7 +21,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
   const [previewImage, setPreviewImage] = useState<string | null>(
     formData.profileImage || null
   );
- const [publicId , setPublicId] = useState('');
+  const [publicId, setPublicId] = useState("");
 
   useEffect(() => {
     setTitle(formData.title || "");
@@ -34,7 +38,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
   // Handle Cloudinary upload success
   const handleUploadSuccess = (result: any) => {
     const imageUrl = result.info.secure_url;
-    console.log('img: ', imageUrl)
+    console.log("img: ", imageUrl);
     setProfileImage(imageUrl);
     setPreviewImage(imageUrl);
   };
@@ -85,7 +89,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
               </p>
               <div className="space-y-4">
                 <CldUploadWidget
-                  uploadPreset="lymdepzy" 
+                  uploadPreset="lymdepzy"
                   onSuccess={handleUploadSuccess}
                 >
                   {({ open }) => (

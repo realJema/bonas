@@ -108,4 +108,7 @@ const UserProfilePage = async ({
   );
 };
 
+
+export const dynamic = "force-dynamic";
+
 export default UserProfilePage;

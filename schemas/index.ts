@@ -1,3 +1,4 @@
+import { isValidCloudinaryUrl } from "@/utils/imageUtils";
 import * as z from "zod";
 
 export const LoginSchema = z.object({
@@ -57,8 +58,7 @@ export const CreateListingSchema = z.object({
     .min(1, "At least one listing image is required")
     .max(5, "Maximum 5 images allowed")
     .refine(
-      (urls) =>
-        urls.every((url) => url.startsWith("https://res.cloudinary.com/")),
+      (urls) => urls.every(isValidCloudinaryUrl),
       "Invalid image URL. Must be Cloudinary URLs"
     ),
 });
@@ -75,7 +75,7 @@ export const UpdateListingSchema = z.object({
     .min(10, "Description must be at least 10 characters long"),
   location: z.string().min(1, "Location is required"),
   timeline: z.string().min(1, "Timeline is required"),
-    budget: z.union([
+  budget: z.union([
     z.number(),
     z.string().transform((val) => {
       const parsed = parseFloat(val);
@@ -89,8 +89,7 @@ export const UpdateListingSchema = z.object({
     .min(1, "At least one listing image is required")
     .max(5, "Maximum 5 images allowed")
     .refine(
-      (urls) =>
-        urls.every((url) => url.startsWith("https://res.cloudinary.com/")),
+      (urls) => urls.every(isValidCloudinaryUrl),
       "Invalid image URL. Must be Cloudinary URLs"
     ),
 });

@@ -3,6 +3,7 @@ import prisma from "@/prisma/client";
 import { UpdateListingSchema } from "@/schemas";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { revalidateTag } from "next/cache";
 
 export async function PUT(
   request: Request,
@@ -126,8 +127,16 @@ export async function PUT(
       });
     });
 
+    revalidateTag("listings-by-user-id");
+
+
     // 9. Return success response
-    return NextResponse.json(updatedListing, { status: 200 });
+    return NextResponse.json(updatedListing, {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -148,3 +157,6 @@ export async function PUT(
     );
   }
 }
+
+
+export const dynamic = "force-dynamic";

@@ -315,27 +315,13 @@ const ItemCard = ({
       {/* edit dialog */}
 
       {canEditListing && (
-        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogTrigger asChild>
-            <button className="absolute -top-4 left-0 bg-white rounded-full p-1.5 shadow-md z-20">
-              <Pencil className="h-5 w-5 text-gray-600" />
-            </button>
-          </DialogTrigger>
-          <DialogContent className="max-w-3xl md:max-w-2xl">
-            <ScrollArea className="max-h-[90vh] px-1">
-              <div className="p-6">
-                <DialogHeader>
-                  <DialogTitle>Update Listing</DialogTitle>
-                </DialogHeader>
-              </div>
               <UpdateListingForm
                 listing={listing}
                 onSuccess={handleEditSuccess}
                 onCancel={() => setIsEditModalOpen(false)}
+                openModal={isEditModalOpen}
+                onOpenChangeModal={setIsEditModalOpen}
               />
-            </ScrollArea>
-          </DialogContent>
-        </Dialog>
       )}
     </div>
   );

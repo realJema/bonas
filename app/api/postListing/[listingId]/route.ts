@@ -159,4 +159,98 @@ export async function PUT(
 }
 
 
+
+// delete listing
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { listingId: string } }
+) {
+  try {
+    // 1. Get authenticated session
+    const session = await auth();
+
+    // 2. Check if user is authenticated and has an email
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: "Unauthorized - Please sign in" },
+        { status: 401 }
+      );
+    }
+
+    // 3. Get listing ID from params and validate
+    const listingId = parseInt(params.listingId);
+    if (isNaN(listingId)) {
+      return NextResponse.json(
+        { error: "Invalid listing ID" },
+        { status: 400 }
+      );
+    }
+
+    // 4. Get user from database
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // 5. Verify listing exists and belongs to user
+    const existingListing = await prisma.listing.findUnique({
+      where: { id: listingId },
+    });
+
+    if (!existingListing) {
+      return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+    }
+
+    if (existingListing.userId !== user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized to delete this listing" },
+        { status: 403 }
+      );
+    }
+
+    // 6. Delete listing and related data in a transaction
+    await prisma.$transaction(async (tx) => {
+      // 6.1 Delete all images associated with the listing
+      await tx.image.deleteMany({
+        where: { listingId: listingId },
+      });
+
+      // 6.2 Delete all reviews associated with the listing
+      await tx.review.deleteMany({
+        where: { listingId: listingId },
+      });
+
+      // 6.3 Delete the listing itself
+      await tx.listing.delete({
+        where: { id: listingId },
+      });
+    });
+
+    // 7. Revalidate cache tags
+    revalidateTag("listings-by-user-id");
+
+    // 8. Return success response
+    return NextResponse.json(
+      { message: "Listing deleted successfully" },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+    return NextResponse.json(
+      { error: "Failed to delete listing" },
+      { status: 500 }
+    );
+  }
+}
+
+
 export const dynamic = "force-dynamic";

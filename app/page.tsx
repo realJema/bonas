@@ -1,5 +1,5 @@
+import {getListings} from "@/utils/getListings"
 import { getJobListings } from "@/utils/getJobListings";
-import { getListings } from "@/utils/getListings";
 import { getRealEstateListings } from "@/utils/getRealEstateListings";
 import { getVehiclesAndMotorListings } from "@/utils/getVehiclesAndMotorListings";
 import Footer from "./components/Footer";

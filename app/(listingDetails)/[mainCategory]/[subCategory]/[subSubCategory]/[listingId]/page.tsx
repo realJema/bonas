@@ -16,22 +16,26 @@ const ListingDetailsPage = async ({
     listingId: string;
   };
 }) => {
-  const listing = await prisma.listing.findUnique({
-    where: { id: parseInt(listingId) },
-    include: {
-      user: true,
-      category: {
-        include: {
-          parent: true,
-        },
-      },
-      images: true,
-    },
-  });
+   const listing = await prisma.listing.findUnique({
+     where: { id: parseInt(listingId) },
+     include: {
+       user: true,
+       category: {
+         include: {
+           parent: {
+             include: {
+               parent: true,
+             },
+           },
+         },
+       },
+       images: true,
+     },
+   });
 
-  if (!listing) {
-    notFound();
-  }
+   if (!listing) {
+     notFound();
+   }
 
   return (
     <div className="">
@@ -56,7 +60,6 @@ const ListingDetailsPage = async ({
         />
       </div>
 
-      {/* {JSON.stringify(listing)} */}
     </div>
   );
 };

@@ -174,6 +174,7 @@ const Gig = ({
                 Read more
               </Link>
             </div>
+            
             {/* categories */}
             <div className="flex flex-wrap gap-3 mt-4">
               {categories.map((cat, index) => (

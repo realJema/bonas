@@ -152,7 +152,7 @@ const getCachedListings = unstable_cache(
           images: listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
           category: listing.category!,
           user: listing.user,
-          reviews: listing.reviews,
+          review: listing.reviews,
         })),
         totalCount,
       };

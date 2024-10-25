@@ -8,6 +8,7 @@ import Reviews from "./Reviews";
 import SearchReviews from "./SearchReviews";
 import ReviewCard, { ReviewCardProps } from "./ReviewCard";
 import InfoRow from "./InfoRow";
+import prisma from "@/prisma/client";
 
 interface ImageData {
   id: number;
@@ -26,7 +27,7 @@ interface Props {
   price: string | number | null;
   listingImage: ImageData[];
   isFrench?: boolean;
-  category: string;
+  categoryId: number | null;
 }
 
 const sampleReviews: ReviewCardProps[] = [
@@ -55,7 +56,7 @@ const sampleReviews: ReviewCardProps[] = [
   },
 ];
 
-const Gig = ({
+const Gig = async ({
   image,
   description,
   rating,
@@ -65,9 +66,22 @@ const Gig = ({
   datePosted,
   listingImage,
   isFrench = false,
-  category,
+  categoryId,
 }: Props) => {
-  const categories = category.split(", ");
+
+   // Fetch sibling sub-sub categories
+  const siblingCategories = await prisma.category.findMany({
+    where: {
+      parentId: categoryId,
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  const categoryNames = siblingCategories.map(cat => cat.name);
+
+
 
   return (
     <div>
@@ -174,10 +188,10 @@ const Gig = ({
                 Read more
               </Link>
             </div>
-            
+
             {/* categories */}
             <div className="flex flex-wrap gap-3 mt-4">
-              {categories.map((cat, index) => (
+              {categoryNames.map((cat, index) => (
                 <CategoryButton key={index} label={cat} />
               ))}
             </div>

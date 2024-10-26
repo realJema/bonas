@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-import { revalidatePath } from "next/cache";
+import { revalidatePath , revalidateTag } from "next/cache";
 import { z } from "zod";
 
 // 1. Define deletion schema for validation
@@ -96,8 +96,17 @@ export async function deleteListing(
 
     // 9. Revalidate relevant paths
     revalidatePath(`/profile/user-dashboard/${validated.username}`);
+    
     revalidatePath("/listings"); // Revalidate main listings page if exists
     revalidatePath(`/listings/${listing.id}`); // Revalidate listing detail page
+    // Add cache revalidation after successful creation
+      revalidateTag("listings-by-user-id");
+
+      // Also revalidate the specific user's listings cache
+      revalidateTag(`user-${user.id}-listings`);
+
+      // revalidate all listings
+      revalidateTag("listings")
 
     return { success: true };
   } catch (error) {

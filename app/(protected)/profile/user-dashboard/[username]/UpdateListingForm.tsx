@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback , useEffect} from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { X, Pencil } from "lucide-react";
@@ -48,6 +48,44 @@ interface Category {
   parentId: number | null;
 }
 
+
+
+const findCategoryPath = (
+  categories: Category[] | undefined,
+  targetCategory: string
+): { main?: string; sub?: string; subSub?: string } => {
+  if (!categories) return {};
+
+  for (const mainCat of categories) {
+    if (mainCat.name === targetCategory) {
+      return { main: mainCat.name };
+    }
+
+    if (mainCat.children) {
+      for (const subCat of mainCat.children) {
+        if (subCat.name === targetCategory) {
+          return { main: mainCat.name, sub: subCat.name };
+        }
+
+        if (subCat.children) {
+          for (const subSubCat of subCat.children) {
+            if (subSubCat.name === targetCategory) {
+              return {
+                main: mainCat.name,
+                sub: subCat.name,
+                subSub: subSubCat.name,
+              };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return {};
+};
+
+
 export default function UpdateListingForm({
   listing,
   onSuccess,
@@ -78,20 +116,126 @@ export default function UpdateListingForm({
       const response = await axios.get<Towns[]>("/api/towns");
       return response.data;
     },
-    staleTime: 1000 * 60 * 60, // Cache for 1 hour
+    staleTime: 1000 * 60 * 60,
   });
 
-  const [formData, setFormData] = useState<FormData>({
-    title: listing.title,
-    description: listing.description,
-    category: listing.category.name,
-    price: listing.price,
-    budget: listing.budget?.toString() || "",
-    address: listing.location?.split(", ")[1] || "",
-    town: listing.location?.split(", ")[0] || "",
-    timeline: listing.timeline || "",
-    listingImages: listing.images.map((img) => img.imageUrl),
-  });
+  // const [formData, setFormData] = useState<FormData>({
+  //   title: listing.title,
+  //   description: listing.description,
+  //   category: listing.category.name,
+  //   price: listing.price,
+  //   budget: listing.budget?.toString() || "",
+  //   address: listing.location?.split(", ")[1] || "",
+  //   town: listing.location?.split(", ")[0] || "",
+  //   timeline: listing.timeline || "",
+  //   listingImages: listing.images.map((img) => img.imageUrl),
+  // });
+
+  // Initialize form data with category hierarchy
+    const [originalSelections, setOriginalSelections] = useState<{
+      category: string;
+      subcategory: string;
+      subSubcategory: string;
+    } | null>(null);
+
+    const initializeFormData = useCallback(() => {
+      const categoryPath = findCategoryPath(categories, listing.category.name);
+
+      // Store the original selections when first initializing
+      if (!originalSelections) {
+        setOriginalSelections({
+          category: categoryPath.main || listing.category.name,
+          subcategory: categoryPath.sub || "",
+          subSubcategory: categoryPath.subSub || "",
+        });
+      }
+
+      return {
+        title: listing.title,
+        description: listing.description,
+        category: categoryPath.main || listing.category.name,
+        subcategory: categoryPath.sub || "",
+        subSubcategory: categoryPath.subSub || "",
+        price: listing.price,
+        budget: listing.budget?.toString() || "",
+        address: listing.location?.split(", ")[1] || "",
+        town: listing.location?.split(", ")[0] || "",
+        timeline: listing.timeline || "",
+        listingImages: listing.images.map((img) => img.imageUrl),
+      };
+    }, [categories, listing, originalSelections]);
+
+    const [formData, setFormData] = useState<FormData>(initializeFormData());
+
+    useEffect(() => {
+      if (categories) {
+        setFormData(initializeFormData());
+      }
+    }, [categories, initializeFormData]);
+
+    const selectedCategory = categories?.find(
+      (cat) => cat.name === formData.category
+    );
+
+    const selectedSubcategory = selectedCategory?.children?.find(
+      (subcat) => subcat.name === formData.subcategory
+    );
+
+  // Reset subcategory and sub-subcategory when main category changes
+   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+     const { name, value } = e.target;
+
+     // If switching back to the original category, restore the original selections
+     if (value === originalSelections?.category) {
+       setFormData((prev) => ({
+         ...prev,
+         [name]: value,
+         subcategory: originalSelections.subcategory,
+         subSubcategory: originalSelections.subSubcategory,
+       }));
+     } else {
+       // Otherwise, reset subcategories as before
+       setFormData((prev) => ({
+         ...prev,
+         [name]: value,
+         subcategory: "",
+         subSubcategory: "",
+       }));
+     }
+   };
+
+  // Reset sub-subcategory when subcategory changes
+  // const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //     subSubcategory: "",
+  //   }));
+  // };
+ const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+   const { name, value } = e.target;
+
+   // If switching back to the original subcategory and main category matches
+   if (
+     value === originalSelections?.subcategory &&
+     formData.category === originalSelections?.category
+   ) {
+     setFormData((prev) => ({
+       ...prev,
+       [name]: value,
+       subSubcategory: originalSelections.subSubcategory,
+     }));
+   } else {
+     // Otherwise, reset sub-subcategory as before
+     setFormData((prev) => ({
+       ...prev,
+       [name]: value,
+       subSubcategory: "",
+     }));
+   }
+ };
+
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -181,13 +325,7 @@ export default function UpdateListingForm({
     }
   };
 
-  const selectedCategory = categories?.find(
-    (cat) => cat.name === formData.category
-  );
 
-  const selectedSubcategory = selectedCategory?.children?.find(
-    (subcat) => subcat.name === formData.subcategory
-  );
 
   return (
     <Dialog modal={false} open={openModal} onOpenChange={onOpenChangeModal}>
@@ -245,28 +383,102 @@ export default function UpdateListingForm({
             </div>
 
             <div>
-        <label
-          htmlFor="category"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Category
-        </label>
-        <select
-          name="category"
-          id="category"
-          required
-          value={formData.category}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
-        >
-          <option value="">Select a category</option>
-          {categories?.map((cat) => (
-            <option key={cat.id} value={cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Category
+              </label>
+              <select
+                name="category"
+                id="category"
+                required
+                value={formData.category}
+                onChange={handleCategoryChange}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+              >
+                <option value="">Select a category</option>
+                {categories?.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {selectedCategory?.children && (
+              <div>
+                <label
+                  htmlFor="subcategory"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Subcategory
+                </label>
+                <select
+                  name="subcategory"
+                  id="subcategory"
+                  value={formData.subcategory}
+                  onChange={handleSubcategoryChange}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                >
+                  <option value="">Select a subcategory</option>
+                  {selectedCategory.children.map((subcat) => (
+                    <option key={subcat.id} value={subcat.name}>
+                      {subcat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {selectedSubcategory?.children && (
+              <div>
+                <label
+                  htmlFor="subSubcategory"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Sub-subcategory
+                </label>
+                <select
+                  name="subSubcategory"
+                  id="subSubcategory"
+                  value={formData.subSubcategory}
+                  onChange={handleChange}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                >
+                  <option value="">Select a sub-subcategory</option>
+                  {selectedSubcategory.children.map((subsubcat) => (
+                    <option key={subsubcat.id} value={subsubcat.name}>
+                      {subsubcat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Category
+              </label>
+              <select
+                name="category"
+                id="category"
+                required
+                value={formData.category}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+              >
+                <option value="">Select a category</option>
+                {categories?.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {selectedCategory?.children && (
               <div>
@@ -316,31 +528,9 @@ export default function UpdateListingForm({
                   ))}
                 </select>
               </div>
-            )}
+            )} */}
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {/* <div>
-                <label
-                  htmlFor="town"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Town
-                </label>
-                <select
-                  id="town"
-                  name="town"
-                  required
-                  value={formData.town}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
-                >
-                  <option value="">Select a town</option>
-                  <option value="New York">New York</option>
-                  <option value="Los Angeles">Los Angeles</option>
-                  <option value="Chicago">Chicago</option>
-                </select>
-              </div> */}
-
               <div>
                 <label
                   htmlFor="town"

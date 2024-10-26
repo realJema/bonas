@@ -119,17 +119,6 @@ export default function UpdateListingForm({
     staleTime: 1000 * 60 * 60,
   });
 
-  // const [formData, setFormData] = useState<FormData>({
-  //   title: listing.title,
-  //   description: listing.description,
-  //   category: listing.category.name,
-  //   price: listing.price,
-  //   budget: listing.budget?.toString() || "",
-  //   address: listing.location?.split(", ")[1] || "",
-  //   town: listing.location?.split(", ")[0] || "",
-  //   timeline: listing.timeline || "",
-  //   listingImages: listing.images.map((img) => img.imageUrl),
-  // });
 
   // Initialize form data with category hierarchy
     const [originalSelections, setOriginalSelections] = useState<{

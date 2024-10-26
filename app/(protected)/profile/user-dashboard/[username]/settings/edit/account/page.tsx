@@ -48,7 +48,7 @@ const AccountEditPage = async () => {
                 htmlFor="deactivationReason"
                 className="text-sm font-semibold block mb-2"
               >
-                I'm leaving because...
+                I&apos;m leaving because...
               </Label>
               <Select>
                 <SelectTrigger className="w-full border-gray-300">
@@ -69,9 +69,11 @@ const AccountEditPage = async () => {
               <InfoIcon className="h-5 w-5 text-gray-400 ml-2" />
             </h3>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
-              <li>Your profile and Gigs won't be shown on Fiverr anymore.</li>
+              <li>
+                Your profile and Gigs won&apos;t be shown on Fiverr anymore.
+              </li>
               <li>Active orders will be cancelled.</li>
-              <li>You won't be able to re-activate your Gigs.</li>
+              <li>You won&apos;t be able to re-activate your Gigs.</li>
             </ul>
           </div>
         </div>

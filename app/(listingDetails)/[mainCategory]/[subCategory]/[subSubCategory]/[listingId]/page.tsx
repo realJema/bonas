@@ -57,6 +57,7 @@ const ListingDetailsPage = async ({
           price={listing.price?.toString() || listing.budget}
           datePosted={listing.createdAt}
           categoryId={listing.category.parentId}
+          category={listing.category.name}
         />
       </div>
 

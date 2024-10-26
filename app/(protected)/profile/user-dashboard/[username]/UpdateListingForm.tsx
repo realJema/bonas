@@ -84,7 +84,7 @@ export default function UpdateListingForm({
   const [formData, setFormData] = useState<FormData>({
     title: listing.title,
     description: listing.description,
-    //  category: listing.category.name,
+    category: listing.category.name,
     price: listing.price,
     budget: listing.budget?.toString() || "",
     address: listing.location?.split(", ")[1] || "",
@@ -244,7 +244,7 @@ export default function UpdateListingForm({
               />
             </div>
 
-            {/* <div>
+            <div>
         <label
           htmlFor="category"
           className="block text-sm font-medium text-gray-700"
@@ -266,7 +266,7 @@ export default function UpdateListingForm({
             </option>
           ))}
         </select>
-      </div> */}
+      </div>
 
             {selectedCategory?.children && (
               <div>
@@ -473,11 +473,6 @@ export default function UpdateListingForm({
                   <CldUploadWidget
                     uploadPreset="lymdepzy"
                     options={{
-                      styles: {
-                        modal: {
-                          zIndex: 99999,
-                        },
-                      },
                       sources: ["local", "url"],
                       multiple: true,
                       maxFiles: 5 - (formData.listingImages?.length || 0),

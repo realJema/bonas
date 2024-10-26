@@ -159,6 +159,10 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
               {listingImages.length < 5 && (
                 <CldUploadWidget
                   uploadPreset="lymdepzy"
+                  options={{
+                    sources: ["local"],
+                    multiple: true,
+                  }}
                   onSuccess={handleUploadSuccess}
                 >
                   {({ open }) => (

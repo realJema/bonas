@@ -28,6 +28,7 @@ interface Props {
   listingImage: ImageData[];
   isFrench?: boolean;
   categoryId: number | null;
+  category: string
 }
 
 const sampleReviews: ReviewCardProps[] = [
@@ -67,6 +68,7 @@ const Gig = async ({
   listingImage,
   isFrench = false,
   categoryId,
+  category
 }: Props) => {
 
    // Fetch sibling sub-sub categories
@@ -79,8 +81,13 @@ const Gig = async ({
     },
   });
 
-  const categoryNames = siblingCategories.map(cat => cat.name);
-
+// const categoryNames = siblingCategories.map(cat => cat.name);
+const categoryNames = [
+  category, // Current category first
+  ...siblingCategories
+    .map((cat) => cat.name)
+    .filter((name) => name !== category),
+];
 
 
   return (

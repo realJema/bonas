@@ -3,10 +3,8 @@ import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { DEFAULT_IMAGE } from "@/utils/imageUtils";
 
-
 // Set the maximum duration for this function to 60 seconds
 export const maxDuration = 60;
-
 
 // Define the parameters for the getListingsByUserId function
 interface GetListingsByUserIdParams {
@@ -32,8 +30,8 @@ const getCachedListingsByUserId = unstable_cache(
         userId: userId,
       };
 
-        const timestamp = Date.now();
-        console.log(`Cache busting timestamp: ${timestamp}`);
+      // const timestamp = Date.now();
+      // console.log(`Cache busting timestamp: ${timestamp}`);
 
       // Fetch listings and total count in a single transaction
       const [listings, totalCount] = await prisma.$transaction([
@@ -56,9 +54,10 @@ const getCachedListingsByUserId = unstable_cache(
       return {
         listings: listings.map(
           (listing): ExtendedListing => ({
-              ...listing,
+            ...listing,
             price: listing.price?.toFixed(2) ?? "0.00",
-            images: listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
+            images:
+              listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
             category: listing.category!,
             user: listing.user,
             review: listing.reviews,

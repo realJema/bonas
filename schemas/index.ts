@@ -83,7 +83,9 @@ export const UpdateListingSchema = z.object({
       return parsed;
     }),
   ]),
-  category: z.string().min(1, "Category is required"),
+  category: z.string().optional(),
+  subcategory: z.string().optional(),
+  subSubcategory: z.string().optional(),
   listingImages: z
     .array(z.string())
     .min(1, "At least one listing image is required")

@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-import { CreateListingInput, CreateListingSchema } from "@/schemas";
+import { CreateListingSchema } from "@/schemas";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function POST(request: Request) {
@@ -32,15 +33,55 @@ export async function POST(request: Request) {
     try {
       const validatedData = CreateListingSchema.parse(body);
 
-      // 5. Get category ID
-      const categoryData = await prisma.category.findFirst({
-        where: { name: validatedData.category },
-        select: { id: true },
-      });
+      // 5. Get the most specific category ID based on hierarchy
+      let categoryId: number | null | undefined = null;
 
-      if (!categoryData) {
+      if (validatedData.subSubcategory) {
+        // First try to find the sub-subcategory
+        const subSubCategory = await prisma.category.findFirst({
+          where: {
+            name: validatedData.subSubcategory,
+            parent: {
+              name: validatedData.subcategory,
+              parent: {
+                name: validatedData.category,
+              },
+            },
+          },
+          select: { id: true },
+        });
+        categoryId = subSubCategory?.id;
+      }
+
+      if (!categoryId && validatedData.subcategory) {
+        // If no sub-subcategory found, try to find the subcategory
+        const subCategory = await prisma.category.findFirst({
+          where: {
+            name: validatedData.subcategory,
+            parent: {
+              name: validatedData.category,
+            },
+          },
+          select: { id: true },
+        });
+        categoryId = subCategory?.id;
+      }
+
+      if (!categoryId) {
+        // If no subcategory found, find the main category
+        const mainCategory = await prisma.category.findFirst({
+          where: {
+            name: validatedData.category,
+            parent: null, // Main categories have no parent
+          },
+          select: { id: true },
+        });
+        categoryId = mainCategory?.id;
+      }
+
+      if (!categoryId) {
         return NextResponse.json(
-          { error: `Category '${validatedData.category}' not found` },
+          { error: "Invalid category hierarchy" },
           { status: 400 }
         );
       }
@@ -55,7 +96,7 @@ export async function POST(request: Request) {
             location: validatedData.location,
             timeline: validatedData.timeline,
             budget: validatedData.budget,
-            categoryId: categoryData.id,
+            categoryId: categoryId!, // Using the most specific category ID
             userId: user.id,
           },
         });
@@ -83,11 +124,28 @@ export async function POST(request: Request) {
                 username: true,
               },
             },
-            category: true,
+            category: {
+              include: {
+                parent: {
+                  include: {
+                    parent: true,
+                  },
+                },
+              },
+            },
             images: true,
           },
         });
       });
+
+      // Add cache revalidation after successful creation
+      revalidateTag("listings-by-user-id");
+
+      // Also revalidate the specific user's listings cache
+      revalidateTag(`user-${user.id}-listings`);
+
+      // revalidate all listings
+      revalidateTag("listings")
 
       // 7. Return success response
       return NextResponse.json(listing, { status: 201 });
@@ -114,4 +172,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

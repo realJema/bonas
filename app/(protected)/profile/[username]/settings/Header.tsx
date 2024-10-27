@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
+import Logo from "@/app/components/Logo";
 
 interface Props {
   username: string;
@@ -13,9 +14,9 @@ const Header = ({ username }: Props) => {
   const pathname = usePathname();
 
   const navLinks = [
-    { href: `/profile/${username}/settings/contacts`, label: "Contacts" },
-    { href: `/profile/${username}/settings/inbox`, label: "Inbox" },
-    { href: `/profile/${username}/settings`, label: "Settings" },
+    { href: `/profile/${username}/contacts`, label: "Contacts" },
+    { href: `/profile/${username}/inbox`, label: "Inbox" },
+    { href: `/profile/${username}/settings/edit/account`, label: "Settings" },
   ];
 
   // Function to check if the current path is active
@@ -29,7 +30,10 @@ const Header = ({ username }: Props) => {
   return (
     <header className="hidden border-b xl:px-0 md:block py-3 px-8 bg-white">
       <div className="md:flex justify-between items-center container mx-auto px-5 md:px-8 md:max-w-7xl">
-        <div className="flex space-x-6">
+        <div className="flex items-center space-x-6">
+          <Link href="/">
+            <Logo />
+          </Link>
           {navLinks.map((link) => (
             <Link
               key={link.href}

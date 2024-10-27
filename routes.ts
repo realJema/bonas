@@ -24,6 +24,8 @@ export const publicRoutes = [
 export const authRoutes = [
   "/profile/:username",
   "/profile/:username/settings",
+  "/profile/:username/inbox",
+  "/profile/:username/contacts",
   "/profile/:username/settings/edit/account",
   "/profile/:username/settings/edit/security",
   "/profile/:username/settings/edit/notifications",

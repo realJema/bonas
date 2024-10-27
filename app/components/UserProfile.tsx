@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import Link from "next/link";
 import { Session } from "next-auth";
@@ -41,7 +41,7 @@ export function UserProfile({ session }: UserProfileProps) {
     { label: "Refer a Friend", href: "#", disabled: true },
     {
       label: "Settings",
-      href: `/profile/${formattedUsername}/settings`,
+      href: `/profile/${formattedUsername}/settings/edit/account`,
       disabled: false,
     },
     { label: "Billing and payments", href: "#", disabled: true },

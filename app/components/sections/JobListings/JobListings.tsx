@@ -1,11 +1,11 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { ExtendedListing } from "../entities/ExtendedListing";
-import ListingSection from "./ListingSection";
 import { generateSlides } from "@/lib/generateSlides";
-import SkeletonSwiper from "./swiper/SkeletonSwiper";
-import SkeletonListingSection from "./skeletons/SkeletonListingSection";
+import SkeletonListingSection from "../../skeletons/SkeletonListingSection";
+import { ExtendedListing } from "@/app/entities/ExtendedListing";
+import ListingSection from "../../ListingSection";
+
 
 interface Props {
   jobListings: Promise<ExtendedListing[]>;

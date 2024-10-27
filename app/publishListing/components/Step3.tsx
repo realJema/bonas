@@ -167,7 +167,6 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                 >
                   {({ open }) => (
                     <button
-                      type="button"
                       onClick={() => open()}
                       className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors mb-4"
                     >

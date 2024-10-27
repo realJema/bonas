@@ -1,5 +1,5 @@
-import Footer from "@/app/components/Footer";
-import Navbar from "@/app/Navbar";
+import Footer from "@/app/components/sections/Footer/Footer";
+import Navbar from "@/app/components/sections/Navbar/Navbar";
 import { ReactNode } from "react";
 
 interface Props {

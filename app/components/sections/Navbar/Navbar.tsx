@@ -2,19 +2,19 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { EnvelopeIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import AuthButtons from "./components/auth/AuthButtons";
-import Header from "./components/Header";
-import Logo from "./components/Logo";
-import { PostDropdownMenu } from "./components/PostDropdownMenu";
-import SearchInput from "./components/SearchInput";
-import Sidebar from "./components/Sidebar";
-import { UserProfile } from "./components/UserProfile";
+import AuthButtons from "../../auth/AuthButtons";
+import Logo from "../../Logo";
+import { PostDropdownMenu } from "../../PostDropdownMenu";
+import SearchInput from "../../SearchInput";
+import Sidebar from "../Sidebar/Sidebar";
+import { UserProfile } from "../../UserProfile";
+import Header from "../Header/Header";
 
 interface Props {
-  displayHeader?: string
+  displayHeader?: string;
 }
 
-const Navbar = async ({displayHeader }:Props) => {
+const Navbar = async ({ displayHeader }: Props) => {
   const session = await auth();
 
   return (

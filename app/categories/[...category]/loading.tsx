@@ -1,8 +1,8 @@
-import Footer from '@/app/components/Footer';
-import React from 'react';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-import SkeletonCard from './SkeletonCard';
+import Footer from "@/app/components/sections/Footer/Footer";
+import React from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import SkeletonCard from "./SkeletonCard";
 
 const SkeletonFilterDropdown = () => (
   <div className="w-full">

@@ -1,6 +1,6 @@
 import FilterDropdown from "./FilterDropdown";
 import Search from "./Search";
-import Footer from "@/app/components/Footer";
+import Footer from "@/app/components/sections/Footer/Footer";
 import Hero from "./Hero";
 import Listings from "./Listings";
 import Loading from "./loading";
@@ -31,50 +31,49 @@ interface Filter {
   items: FilterItem[];
 }
 
-
 const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
-const towns = await prisma.towns.findMany({
-  where: {
-    active_listings: {
-      gt: 0,
+  const towns = await prisma.towns.findMany({
+    where: {
+      active_listings: {
+        gt: 0,
+      },
+      name: {
+        not: null, // Ensure we only get towns with names
+      },
     },
-    name: {
-      not: null, // Ensure we only get towns with names
+    orderBy: {
+      name: "asc",
     },
-  },
-  orderBy: {
-    name: "asc",
-  },
-  select: {
-    name: true,
-  },
-});
+    select: {
+      name: true,
+    },
+  });
 
- const filters: Filter[] = [
-   {
-     id: "city-region",
-     label: "City/Region",
-     items: [
-       { name: "All Locations", value: "" },
-       ...towns
-         .filter((town): town is { name: string } => town.name !== null)
-         .map((town) => ({
-           name: town.name,
-           value: town.name,
-         })),
-     ],
-   },
-   {
-     id: "date-posted",
-     label: "Date Posted",
-     items: [
-       { name: "Date Posted", value: "" },
-       { name: "Last 24 hours", value: "24h" },
-       { name: "Last 7 days", value: "7d" },
-       { name: "Last 30 days", value: "30d" },
-     ],
-   },
- ];
+  const filters: Filter[] = [
+    {
+      id: "city-region",
+      label: "City/Region",
+      items: [
+        { name: "All Locations", value: "" },
+        ...towns
+          .filter((town): town is { name: string } => town.name !== null)
+          .map((town) => ({
+            name: town.name,
+            value: town.name,
+          })),
+      ],
+    },
+    {
+      id: "date-posted",
+      label: "Date Posted",
+      items: [
+        { name: "Date Posted", value: "" },
+        { name: "Last 24 hours", value: "24h" },
+        { name: "Last 7 days", value: "7d" },
+        { name: "Last 30 days", value: "30d" },
+      ],
+    },
+  ];
 
   const [mainCategory, subCategory, subSubCategory] =
     category.map(decodeURIComponent);
@@ -87,8 +86,6 @@ const towns = await prisma.towns.findMany({
   const getSelectedValue = (id: string): string => {
     return searchParams[id] || "";
   };
-
-
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -133,17 +130,17 @@ const towns = await prisma.towns.findMany({
               subCategory={subCategory}
               subSubCategory={subSubCategory}
             />
-            
+
             {/* listings */}
-              <Listings
-                mainCategory={mainCategory}
-                subCategory={subCategory}
-                subSubCategory={subSubCategory}
-                page={currentPage}
-                pageSize={pageSize}
-                location={location}
-                datePosted={datePosted}
-              />
+            <Listings
+              mainCategory={mainCategory}
+              subCategory={subCategory}
+              subSubCategory={subSubCategory}
+              page={currentPage}
+              pageSize={pageSize}
+              location={location}
+              datePosted={datePosted}
+            />
           </main>
         </div>
       </div>

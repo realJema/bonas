@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
 import React from "react";
 import Link from "next/link";
-import Logo from "./Logo";
-import { useCategoryStore } from "../store";
+import Logo from "../../Logo";
+import { useCategoryStore } from "../../../store";
 import { useRouter } from "next/navigation";
-import FooterSkeleton from "./skeletons/FooterSkeleton";
+import FooterSkeleton from "../../skeletons/FooterSkeleton";
 
 const Footer = () => {
   const { categories, isLoading } = useCategoryStore();
@@ -70,7 +70,7 @@ const Footer = () => {
         ))}
 
         {/* About section */}
-        <div>
+        {/* <div>
           <h4 className="text-sm font-bold text-gray-700 uppercase">About</h4>
           <div className="mt-3 grid space-y-3 text-[16px]">
             <p>
@@ -130,7 +130,7 @@ const Footer = () => {
               </Link>
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="pt-5 mt-5 border-t border-gray-200 dark:border-neutral-700">
         <div className="sm:flex sm:justify-between sm:items-center">
@@ -208,4 +208,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

@@ -3,16 +3,17 @@
 import React, { useRef, useState } from "react";
 import { Swiper as SwiperInstance } from "swiper";
 import { Swiper as SwiperType } from "swiper/types";
-import { ExtendedListing } from "../entities/ExtendedListing";
-import Heading from "./Heading";
-import ItemCard from "./ItemCard";
-import CustomSwiper from "./swiper/CustomSwiper";
-import Navigation from "./swiper/Navigation";
+
 import Link from "next/link";
-import CategorySelectionItem from "./premiumContent/CategorySelectionItem";
 import { generateSlides } from "@/lib/generateSlides";
-import SkeletonCard from "../categories/[...category]/SkeletonCard";
-import SkeletonSwiper from "./swiper/SkeletonSwiper";
+import { ExtendedListing } from "@/app/entities/ExtendedListing";
+import Navigation from "../../swiper/Navigation";
+import Heading from "../../Heading";
+import CategorySelectionItem from "../../premiumContent/CategorySelectItem/CategorySelectionItem";
+import CustomSwiper from "../../swiper/CustomSwiper";
+import SkeletonSwiper from "../../swiper/SkeletonSwiper";
+import ItemCard from "../../ItemCard";
+
 
 interface SlideItem {
   type: "image" | "video";

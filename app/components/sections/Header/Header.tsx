@@ -1,14 +1,13 @@
 "use client";
 import React from "react";
-import { CategoryWithChildren, useCategoryStore } from "../store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import SearchInput from "./SearchInput";
-import HeaderDropdown from "./dropdowns/HeaderDropdown";
-import HeaderSkeleton from "./skeletons/HeaderSkeleton";
-
+import { CategoryWithChildren, useCategoryStore } from "@/app/store";
+import HeaderSkeleton from "../../skeletons/HeaderSkeleton";
+import HeaderDropdown from "../../dropdowns/HeaderDropdown";
+import SearchInput from "../../SearchInput";
 
 const Header = () => {
   const router = useRouter();
@@ -95,7 +94,6 @@ const Header = () => {
 
   if (isLoading) return <HeaderSkeleton />;
   if (error) return <div>Error loading categories: {error.message}</div>;
-
 
   return (
     <header className="hidden md:block border-b xl:px-0 relative bg-white">

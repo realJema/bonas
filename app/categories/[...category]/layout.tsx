@@ -1,12 +1,11 @@
-import Navbar from '@/app/Navbar'
-import { ReactNode } from 'react'
-
+import Navbar from "@/app/components/sections/Navbar/Navbar";
+import { ReactNode } from "react";
 
 interface Props {
-    children: ReactNode
+  children: ReactNode;
 }
 
-const CategriesLayout = ({children}:Props) => {
+const CategriesLayout = ({ children }: Props) => {
   return (
     <div>
       <Navbar />
@@ -15,6 +14,6 @@ const CategriesLayout = ({children}:Props) => {
       </main>
     </div>
   );
-}
+};
 
-export default CategriesLayout
+export default CategriesLayout;

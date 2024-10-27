@@ -1,9 +1,10 @@
 "use client";
 
+import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import React, { Suspense } from "react";
-import { ExtendedListing } from "../entities/ExtendedListing";
-import ListingSection from "./ListingSection";
-import SkeletonListingSection from "./skeletons/SkeletonListingSection";
+import SkeletonListingSection from "../../skeletons/SkeletonListingSection";
+import ListingSection from "../../ListingSection";
+
 
 interface Props {
   vehiclesAndMotorListings: Promise<ExtendedListing[]>;

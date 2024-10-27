@@ -47,8 +47,9 @@ const ListingDetailsPage = async ({
         />
         <IconRow />
       </div>
-      <div className="mt-10">
+      <div className="mt-5">
         <Gig
+          title={listing.title}
           description={listing.description}
           image={listing.user.profilePicture || ''}
           location={listing.location || ''}

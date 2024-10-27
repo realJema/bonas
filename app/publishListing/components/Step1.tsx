@@ -94,7 +94,6 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                 >
                   {({ open }) => (
                     <button
-                      type="button"
                       onClick={() => open()}
                       className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
                     >

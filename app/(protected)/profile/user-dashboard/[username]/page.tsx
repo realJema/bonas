@@ -3,11 +3,11 @@ import { auth } from "@/auth";
 import ProfileCard from "./UserProfileCard";
 import LearnmoreCard from "./LearnMoreCard";
 import DescriptionCard from "./DescriptionCard";
-import Header from "@/app/components/Header";
 import { getListingsByUserId } from "@/utils/getListingsByUserId";
 import ItemCard from "@/app/components/ItemCard";
 import { generateSlides } from "@/lib/generateSlides";
 import Pagination from "@/app/components/Pagination";
+import Header from "@/app/components/sections/Header/Header";
 
 interface Props {
   params: { username: string };
@@ -30,7 +30,6 @@ const UserProfilePage = async ({
     page: currentPage,
     pageSize: pageSize,
   });
-
 
   return (
     <>
@@ -109,7 +108,6 @@ const UserProfilePage = async ({
     </>
   );
 };
-
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

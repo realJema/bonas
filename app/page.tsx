@@ -1,15 +1,15 @@
-import {getListings} from "@/utils/getListings"
+import { getListings } from "@/utils/getListings";
 import { getJobListings } from "@/utils/getJobListings";
 import { getRealEstateListings } from "@/utils/getRealEstateListings";
 import { getVehiclesAndMotorListings } from "@/utils/getVehiclesAndMotorListings";
-import Footer from "./components/Footer";
+import Footer from "./components/sections/Footer/Footer";
 import Hero from "./components/Hero";
-import JobListings from "./components/JobListings";
-import PremiumContent from "./components/PremiumContent";
-import RealEstates from "./components/RealEstateListings";
-import VehiculesAndMotor from "./components/VehiculesAndMotor";
-import Navbar from "./Navbar";
+import Navbar from "./components/sections/Navbar/Navbar";
 import { auth } from "@/auth";
+import JobListings from "./components/sections/JobListings/JobListings";
+import RealEstates from "./components/sections/RealEstateListings/RealEstateListings";
+import VehiculesAndMotor from "./components/sections/VehiclesAndMotorListings/VehiculesAndMotor";
+import PremiumContent from "./components/sections/PremiumContent/PremiumContent";
 
 // Server Action
 async function fetchListingsForCategory(category: string) {

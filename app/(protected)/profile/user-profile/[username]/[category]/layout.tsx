@@ -1,5 +1,5 @@
-import Footer from "@/app/components/Footer";
-import Navbar from "@/app/Navbar";
+import Footer from "@/app/components/sections/Footer/Footer";
+import Navbar from "@/app/components/sections/Navbar/Navbar";
 import React, { PropsWithChildren } from "react";
 
 const UserProfilePageLayout = ({ children }: PropsWithChildren) => {

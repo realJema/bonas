@@ -29,6 +29,7 @@ interface Props {
   isFrench?: boolean;
   categoryId: number | null;
   category: string
+  title: string;
 }
 
 const sampleReviews: ReviewCardProps[] = [
@@ -68,7 +69,8 @@ const Gig = async ({
   listingImage,
   isFrench = false,
   categoryId,
-  category
+  category,
+  title,
 }: Props) => {
 
    // Fetch sibling sub-sub categories
@@ -95,9 +97,9 @@ const categoryNames = [
       <div className="lg:grid lg:grid-cols-3 lg:gap-6">
         <div className="lg:col-span-2">
           <div className="w-full">
-            {/* Description */}
+            {/* Title */}
             <div className="text-lg font-bold text-black mb-4 p-2 max-w-3xl">
-              {description}
+              {title}
             </div>
 
             {/* Rating */}
@@ -123,7 +125,7 @@ const categoryNames = [
 
             {/* Profile info */}
             <div className="flex items-center space-x-4 mb-4">
-              <div className="relative h-32 w-32">
+              <div className="relative h-24 w-24">
                 <Image
                   src={image}
                   fill
@@ -179,9 +181,9 @@ const categoryNames = [
           </div>
 
           <div className="flex-col gap-3 w-full max-w-xl mt-6">
+            {/* Description */}
             <h2 className="font-bold mb-1">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-              molestias architecto earum.
+              {description}
             </h2>
             <p className="text-gray-500 mb-5">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea ipsum

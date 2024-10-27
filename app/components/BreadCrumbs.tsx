@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronRight, Home } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   mainCategory?: string;
@@ -12,10 +13,12 @@ const BreadCrumbs = ({ mainCategory, subCategory, subSubCategory }: Props) => {
     <nav aria-label="Breadcrumb" className="py-3 sm:py-4 md:py-5">
       <ol className="flex flex-wrap items-center text-sm sm:text-base md:text-lg">
         <li className="flex items-center">
+          <Link href='/'>
           <Home
             className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500"
             aria-hidden="true"
           />
+          </Link>
           <span className="sr-only">Home</span>
         </li>
         {mainCategory && (

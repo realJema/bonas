@@ -6,8 +6,9 @@ import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
 import FinalStep from "./components/FinalStep";
 import SuccessPage from "./components/SuccessPage";
-import { useRouter } from 'next/navigation';
-import {ListingFormData} from "@/schemas/interfaces";
+import { useRouter } from "next/navigation";
+import { ListingFormData } from "@/schemas/interfaces";
+import Link from "next/link";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -29,77 +30,76 @@ export default function Home() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-const handlePublish = async () => {
-  try {
-    setIsPublishing(true);
-    setError(null);
+  const handlePublish = async () => {
+    try {
+      setIsPublishing(true);
+      setError(null);
 
-    
-    console.log("Sending formData:", formData);
-    const response = await fetch("/api/postListing", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+      console.log("Sending formData:", formData);
+      const response = await fetch("/api/postListing", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      if (data.details) {
-        // Handle validation errors
-        const errorMessage = data.details
-          .map(
-            (err: { path: string; message: string }) =>
-              `${err.path}: ${err.message}`
-          )
-          .join(", ");
-        throw new Error(errorMessage);
+      if (!response.ok) {
+        if (data.details) {
+          // Handle validation errors
+          const errorMessage = data.details
+            .map(
+              (err: { path: string; message: string }) =>
+                `${err.path}: ${err.message}`
+            )
+            .join(", ");
+          throw new Error(errorMessage);
+        }
+        throw new Error(data.error || "Failed to create listing");
       }
-      throw new Error(data.error || "Failed to create listing");
+
+      setIsPublished(true);
+    } catch (error) {
+      console.error("Error publishing listing:", error);
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+    } finally {
+      setIsPublishing(false);
     }
+  };
 
-    setIsPublished(true);
-  } catch (error) {
-    console.error("Error publishing listing:", error);
-    setError(
-      error instanceof Error ? error.message : "An unexpected error occurred"
-    );
-  } finally {
-    setIsPublishing(false);
-  }
-};
+  // const handlePublish = async () => {
+  //   try {
+  //     setIsPublishing(true);
+  //     setError(null);
 
-// const handlePublish = async () => {
-//   try {
-//     setIsPublishing(true);
-//     setError(null);
+  //     const response = await fetch("/api/postListing", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //        body: JSON.stringify(formData),
+  //     });
 
-//     const response = await fetch("/api/postListing", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//        body: JSON.stringify(formData),
-//     });
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.error || "Failed to create listing");
+  //     }
 
-//     if (!response.ok) {
-//       const errorData = await response.json();
-//       throw new Error(errorData.error || "Failed to create listing");
-//     }
-
-//     const listing = await response.json();
-//     setIsPublished(true);
-//   } catch (error) {
-//     console.error("Error publishing listing:", error);
-//     setError(
-//       error instanceof Error ? error.message : "An unexpected error occurred"
-//     );
-//   } finally {
-//     setIsPublishing(false);
-//   }
-// };
+  //     const listing = await response.json();
+  //     setIsPublished(true);
+  //   } catch (error) {
+  //     console.error("Error publishing listing:", error);
+  //     setError(
+  //       error instanceof Error ? error.message : "An unexpected error occurred"
+  //     );
+  //   } finally {
+  //     setIsPublishing(false);
+  //   }
+  // };
 
   const handleReview = () => {
     setIsPublished(false);
@@ -173,11 +173,24 @@ const handlePublish = async () => {
           )}
 
           {/* Exit Button */}
-          <button className="text-[15px] text-gray-800 hover:underline" onClick={() => window.location.href = '/'}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <Link href="/">
+            <button className="text-[15px] text-gray-800 hover:underline">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </Link>
         </div>
       </header>
 

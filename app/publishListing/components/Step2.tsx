@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { ListingFormData } from '@/schemas/interfaces';
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { ListingFormData } from "@/schemas/interfaces";
 import { Towns } from "@prisma/client";
-
 
 interface Step2Props {
   onContinue: (data: {
@@ -13,7 +12,7 @@ interface Step2Props {
     location: string;
   }) => void;
   onBack: () => void;
-  formData: ListingFormData
+  formData: ListingFormData;
 }
 
 interface Category {
@@ -43,18 +42,18 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
     setLocation(`${town}, ${newAddress}`);
   };
 
-   const { data: towns, isLoading: isLoadingTowns } = useQuery<Towns[]>({
-     queryKey: ["towns"],
-     queryFn: async () => {
-       const response = await axios.get<Towns[]>("/api/towns");
-       return response.data;
-     },
-     staleTime: 1000 * 60 * 60, // Cache for 1 hour
-   });
+  const { data: towns, isLoading: isLoadingTowns } = useQuery<Towns[]>({
+    queryKey: ["towns"],
+    queryFn: async () => {
+      const response = await axios.get<Towns[]>("/api/towns");
+      return response.data;
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
   const {
     isLoading,
-    error,
     data: categories,
   } = useQuery<Category[], Error>({
     queryKey: ["categories"],
@@ -62,7 +61,8 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
       const response = await axios.get<Category[]>("/api/categories");
       return response.data;
     },
-    staleTime: 1000 * 60 * 60, // 1 hour
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,11 +126,15 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                 required
               >
                 <option value="">Select a category</option>
-                {categories?.map((cat) => (
-                  <option key={cat.id} value={cat.name}>
-                    {cat.name}
-                  </option>
-                ))}
+                {isLoading ? (
+                  <option disabled>Loading categories...</option>
+                ) : (
+                  categories?.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
 
@@ -225,15 +229,15 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                   onChange={(e) => handleTownChange(e.target.value)}
                 >
                   <option value="">Select a town</option>
-                  {towns?.map((town) => (
-                    <option key={town.id} value={town.name || ""}>
-                      {town.name} {town.region && `(${town.region})`}
-                    </option>
-                  ))}
-                  {isLoadingTowns && (
-                    <p className="mt-1 text-sm text-gray-500">
-                      Loading towns...
-                    </p>
+                  <option value="">Select a town</option>
+                  {isLoadingTowns ? (
+                    <option disabled>Loading towns...</option>
+                  ) : (
+                    towns?.map((town) => (
+                      <option key={town.id} value={town.name || ""}>
+                        {town.name} {town.region && `(${town.region})`}
+                      </option>
+                    ))
                   )}
                 </select>
               </div>

@@ -198,7 +198,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
               />
 
               {/* Images Preview Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 my-4">
                 {listingImages.map((image, index) => (
                   <div key={index} className="relative group">
                     <div className="relative w-full h-32 rounded-lg overflow-hidden">

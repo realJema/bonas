@@ -6,7 +6,14 @@ import {
 } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 4,
+      staleTime: 1000 * 60 * 60,
+    }
+  }
+});
 
 const QueryClientProvider = ({ children }: PropsWithChildren) => {
   return (

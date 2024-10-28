@@ -3,6 +3,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { X } from "lucide-react";
+import CloudinaryUpload from "./CloudinaryUpload/CloudinaryUpload";
 
 interface Step3Props {
   onContinue: (data: {
@@ -15,11 +16,25 @@ interface Step3Props {
 }
 
 export default function Step3({ onContinue, onBack, formData }: Step3Props) {
+  const [isUploading, setIsUploading] = useState(false);
   const [timeline, setTimeline] = useState<string>(formData.timeline || "");
   const [budget, setBudget] = useState<string>(formData.budget || "");
   const [listingImages, setListingImages] = useState<string[]>(
     formData.listingImages || []
   );
+
+  // Handle Cloudinary upload success
+  const handleUploadSuccess = (imageUrl: string) => {
+    setListingImages((prev) => [...prev, imageUrl]);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isUploading) {
+      return;
+    }
+    onContinue({ timeline, budget, listingImages });
+  };
 
   useEffect(() => {
     setTimeline(formData.timeline || "");
@@ -27,16 +42,13 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
     setListingImages(formData.listingImages || []);
   }, [formData]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onContinue({ timeline, budget, listingImages });
-  };
+  
 
   // Handle Cloudinary upload success
-  const handleUploadSuccess = (result: any) => {
-    const imageUrl = result.info.secure_url;
-    setListingImages((prev) => [...prev, imageUrl]);
-  };
+  // const handleUploadSuccess = (result: any) => {
+  //   const imageUrl = result.info.secure_url;
+  //   setListingImages((prev) => [...prev, imageUrl]);
+  // };
 
   // Handle image removal
   const handleRemoveImage = (indexToRemove: number) => {
@@ -156,7 +168,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
               </p>
 
               {/* Upload Button */}
-              {listingImages.length < 5 && (
+              {/* {listingImages.length < 5 && (
                 <CldUploadWidget
                   uploadPreset="lymdepzy"
                   options={{
@@ -174,7 +186,16 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                     </button>
                   )}
                 </CldUploadWidget>
-              )}
+              )} */}
+              <CloudinaryUpload
+                onUploadSuccess={handleUploadSuccess}
+                onUploadError={(error) =>
+                  console.error("Upload failed:", error)
+                }
+                currentFiles={listingImages}
+                maxFiles={5}
+                multiple={true}
+              />
 
               {/* Images Preview Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">

@@ -2,6 +2,7 @@ import { ListingFormData } from "@/schemas/interfaces";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import CloudinaryUpload from "./CloudinaryUpload/CloudinaryUpload";
 
 interface Step1Props {
   onContinue: (data: {
@@ -13,6 +14,7 @@ interface Step1Props {
 }
 
 export default function Step1({ onContinue, formData }: Step1Props) {
+  const [isUploading, setIsUploading] = useState(false);
   const [title, setTitle] = useState(formData.title || "");
   const [description, setDescription] = useState(formData.description || "");
   const [profileImage, setProfileImage] = useState<string>(
@@ -21,7 +23,11 @@ export default function Step1({ onContinue, formData }: Step1Props) {
   const [previewImage, setPreviewImage] = useState<string | null>(
     formData.profileImage || null
   );
-  const [publicId, setPublicId] = useState("");
+
+   const handleUploadSuccess = (imageUrl: string) => {
+     setProfileImage(imageUrl);
+     setPreviewImage(imageUrl);
+   };
 
   useEffect(() => {
     setTitle(formData.title || "");
@@ -30,18 +36,21 @@ export default function Step1({ onContinue, formData }: Step1Props) {
     setPreviewImage(formData.profileImage || null);
   }, [formData]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onContinue({ title, description });
-  };
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+     if (isUploading) {
+       return;
+     }
+     onContinue({ title, description, profileImage });
+   };
 
   // Handle Cloudinary upload success
-  const handleUploadSuccess = (result: any) => {
-    const imageUrl = result.info.secure_url;
-    console.log("img: ", imageUrl);
-    setProfileImage(imageUrl);
-    setPreviewImage(imageUrl);
-  };
+  // const handleUploadSuccess = (result: any) => {
+  //   const imageUrl = result.info.secure_url;
+  //   console.log("img: ", imageUrl);
+  //   setProfileImage(imageUrl);
+  //   setPreviewImage(imageUrl);
+  // };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -88,7 +97,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                 Upload a profile image to personalize your listing
               </p>
               <div className="space-y-4">
-                <CldUploadWidget
+                {/* <CldUploadWidget
                   uploadPreset="lymdepzy"
                   onSuccess={handleUploadSuccess}
                 >
@@ -100,7 +109,17 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                       Choose Image
                     </button>
                   )}
-                </CldUploadWidget>
+                </CldUploadWidget> */}
+
+                <CloudinaryUpload
+                  onUploadSuccess={handleUploadSuccess}
+                  onUploadError={(error) =>
+                    console.error("Upload failed:", error)
+                  }
+                  currentFiles={profileImage ? [profileImage] : []}
+                  maxFiles={1}
+                  multiple={false}
+                />
 
                 {/* Image Preview */}
                 {previewImage && (

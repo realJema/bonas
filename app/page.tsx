@@ -3,7 +3,7 @@ import { getJobListings } from "@/utils/getJobListings";
 import { getRealEstateListings } from "@/utils/getRealEstateListings";
 import { getVehiclesAndMotorListings } from "@/utils/getVehiclesAndMotorListings";
 import Footer from "./components/sections/Footer/Footer";
-import Hero from "./components/Hero";
+import Hero from "./components/sections/Hero/Hero";
 import Navbar from "./components/sections/Navbar/Navbar";
 import { auth } from "@/auth";
 import JobListings from "./components/sections/JobListings/JobListings";

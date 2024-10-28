@@ -3,9 +3,9 @@
 import { formatUsername } from "@/utils/formatUtils";
 import { useCallback, useState } from "react";
 import { Swiper as SwiperType } from "swiper";
-import HeroLink, { HeroLinkProps } from "./HeroLink";
-import HeroSwiper from "./swiper/HeroSwipper";
-import Navigation from "./swiper/Navigation";
+import HeroLink, { HeroLinkProps } from "../../HeroLink";
+import HeroSwiper from "../../swiper/HeroSwipper";
+import Navigation from "../../swiper/Navigation";
 import Image from "next/image";
 import backgroundImage from "@/public/Banner-Desktop.webp";
 

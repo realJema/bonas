@@ -279,7 +279,7 @@ const ItemCard = ({
               </Link>
             </div>
             {/* date posted */}
-            <span className="text-sm text-gray-600">
+            <span className="text-xs text-gray-600">
               {formatDatePosted(listing.createdAt)}
             </span>
           </div>

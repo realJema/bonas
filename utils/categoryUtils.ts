@@ -60,3 +60,10 @@ export const validateListingUrl = (
     expectedSubSub === subSubCategory.toLowerCase()
   );
 };
+
+/**  */
+
+export const getCategoryUrl = (category: string) => {
+  const encodedCategory = encodeURIComponent(category);
+  return `/categories/${encodedCategory}`;
+};

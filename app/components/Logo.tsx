@@ -1,7 +1,11 @@
+import Link from "next/link";
 
 const Logo = () => {
   return (
-    <h1 className="text-2xl font-black text-black opacity-90 flex items-center">
+    <Link
+      href="/"
+      className="text-2xl font-black text-black opacity-90 flex items-center"
+    >
       <span className="relative">
         Bonas
         <span className="absolute bottom-2 -right-2">
@@ -19,7 +23,7 @@ const Logo = () => {
           </svg>
         </span>
       </span>
-    </h1>
+    </Link>
   );
 };
 

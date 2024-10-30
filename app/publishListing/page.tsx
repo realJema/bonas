@@ -9,6 +9,8 @@ import SuccessPage from "./components/SuccessPage";
 import { useRouter } from "next/navigation";
 import { ListingFormData } from "@/schemas/interfaces";
 import Link from "next/link";
+import Logo from "@/app/components/Logo";
+
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -119,12 +121,7 @@ export default function Home() {
       <header className="bg-white shadow-sm h-auto md:h-[70px] py-4 md:py-0 flex items-center">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           {/* Bonas Logo */}
-          <div
-            className="text-2xl font-bold mb-4 md:mb-0 md:mr-8 text-black"
-            style={{ width: "100px" }}
-          >
-            Bonas<span className="text-[#1dbf73]">.</span>
-          </div>
+          <Logo />
 
           {/* Breadcrumb Navigation */}
           {!isPublished && (

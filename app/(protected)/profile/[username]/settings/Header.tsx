@@ -31,9 +31,8 @@ const Header = ({ username }: Props) => {
     <header className="hidden border-b xl:px-0 md:block py-3 px-8 bg-white">
       <div className="md:flex justify-between items-center container mx-auto px-5 md:px-8 md:max-w-7xl">
         <div className="flex items-center space-x-6">
-          <Link href="/">
-            <Logo />
-          </Link>
+          <Logo />
+          
           {navLinks.map((link) => (
             <Link
               key={link.href}

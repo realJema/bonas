@@ -87,6 +87,8 @@ export default async function Home() {
   );
 }
 
+export const dynamic = "force-dynamic";
+
 // import { getListings } from "@/utils/getListings";
 // import { getJobListings } from "@/utils/getJobListings";
 // import { getRealEstateListings } from "@/utils/getRealEstateListings";

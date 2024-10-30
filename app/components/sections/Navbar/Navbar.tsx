@@ -19,29 +19,29 @@ const Navbar = async ({ displayHeader }: Props) => {
 
   return (
     <header className="border-b h-16 bg-white w-full">
-      <nav className="flex justify-around sm:justify-between items-center sticky z-40 top-0 border-b h-16 bg-white gap-5 sm:gap-3 container mx-auto px-10 md:px-4 md:max-w-7xl">
+      <nav className="flex justify-around sm:justify-between items-center sticky z-40 top-0 border-b h-16 bg-white gap-4 sm:gap-3 container mx-auto px-10 md:px-4 md:max-w-7xl">
         <div className="flex items-center gap-4 md:gap-7 w-full">
           <div className="flex items-center gap-3">
             <div className="xl:hidden">
               <Sidebar />
             </div>
-            <Link className="hidden sm:block" href="/">
+            <div className="hidden sm:block">
               <Logo />
-            </Link>
+            </div>
           </div>
           <div className="hidden sm:block w-full md:max-w-lg lg:max-w-full">
             <SearchInput />
           </div>
         </div>
 
-        <Link className="sm:hidden" href="/">
+        <div className="sm:hidden">
           <Logo />
-        </Link>
+        </div>
 
         <div className="flex items-center gap-4">
-          <div className="hidden sm:block">
-            <PostDropdownMenu />
-          </div>
+          {session && (
+              <PostDropdownMenu />
+          )}
 
           <Button
             variant="ghost"

@@ -119,7 +119,7 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="bg-white shadow-sm h-auto md:h-[70px] py-4 md:py-0 flex items-center">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
+        <div className="container mx-auto space-x-3 px-4 flex flex-col md:flex-row items-center">
           {/* Bonas Logo */}
           <Logo />
 

@@ -78,7 +78,7 @@ const SignInModal = ({ isOpen, onClose, switchToSignup }: SignInModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] h-[600px] md:h-[650px] md:max-w-4xl xl:max-w-5xl p-0 border-none">
+      <DialogContent className="sm:max-w-[500px] lg:h-[600px] md:max-w-4xl xl:max-w-5xl p-0 border-none">
         <div className="grid md:grid-cols-2">
           <ModalDescription />
           <div className="p-4 sm:p-7">

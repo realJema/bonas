@@ -44,13 +44,6 @@ export default function Step1({ onContinue, formData }: Step1Props) {
      onContinue({ title, description, profileImage });
    };
 
-  // Handle Cloudinary upload success
-  // const handleUploadSuccess = (result: any) => {
-  //   const imageUrl = result.info.secure_url;
-  //   console.log("img: ", imageUrl);
-  //   setProfileImage(imageUrl);
-  //   setPreviewImage(imageUrl);
-  // };
 
   return (
     <div className="flex flex-col md:flex-row">

@@ -92,11 +92,6 @@ export default function CloudinaryUpload({
             showPoweredBy: false,
           }}
           onSuccess={handleSuccess}
-        //   onFailure={(error) => {
-        //     console.error("Upload failed:", error);
-        //     setUploadError(error.message || "Upload failed");
-        //     onUploadError?.(error);
-        //   }}
           onClose={() => {
             setIsUploading(false);
             setUploadError(null);

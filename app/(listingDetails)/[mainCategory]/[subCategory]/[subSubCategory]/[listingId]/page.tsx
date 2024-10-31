@@ -16,26 +16,26 @@ const ListingDetailsPage = async ({
     listingId: string;
   };
 }) => {
-   const listing = await prisma.listing.findUnique({
-     where: { id: parseInt(listingId) },
-     include: {
-       user: true,
-       category: {
-         include: {
-           parent: {
-             include: {
-               parent: true,
-             },
-           },
-         },
-       },
-       images: true,
-     },
-   });
+  const listing = await prisma.listing.findUnique({
+    where: { id: parseInt(listingId) },
+    include: {
+      user: true,
+      category: {
+        include: {
+          parent: {
+            include: {
+              parent: true,
+            },
+          },
+        },
+      },
+      images: true,
+    },
+  });
 
-   if (!listing) {
-     notFound();
-   }
+  if (!listing) {
+    notFound();
+  }
 
   return (
     <div className="">
@@ -51,17 +51,16 @@ const ListingDetailsPage = async ({
         <Gig
           title={listing.title}
           description={listing.description}
-          image={listing.user.profilePicture || ''}
-          location={listing.location || ''}
+          image={listing.user.profilePicture || ""}
+          location={listing.location || ""}
           listingImage={listing.images!}
-          username={listing.user.name || ''}
+          username={listing.user.name || ""}
           price={listing.price?.toString() || listing.budget}
           datePosted={listing.createdAt}
           categoryId={listing.category.parentId}
           category={listing.category.name}
         />
       </div>
-
     </div>
   );
 };

@@ -24,10 +24,6 @@ export default function Step1({ onContinue, formData }: Step1Props) {
     formData.profileImage || null
   );
 
-   const handleUploadSuccess = (imageUrl: string) => {
-     setProfileImage(imageUrl);
-     setPreviewImage(imageUrl);
-   };
 
   useEffect(() => {
     setTitle(formData.title || "");
@@ -36,14 +32,18 @@ export default function Step1({ onContinue, formData }: Step1Props) {
     setPreviewImage(formData.profileImage || null);
   }, [formData]);
 
-   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-     e.preventDefault();
-     if (isUploading) {
-       return;
-     }
-     onContinue({ title, description, profileImage });
-   };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onContinue({ title, description, profileImage });
+  };
 
+  // Handle Cloudinary upload success
+  const handleUploadSuccess = (result: any) => {
+    const imageUrl = result.info.secure_url;
+    console.log("img: ", imageUrl);
+    setProfileImage(imageUrl);
+    setPreviewImage(imageUrl);
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -90,7 +90,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                 Upload a profile image to personalize your listing
               </p>
               <div className="space-y-4">
-                {/* <CldUploadWidget
+                <CldUploadWidget
                   uploadPreset="lymdepzy"
                   onSuccess={handleUploadSuccess}
                 >
@@ -102,17 +102,7 @@ export default function Step1({ onContinue, formData }: Step1Props) {
                       Choose Image
                     </button>
                   )}
-                </CldUploadWidget> */}
-
-                <CloudinaryUpload
-                  onUploadSuccess={handleUploadSuccess}
-                  onUploadError={(error) =>
-                    console.error("Upload failed:", error)
-                  }
-                  currentFiles={profileImage ? [profileImage] : []}
-                  maxFiles={1}
-                  multiple={false}
-                />
+                </CldUploadWidget>
 
                 {/* Image Preview */}
                 {previewImage && (

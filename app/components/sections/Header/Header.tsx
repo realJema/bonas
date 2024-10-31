@@ -26,7 +26,6 @@ const Header = () => {
           "/api/categories"
         );
         setCategories(response.data);
-        // console.log('all categories: ', response.data)
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -39,7 +38,8 @@ const Header = () => {
         throw error;
       }
     },
-    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   useEffect(() => {

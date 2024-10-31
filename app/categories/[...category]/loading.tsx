@@ -2,7 +2,7 @@ import Footer from "@/app/components/sections/Footer/Footer";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import SkeletonCard from "./SkeletonCard";
+import ItemCardSkeleton from "../../components/skeletons/ItemCardSkeleton";
 
 const SkeletonFilterDropdown = () => (
   <div className="w-full">
@@ -43,7 +43,7 @@ const Loading = () => {
             <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
                 <div key={index} className="mt-6">
-                  <SkeletonCard />
+                  <ItemCardSkeleton />
                 </div>
               ))}
             </div>

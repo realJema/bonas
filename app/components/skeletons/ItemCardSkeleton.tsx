@@ -2,7 +2,7 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const SkeletonCard = () => (
+const ItemCardSkeleton = () => (
   <div className="flex flex-col gap-1 mt-1 p-1">
     <Skeleton height={125} /> {/* Image placeholder */}
     <div className="flex items-center justify-between">
@@ -21,4 +21,4 @@ const SkeletonCard = () => (
   </div>
 );
 
-export default SkeletonCard;
+export default ItemCardSkeleton;

@@ -4,7 +4,7 @@ import Pagination from "@/app/components/Pagination";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { generateSlides } from "@/lib/generateSlides";
 import { getListings } from "@/utils/getListings";
-import SkeletonCard from "./SkeletonCard";
+import ItemCardSkeleton from "../../components/skeletons/ItemCardSkeleton";
 import Hero from "./Hero";
 
 interface Props {
@@ -26,7 +26,6 @@ const Listings = async ({
   location,
   datePosted,
 }: Props) => {
-
   const { listings, totalCount } = await getListings({
     mainCategory,
     subCategory,
@@ -56,7 +55,7 @@ const Listings = async ({
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <Suspense
               fallback={[...Array(pageSize)].map((_, index) => (
-                <SkeletonCard key={index} />
+                <ItemCardSkeleton key={index} />
               ))}
             >
               {listings.map((listing, index) => (

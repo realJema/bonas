@@ -181,6 +181,7 @@ const ItemCard = ({
   };
 
   const formattedUsername = formatUsername(listing.user.name);
+  const username = listing.user.username ?? formattedUsername;
 
   return (
     <div
@@ -265,14 +266,14 @@ const ItemCard = ({
                     className="object-cover rounded-full"
                     onClick={() =>
                       router.push(
-                        `/profile/user-profile/${listing.user.username}/${listing.category?.name}`
+                        `/profile/user-profile/${username}/${listing.category?.name}`
                       )
                     }
                   />
                 </div>
               )}
               <Link
-                href={`/profile/user-profile/${listing.user.username}/${listing.category?.name}`}
+                href={`/profile/user-profile/${username}/${listing.category?.name}`}
                 className="text-sm font-semibold text-gray-700 text-opacity-85 hover:underline cursor-pointer"
               >
                 {listing.user.username ?? formattedUsername}

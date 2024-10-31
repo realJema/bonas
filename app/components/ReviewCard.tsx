@@ -1,9 +1,9 @@
 import Image from "next/image";
 import React from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import StarRating from "./StarRating";
+import StarRating from "../(listingDetails)/[mainCategory]/[subCategory]/[subSubCategory]/[listingId]/StarRating";
 
-export interface ReviewCardProps {
+export interface ReviewCardItems {
   name: string;
   location: string;
   createdAt: Date;
@@ -33,9 +33,9 @@ const ReviewCard = ({
   location,
   createdAt,
   comment,
-}: ReviewCardProps) => {
+}: ReviewCardItems) => {
   return (
-   <div className="w-full bg-white rounded-lg p-4 sm:p-6 mb-4 border border-gray-50">
+    <div className="w-full bg-white rounded-lg p-4 sm:p-6 mb-4 border border-gray-50">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex items-center mb-2 sm:mb-0">
           <div className="w-10 h-10 rounded-full bg-amber-700 flex items-center justify-center text-white font-bold text-lg mr-3 flex-shrink-0">
@@ -61,7 +61,7 @@ const ReviewCard = ({
           {comment}
         </p>
       )}
-      
+
       <div className="flex flex-wrap gap-4 items-center">
         <span className="text-sm text-gray-800 font-semibold">Helpful?</span>
         <button className="flex items-center gap-1 text-sm text-gray-600 hover:text-green-500 transition-colors duration-200">

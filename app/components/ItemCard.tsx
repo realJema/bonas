@@ -256,6 +256,7 @@ const ItemCard = ({
       <Link href={buildListingUrl(listing)}>
         <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-52 rounded-sm">
           <div className="flex items-center justify-between">
+            {/* users info */}
             <div className="flex gap-1 items-center">
               {listing.user.profilePicture && (
                 <div className="h-10 w-10 rounded-full relative">

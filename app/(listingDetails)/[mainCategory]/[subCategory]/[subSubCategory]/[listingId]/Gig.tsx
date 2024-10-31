@@ -4,9 +4,11 @@ import { MapPin, MessageCircle } from "lucide-react";
 import PublishedCard from "./PublishedCard";
 import Link from "next/link";
 import CategoryButton from "./CategoryButton";
-import Reviews from "./Reviews";
-import SearchReviews from "./SearchReviews";
-import ReviewCard, { ReviewCardProps } from "./ReviewCard";
+import Reviews from "../../../../../components/Reviews";
+import SearchReviews from "../../../../../components/SearchReviews";
+import ReviewCard, {
+  ReviewCardItems,
+} from "../../../../../components/ReviewCard";
 import InfoRow from "./InfoRow";
 import prisma from "@/prisma/client";
 
@@ -28,11 +30,11 @@ interface Props {
   listingImage: ImageData[];
   isFrench?: boolean;
   categoryId: number | null;
-  category: string
+  category: string;
   title: string;
 }
 
-const sampleReviews: ReviewCardProps[] = [
+const sampleReviews: ReviewCardItems[] = [
   {
     name: "John Doe",
     location: "New York, USA",
@@ -72,8 +74,7 @@ const Gig = async ({
   category,
   title,
 }: Props) => {
-
-   // Fetch sibling sub-sub categories
+  // Fetch sibling sub-sub categories
   const siblingCategories = await prisma.category.findMany({
     where: {
       parentId: categoryId,
@@ -83,14 +84,13 @@ const Gig = async ({
     },
   });
 
-// const categoryNames = siblingCategories.map(cat => cat.name);
-const categoryNames = [
-  category, // Current category first
-  ...siblingCategories
-    .map((cat) => cat.name)
-    .filter((name) => name !== category),
-];
-
+  // const categoryNames = siblingCategories.map(cat => cat.name);
+  const categoryNames = [
+    category, // Current category first
+    ...siblingCategories
+      .map((cat) => cat.name)
+      .filter((name) => name !== category),
+  ];
 
   return (
     <div>
@@ -182,9 +182,7 @@ const categoryNames = [
 
           <div className="flex-col gap-3 w-full max-w-xl mt-6">
             {/* Description */}
-            <h2 className="font-bold mb-1">
-              {description}
-            </h2>
+            <h2 className="font-bold mb-1">{description}</h2>
             <p className="text-gray-500 mb-5">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea ipsum
               itaque voluptatibus sed totam accusamus commodi delectus iure
@@ -207,7 +205,7 @@ const categoryNames = [
 
             {/* Reviews */}
             <div className="flex-col space-y-4 mt-6">
-              <Reviews />
+              <Reviews className="w-full max-w-3xl mx-auto mt-8 px-3 sm:px-4 lg:px-5 " />
               {/* search reviews */}
               <SearchReviews />
               {/* sort reviews */}

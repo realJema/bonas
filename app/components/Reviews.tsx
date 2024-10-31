@@ -1,11 +1,15 @@
 import React from "react";
 import { Star, StarHalf } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import StarRating from "./StarRating";
+import StarRating from "../(listingDetails)/[mainCategory]/[subCategory]/[subSubCategory]/[listingId]/StarRating";
 
-const Reviews = () => {
+interface Props {
+  className?: string;
+}
+
+const Reviews = ({className}:Props) => {
   return (
-    <div className="w-full max-w-3xl mx-auto mt-8 px-3 sm:px-4 lg:px-5">
+    <div className={`${className}`}>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Reviews</h1>
 
       <div className="bg-white shadow-sm rounded-lg p-6">

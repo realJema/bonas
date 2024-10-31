@@ -19,7 +19,7 @@ const UsersProfile = async ({ params: { username, category } }: Props) => {
     "Writer on Medium & Vocal. Know a bit about Search Engine Optimization, getting over 100,000 views in the last 30 days. Writing online is powerful and I could help you write better. My articles are search optimized so I would help you to get more organic traffic for a lifetime.";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className=" pb-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main content area - takes up 2/3 on desktop */}
         <div className="lg:col-span-2 space-y-6">

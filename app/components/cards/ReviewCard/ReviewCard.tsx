@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import StarRating from "../(listingDetails)/[mainCategory]/[subCategory]/[subSubCategory]/[listingId]/StarRating";
+import StarRating from "../../../(listingDetails)/[mainCategory]/[subCategory]/[subSubCategory]/[listingId]/StarRating";
 
 export interface ReviewCardItems {
   name: string;

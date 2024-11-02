@@ -5,11 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
 import "swiper/css";
 import "swiper/css/free-mode";
-import ItemCard from "./ItemCard";
 import Heading from "./Heading";
 import SubHeading from "./SubHeading";
 import Link from "next/link";
 import { ExtendedListing } from "../entities/ExtendedListing";
+import ItemCard from "./cards/ItemCard/ItemCard";
 
 interface ListingSectionProps {
   heading: string;

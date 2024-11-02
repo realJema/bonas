@@ -8,7 +8,7 @@ import Reviews from "../../../../../components/Reviews";
 import SearchReviews from "../../../../../components/SearchReviews";
 import ReviewCard, {
   ReviewCardItems,
-} from "../../../../../components/ReviewCard";
+} from "../../../../../components/cards/ReviewCard/ReviewCard";
 import InfoRow from "./InfoRow";
 import prisma from "@/prisma/client";
 

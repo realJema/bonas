@@ -4,7 +4,7 @@ import ProfileCard from "./UserProfileCard";
 import LearnmoreCard from "./LearnMoreCard";
 import DescriptionCard from "./DescriptionCard";
 import { getListingsByUserId } from "@/utils/getListingsByUserId";
-import ItemCard from "@/app/components/ItemCard";
+import ItemCard from "@/app/components/cards/ItemCard/ItemCard";
 import { generateSlides } from "@/lib/generateSlides";
 import Pagination from "@/app/components/Pagination";
 import Header from "@/app/components/sections/Header/Header";

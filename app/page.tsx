@@ -1,46 +1,33 @@
-import { getListings } from "@/utils/getListings";
+import { auth } from "@/auth";
+import { fetchListingsForCategory } from "@/utils/fetchListingsForCategory";
 import { getJobListings } from "@/utils/getJobListings";
 import { getRealEstateListings } from "@/utils/getRealEstateListings";
-import { getVehiclesAndMotorListings } from "@/utils/getVehiclesAndMotorListings";
+import { getVehiclesListings } from "@/utils/getVehiclesListings";
+import { Suspense } from "react";
 import Footer from "./components/sections/Footer/Footer";
 import Hero from "./components/sections/Hero/Hero";
-import Navbar from "./components/sections/Navbar/Navbar";
-import { auth } from "@/auth";
 import JobListings from "./components/sections/JobListings/JobListings";
+import Navbar from "./components/sections/Navbar/Navbar";
+import PremiumContentWrapper from "./components/sections/PremiumContentWrapper/PremiumContentWrapper";
 import RealEstates from "./components/sections/RealEstateListings/RealEstateListings";
 import VehiculesAndMotor from "./components/sections/VehiclesAndMotorListings/VehiculesAndMotor";
-import PremiumContent from "./components/sections/PremiumContent/PremiumContent";
-import { Suspense } from "react";
 
-// Server Action
-async function fetchListingsForCategory(category: string) {
-  "use server";
-  const { listings } = await getListings({
-    mainCategory: category,
-    page: 1,
-    pageSize: 10,
-  });
-  return listings;
-}
+
 
 export default async function Home() {
   const session = await auth();
 
-  // Fetch all data in parallel
+  // Fetch all data in parallel using the new cached functions
   const [
-    { listings: initialListings },
+    initialListingsResult,
     jobListings,
     realEstateListings,
     vehiclesAndMotorListings,
   ] = await Promise.all([
-    getListings({
-      mainCategory: "Electronics",
-      page: 1,
-      pageSize: 10,
-    }),
-    getJobListings(),
-    getRealEstateListings(),
-    getVehiclesAndMotorListings(),
+    fetchListingsForCategory("Electronics"),
+    getJobListings(1, 10),
+    getRealEstateListings(1, 10),
+    getVehiclesListings(),
   ]);
 
   const categories = [
@@ -63,23 +50,19 @@ export default async function Home() {
       <Navbar />
       <div className="container mx-auto max-w-7xl px-10 md:px-4">
         <Hero username={session?.user?.name ?? undefined} />
-        <PremiumContent
-          initialListings={initialListings}
+        <PremiumContentWrapper
+          initialListings={initialListingsResult}
           categories={categories}
-          onCategoryChange={fetchListingsForCategory}
+          getListings={fetchListingsForCategory}
         />
         <Suspense fallback={<div>Loading vehicles...</div>}>
-          <VehiculesAndMotor
-            vehiclesAndMotorListings={Promise.resolve(vehiclesAndMotorListings)}
-          />
+          <VehiculesAndMotor vehiclesAndMotorListings={getVehiclesListings()} />
         </Suspense>
         <Suspense fallback={<div>Loading jobs...</div>}>
-          <JobListings jobListings={Promise.resolve(jobListings)} />
+          <JobListings jobListings={getJobListings()} />
         </Suspense>
         <Suspense fallback={<div>Loading real estate...</div>}>
-          <RealEstates
-            realEstateListings={Promise.resolve(realEstateListings)}
-          />
+          <RealEstates realEstateListings={getRealEstateListings()} />
         </Suspense>
         <Footer />
       </div>
@@ -90,7 +73,6 @@ export default async function Home() {
 // import { getListings } from "@/utils/getListings";
 // import { getJobListings } from "@/utils/getJobListings";
 // import { getRealEstateListings } from "@/utils/getRealEstateListings";
-// import { getVehiclesAndMotorListings } from "@/utils/getVehiclesAndMotorListings";
 // import Footer from "./components/sections/Footer/Footer";
 // import Hero from "./components/sections/Hero/Hero";
 // import Navbar from "./components/sections/Navbar/Navbar";
@@ -99,6 +81,8 @@ export default async function Home() {
 // import RealEstates from "./components/sections/RealEstateListings/RealEstateListings";
 // import VehiculesAndMotor from "./components/sections/VehiclesAndMotorListings/VehiculesAndMotor";
 // import PremiumContent from "./components/sections/PremiumContent/PremiumContent";
+// import { Suspense } from "react";
+// import { getVehiclesListings } from "@/utils/getVehiclesListings";
 
 // // Server Action
 // async function fetchListingsForCategory(category: string) {
@@ -113,15 +97,23 @@ export default async function Home() {
 
 // export default async function Home() {
 //   const session = await auth();
-//   const initialListings = await getListings({
-//     mainCategory: "Electronics",
-//     page: 1,
-//     pageSize: 10,
-//   });
 
-//   const jobListings = getJobListings();
-//   const realEstateListings = getRealEstateListings();
-//   const vehiclesAndMotorListings = getVehiclesAndMotorListings();
+//   // Fetch all data in parallel
+//   const [
+//     { listings: initialListings },
+//     jobListings,
+//     realEstateListings,
+//     vehiclesAndMotorListings,
+//   ] = await Promise.all([
+//     getListings({
+//       mainCategory: "Electronics",
+//       page: 1,
+//       pageSize: 10,
+//     }),
+//     getJobListings(),
+//     getRealEstateListings(),
+//     getVehiclesListings(),
+//   ]);
 
 //   const categories = [
 //     {
@@ -144,15 +136,23 @@ export default async function Home() {
 //       <div className="container mx-auto max-w-7xl px-10 md:px-4">
 //         <Hero username={session?.user?.name ?? undefined} />
 //         <PremiumContent
-//           initialListings={initialListings.listings}
+//           initialListings={initialListings}
 //           categories={categories}
 //           onCategoryChange={fetchListingsForCategory}
 //         />
-//         <VehiculesAndMotor
-//           vehiclesAndMotorListings={vehiclesAndMotorListings}
-//         />
-//         <JobListings jobListings={jobListings} />
-//         <RealEstates realEstateListings={realEstateListings} />
+//         <Suspense fallback={<div>Loading vehicles...</div>}>
+//           <VehiculesAndMotor
+//             vehiclesAndMotorListings={Promise.resolve(vehiclesAndMotorListings)}
+//           />
+//         </Suspense>
+//         <Suspense fallback={<div>Loading jobs...</div>}>
+//           <JobListings jobListings={Promise.resolve(jobListings)} />
+//         </Suspense>
+//         <Suspense fallback={<div>Loading real estate...</div>}>
+//           <RealEstates
+//             realEstateListings={Promise.resolve(realEstateListings)}
+//           />
+//         </Suspense>
 //         <Footer />
 //       </div>
 //     </>

@@ -3,11 +3,13 @@ import UserProfile from "./UserProfile";
 import ProfileCard from "./ProfileCard";
 import Pagination from "@/app/components/Pagination";
 import { getListingsByUserId } from "@/utils/getListingsByUserId";
-import ItemCard from "@/app/components/ItemCard";
+import ItemCard from "@/app/components/cards/ItemCard/ItemCard";
 import { generateSlides } from "@/lib/generateSlides";
 import Reviews from "@/app/components/Reviews";
 import SearchReviews from "@/app/components/SearchReviews";
-import ReviewCard, { ReviewCardItems } from "@/app/components/ReviewCard";
+import ReviewCard, {
+  ReviewCardItems,
+} from "@/app/components/cards/ReviewCard/ReviewCard";
 import SortReview from "./SortReview";
 
 interface Props {

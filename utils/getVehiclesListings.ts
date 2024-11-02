@@ -5,21 +5,21 @@ import { ExtendedListing } from "@/app/entities/ExtendedListing";
 
 export const maxDuration = 60;
 
-export const getJobListings = cache(
+export const getVehiclesListings = cache(
   async (page = 1, pageSize = 10): Promise<ExtendedListing[]> => {
     return unstable_cache(
       async () => {
         const { listings } = await getListings({
-          mainCategory: "Jobs",
+          mainCategory: "Vehicles",
           page,
           pageSize,
         });
         return listings;
       },
-      [`job-listings-${page}-${pageSize}`],
+      [`vehicles-listings-${page}-${pageSize}`],
       {
         revalidate: 300,
-        tags: ["jobs"],
+        tags: ["vehicles"],
       }
     )();
   }

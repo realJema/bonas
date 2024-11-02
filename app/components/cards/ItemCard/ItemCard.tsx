@@ -23,7 +23,6 @@ import "pure-react-carousel/dist/react-carousel.es.css";
 import dynamic from "next/dynamic";
 import type { ReactPlayerProps } from "react-player/types";
 import { Listing, Category, User } from "@prisma/client";
-import { ExtendedListing } from "../entities/ExtendedListing";
 import {
   formatPrice,
   formatDatePosted,
@@ -44,10 +43,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import UpdateListingForm from "../(protected)/profile/user-dashboard/[username]/UpdateListingForm";
 import { toast } from "react-toastify";
 import { deleteListing } from "@/actions/deleteListing";
-import DeleteListingDialog from "../(protected)/profile/user-dashboard/[username]/DeleteListingDialog";
+import DeleteListingDialog from "@/app/(protected)/profile/user-dashboard/[username]/DeleteListingDialog";
+import UpdateListingForm from "@/app/(protected)/profile/user-dashboard/[username]/UpdateListingForm";
+import { ExtendedListing } from "@/app/entities/ExtendedListing";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 

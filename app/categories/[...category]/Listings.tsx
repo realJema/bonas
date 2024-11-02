@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import ItemCard from "@/app/components/ItemCard";
+import ItemCard from "@/app/components/cards/ItemCard/ItemCard";
 import Pagination from "@/app/components/Pagination";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { generateSlides } from "@/lib/generateSlides";

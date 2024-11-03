@@ -317,7 +317,7 @@ export default function UpdateListingForm({
 
 
   return (
-    <Dialog modal={false} open={openModal} onOpenChange={onOpenChangeModal}>
+    <Dialog open={openModal} onOpenChange={onOpenChangeModal}>
       <DialogTrigger asChild>
         <button className="absolute -top-4 left-0 bg-white rounded-full p-1.5 hover:bg-gray-100 shadow-md z-20">
           <Pencil className="h-4 w-4 text-gray-600" />
@@ -326,9 +326,9 @@ export default function UpdateListingForm({
       <DialogContent
         onInteractOutside={(event) => event.preventDefault()}
         onOpenAutoFocus={(e) => e.preventDefault()}
-        className="max-w-2xl md:max-w-4xl shadow-xl"
+        className="max-w-xl sm:max-w-xl md:max-w-3xl xl:max-w-4xl shadow-xl"
       >
-        <ScrollArea className="max-h-[90vh] px-6">
+        <ScrollArea className="max-h-[80vh] sm:max-h-[90vh] py-3 sm:px-4 md:px-6">
           <div className="p-6">
             <DialogHeader>
               <DialogTitle>Update Listing</DialogTitle>

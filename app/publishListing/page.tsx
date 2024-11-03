@@ -73,35 +73,6 @@ export default function Home() {
     }
   };
 
-  // const handlePublish = async () => {
-  //   try {
-  //     setIsPublishing(true);
-  //     setError(null);
-
-  //     const response = await fetch("/api/postListing", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //        body: JSON.stringify(formData),
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.error || "Failed to create listing");
-  //     }
-
-  //     const listing = await response.json();
-  //     setIsPublished(true);
-  //   } catch (error) {
-  //     console.error("Error publishing listing:", error);
-  //     setError(
-  //       error instanceof Error ? error.message : "An unexpected error occurred"
-  //     );
-  //   } finally {
-  //     setIsPublishing(false);
-  //   }
-  // };
 
   const handleReview = () => {
     setIsPublished(false);

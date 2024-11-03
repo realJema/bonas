@@ -16,25 +16,11 @@ interface Step3Props {
 }
 
 export default function Step3({ onContinue, onBack, formData }: Step3Props) {
-  const [isUploading, setIsUploading] = useState(false);
   const [timeline, setTimeline] = useState<string>(formData.timeline || "");
   const [budget, setBudget] = useState<string>(formData.budget || "");
   const [listingImages, setListingImages] = useState<string[]>(
     formData.listingImages || []
   );
-
-  // Handle Cloudinary upload success
-  const handleUploadSuccess = (imageUrl: string) => {
-    setListingImages((prev) => [...prev, imageUrl]);
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isUploading) {
-      return;
-    }
-    onContinue({ timeline, budget, listingImages });
-  };
 
   useEffect(() => {
     setTimeline(formData.timeline || "");
@@ -42,19 +28,37 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
     setListingImages(formData.listingImages || []);
   }, [formData]);
 
-  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length + listingImages.length > 5) {
+      alert("Maximum 5 images allowed");
+      return;
+    }
 
-  // Handle Cloudinary upload success
-  // const handleUploadSuccess = (result: any) => {
-  //   const imageUrl = result.info.secure_url;
-  //   setListingImages((prev) => [...prev, imageUrl]);
-  // };
+    files.forEach((file) => {
+      if (!file.type.match(/^image\/(jpeg|png|jpg)$/)) {
+        alert("Please upload only JPG or PNG images");
+        return;
+      }
 
-  // Handle image removal
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setListingImages((prev) => [...prev, result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleRemoveImage = (indexToRemove: number) => {
     setListingImages((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onContinue({ timeline, budget, listingImages });
   };
 
   return (
@@ -167,35 +171,45 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                 Upload up to 5 images for your listing (minimum 1 required)
               </p>
 
-              {/* Upload Button */}
-              {/* {listingImages.length < 5 && (
-                <CldUploadWidget
-                  uploadPreset="lymdepzy"
-                  options={{
-                    sources: ["local"],
-                    multiple: true,
-                  }}
-                  onSuccess={handleUploadSuccess}
-                >
-                  {({ open }) => (
-                    <button
-                      onClick={() => open()}
-                      className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors mb-4"
-                    >
-                      Add Image ({listingImages.length}/5)
-                    </button>
-                  )}
-                </CldUploadWidget>
-              )} */}
-              <CloudinaryUpload
-                onUploadSuccess={handleUploadSuccess}
-                onUploadError={(error) =>
-                  console.error("Upload failed:", error)
-                }
-                currentFiles={listingImages}
-                maxFiles={5}
-                multiple={true}
-              />
+              {listingImages.length < 5 && (
+                <div className="relative mb-4 block w-full cursor-pointer appearance-none rounded border border-dashed border-gray-400 bg-gray-50 px-4 py-4 hover:border-gray-600 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/jpg"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                  />
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                      </svg>
+                    </span>
+                    <p className="text-sm">
+                      <span className="font-medium text-gray-900">
+                        Click to upload
+                      </span>{" "}
+                      or drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      JPG, PNG only ({listingImages.length}/5 images)
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Images Preview Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 my-4">
@@ -219,6 +233,7 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                   </div>
                 ))}
               </div>
+
               {listingImages.length === 0 && (
                 <p className="text-red-500 text-sm mt-2">
                   Please upload at least one image for your listing

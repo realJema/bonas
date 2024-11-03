@@ -1,53 +1,37 @@
 "use client";
 
-import React from "react";
+import DeleteListingDialog from "@/app/(protected)/profile/user-dashboard/[username]/DeleteListingDialog";
+import UpdateListingForm from "@/app/(protected)/profile/user-dashboard/[username]/UpdateListingForm";
+import { ExtendedListing } from "@/app/entities/ExtendedListing";
+import { buildListingUrl } from "@/utils/categoryUtils";
+import { formatUsername } from "@/utils/formatUsername";
 import {
-  // HeartIcon,
-  VideoCameraIcon,
+  formatDatePosted,
+  getDisplayPrice
+} from "@/utils/formatUtils";
+import {
   PlayIcon,
   // PauseIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
+  // HeartIcon,
+  VideoCameraIcon,
 } from "@heroicons/react/24/outline";
+import { HeartIcon, MapPinIcon, PauseIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { ComponentType, useRef, useState } from "react";
-import {
-  CarouselProvider,
-  Slider,
-  Slide,
-  ButtonBack,
-  ButtonNext,
-} from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css";
-import dynamic from "next/dynamic";
-import type { ReactPlayerProps } from "react-player/types";
-import { Listing, Category, User } from "@prisma/client";
-import {
-  formatPrice,
-  formatDatePosted,
-  getDisplayPrice,
-} from "@/utils/formatUtils";
-import { buildListingUrl } from "@/utils/categoryUtils";
-import { MapPinIcon, Pencil, PauseIcon, HeartIcon, Trash2 } from "lucide-react";
-import { formatUsername } from "@/utils/formatUsername";
 import { useRouter } from "next/navigation";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { toast } from "react-toastify";
-import { deleteListing } from "@/actions/deleteListing";
-import DeleteListingDialog from "@/app/(protected)/profile/user-dashboard/[username]/DeleteListingDialog";
-import UpdateListingForm from "@/app/(protected)/profile/user-dashboard/[username]/UpdateListingForm";
-import { ExtendedListing } from "@/app/entities/ExtendedListing";
+  ButtonBack,
+  ButtonNext,
+  CarouselProvider,
+  Slide,
+  Slider,
+} from "pure-react-carousel";
+import "pure-react-carousel/dist/react-carousel.es.css";
+import { ComponentType, useRef, useState } from "react";
+import type { ReactPlayerProps } from "react-player/types";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 

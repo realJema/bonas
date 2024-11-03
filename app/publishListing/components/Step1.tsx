@@ -3,6 +3,7 @@ import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import CloudinaryUpload from "./CloudinaryUpload/CloudinaryUpload";
+import { toast } from "react-toastify";
 
 interface Step1Props {
   onContinue: (data: {
@@ -32,18 +33,32 @@ export default function Step1({ onContinue, formData }: Step1Props) {
     setPreviewImage(formData.profileImage || null);
   }, [formData]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onContinue({ title, description, profileImage });
-  };
+  
+   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const file = e.target.files?.[0];
+     if (file) {
+       // Validate file type
+       if (!file.type.match(/^image\/(jpeg|png|jpg)$/)) {
+         toast.error("Please upload only JPG or PNG images");
+         return;
+       }
 
-  // Handle Cloudinary upload success
-  const handleUploadSuccess = (result: any) => {
-    const imageUrl = result.info.secure_url;
-    console.log("img: ", imageUrl);
-    setProfileImage(imageUrl);
-    setPreviewImage(imageUrl);
-  };
+       const reader = new FileReader();
+       reader.onload = (e) => {
+         const result = e.target?.result as string;
+         setProfileImage(result);
+         setPreviewImage(result);
+       };
+       reader.readAsDataURL(file);
+     }
+   };
+
+    
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      onContinue({ title, description, profileImage });
+    };
+
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -89,33 +104,53 @@ export default function Step1({ onContinue, formData }: Step1Props) {
               <p className="text-sm text-gray-600 mb-2">
                 Upload a profile image to personalize your listing
               </p>
-              <div className="space-y-4">
-                <CldUploadWidget
-                  uploadPreset="lymdepzy"
-                  onSuccess={handleUploadSuccess}
-                >
-                  {({ open }) => (
-                    <button
-                      onClick={() => open()}
-                      className="cursor-pointer inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
-                    >
-                      Choose Image
-                    </button>
-                  )}
-                </CldUploadWidget>
 
-                {/* Image Preview */}
-                {previewImage && (
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200">
-                    <Image
-                      src={previewImage}
-                      alt="Profile preview"
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                )}
+              <div className="relative mb-4 block w-full cursor-pointer appearance-none rounded border border-dashed border-gray-400 bg-gray-50 px-4 py-4 hover:border-gray-600 transition-colors">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg"
+                  onChange={handleImageUpload}
+                  className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                />
+                <div className="flex flex-col items-center justify-center space-y-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                  </span>
+                  <p className="text-sm">
+                    <span className="font-medium text-gray-900">
+                      Click to upload
+                    </span>{" "}
+                    or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">JPG, PNG only</p>
+                </div>
               </div>
+
+              {/* Image Preview */}
+              {previewImage && (
+                <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200">
+                  <Image
+                    src={previewImage}
+                    alt="Profile preview"
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              )}
             </div>
 
             <div>

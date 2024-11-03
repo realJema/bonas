@@ -1,6 +1,17 @@
 import { isValidCloudinaryUrl } from "@/utils/imageUtils";
 import * as z from "zod";
 
+
+const isValidImageInput = (value: string) => {
+  return value.startsWith("data:image/") || isValidCloudinaryUrl(value);
+};
+
+const isValidOptionalImageInput = (value: string | undefined): boolean => {
+  if (!value) return true;
+  return isValidImageInput(value);
+};
+
+
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
@@ -32,6 +43,9 @@ export const RegisterSchema = z.object({
     }),
 });
 
+
+
+
 export const CreateListingSchema = z.object({
   title: z
     .string()
@@ -45,21 +59,21 @@ export const CreateListingSchema = z.object({
   subSubcategory: z.string().optional(),
   location: z.string(),
   timeline: z.string().optional(),
-  budget: z.string().transform((val) => parseFloat(val)),
+  budget: z.number(),
   profileImage: z
     .string()
     .optional()
     .refine(
-      (val) => !val || val.startsWith("https://res.cloudinary.com/"),
-      "Invalid image URL. Must be a Cloudinary URL"
+      isValidOptionalImageInput,
+      "Invalid image format. Must be base64 or Cloudinary URL"
     ),
   listingImages: z
     .array(z.string())
     .min(1, "At least one listing image is required")
     .max(5, "Maximum 5 images allowed")
     .refine(
-      (urls) => urls.every(isValidCloudinaryUrl),
-      "Invalid image URL. Must be Cloudinary URLs"
+      (images) => images.every((img) => isValidImageInput(img)),
+      "Invalid image format. Must be base64 or Cloudinary URL"
     ),
 });
 
@@ -91,9 +105,80 @@ export const UpdateListingSchema = z.object({
     .min(1, "At least one listing image is required")
     .max(5, "Maximum 5 images allowed")
     .refine(
-      (urls) => urls.every(isValidCloudinaryUrl),
-      "Invalid image URL. Must be Cloudinary URLs"
+      (urls) => urls.every((url) => isValidImageInput(url)),
+      "Invalid image URL. Must be base64 or Cloudinary URL"
     ),
 });
 
 export type UpdateListingInput = z.infer<typeof UpdateListingSchema>;
+
+
+
+
+// export const CreateListingSchema = z.object({
+//   title: z
+//     .string()
+//     .min(3, { message: "Title must be at least 3 characters long" })
+//     .max(255, { message: "Title must be at most 255 characters long" }),
+//   description: z
+//     .string()
+//     .min(10, { message: "Description must be at least 10 characters long" }),
+//   category: z.string(),
+//   subcategory: z.string().optional(),
+//   subSubcategory: z.string().optional(),
+//   location: z.string(),
+//   timeline: z.string().optional(),
+//   budget: z.string().transform((val) => parseFloat(val)),
+//   profileImage: z
+//     .string()
+//     .optional()
+//     .refine(
+//       (val) => !val || val.startsWith("https://res.cloudinary.com/"),
+//       "Invalid image URL. Must be a Cloudinary URL"
+//     ),
+//   listingImages: z
+//     .array(z.string())
+//     .min(1, "At least one listing image is required")
+//     .max(5, "Maximum 5 images allowed")
+//     .refine(
+//       (urls) => urls.every(isValidCloudinaryUrl),
+//       "Invalid image URL. Must be Cloudinary URLs"
+//     ),
+// });
+
+
+
+// export type CreateListingInput = z.infer<typeof CreateListingSchema>;
+
+// export const UpdateListingSchema = z.object({
+//   title: z
+//     .string()
+//     .min(3, "Title must be at least 3 characters long")
+//     .max(100, "Title must be at most 100 characters long"),
+//   description: z
+//     .string()
+//     .min(10, "Description must be at least 10 characters long"),
+//   location: z.string().min(1, "Location is required"),
+//   timeline: z.string().min(1, "Timeline is required"),
+//   budget: z.union([
+//     z.number(),
+//     z.string().transform((val) => {
+//       const parsed = parseFloat(val);
+//       if (isNaN(parsed)) throw new Error("Invalid budget number");
+//       return parsed;
+//     }),
+//   ]),
+//   category: z.string().optional(),
+//   subcategory: z.string().optional(),
+//   subSubcategory: z.string().optional(),
+//   listingImages: z
+//     .array(z.string())
+//     .min(1, "At least one listing image is required")
+//     .max(5, "Maximum 5 images allowed")
+//     .refine(
+//       (urls) => urls.every(isValidCloudinaryUrl),
+//       "Invalid image URL. Must be Cloudinary URLs"
+//     ),
+// });
+
+// export type UpdateListingInput = z.infer<typeof UpdateListingSchema>;

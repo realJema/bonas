@@ -1,4 +1,4 @@
-
+// imageUtils
 import { Image as PrismaImage } from "@prisma/client";
 
 export const DEFAULT_IMAGE: PrismaImage = {

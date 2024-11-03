@@ -140,6 +140,7 @@ export async function getListings({
           title: true,
           description: true,
           price: true,
+          budget: true,
           location: true,
           createdAt: true,
           updatedAt: true,
@@ -167,6 +168,7 @@ export async function getListings({
               name: true,
               email: true,
               image: true,
+              profilePicture: true,
             },
           },
           images: {
@@ -206,6 +208,9 @@ export async function getListings({
     return { listings: [], totalCount: 0 };
   }
 }
+
+
+
 
 // import { unstable_cache } from "next/cache";
 // import prisma from "@/prisma/client";

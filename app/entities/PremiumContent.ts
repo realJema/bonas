@@ -1,6 +1,11 @@
 import { ComponentType } from "react";
-import { SlideItem } from "../components/ItemCard";
 
+// Define SlideItem type
+export interface SlideItem {
+  type: "image" | "video";
+  url: string;
+  thumbnail?: string;
+}
 
 export default interface premiumContent {
   title: string;

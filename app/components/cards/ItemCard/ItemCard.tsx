@@ -3,6 +3,7 @@
 import DeleteListingDialog from "@/app/(protected)/profile/user-dashboard/[username]/DeleteListingDialog";
 import UpdateListingForm from "@/app/(protected)/profile/user-dashboard/[username]/UpdateListingForm";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
+import { SlideItem } from "@/app/entities/PremiumContent";
 import { buildListingUrl } from "@/utils/categoryUtils";
 import { formatUsername } from "@/utils/formatUsername";
 import {
@@ -34,13 +35,6 @@ import { ComponentType, useRef, useState } from "react";
 import type { ReactPlayerProps } from "react-player/types";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
-
-// Define SlideItem type
-export interface SlideItem {
-  type: "image" | "video";
-  url: string;
-  thumbnail?: string;
-}
 
 // Define props for ItemCard
 interface Item {

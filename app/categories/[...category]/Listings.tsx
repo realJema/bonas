@@ -15,6 +15,8 @@ interface Props {
   pageSize: number;
   location?: string;
   datePosted?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 const Listings = async ({

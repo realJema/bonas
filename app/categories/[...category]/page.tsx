@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import BreadCrumbs from "@/app/components/BreadCrumbs";
 import { Town } from "@prisma/client";
 import prisma from "@/prisma/client";
+import PriceRangeFilter from "./PriceRangeFilter";
 
 interface Props {
   params: { category: string[] };
@@ -84,6 +85,13 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
   const location = searchParams["city-region"] || "";
   const datePosted = searchParams["date-posted"] || "";
 
+  const minPrice = searchParams.minPrice
+    ? Number(searchParams.minPrice)
+    : undefined;
+  const maxPrice = searchParams.maxPrice
+    ? Number(searchParams.maxPrice)
+    : undefined;
+
   const getSelectedValue = (id: string): string => {
     return searchParams[id] || "";
   };
@@ -125,6 +133,7 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
                 ))}
 
                 {/* add price filter  here */}
+                <PriceRangeFilter />
               </div>
             </div>
           </aside>
@@ -146,6 +155,8 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
               pageSize={pageSize}
               location={location}
               datePosted={datePosted}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
             />
           </main>
         </div>

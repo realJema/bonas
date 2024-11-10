@@ -9,7 +9,7 @@ import { formatPrice } from "@/utils/formatUtils";
 
 const MAX_PRICE = 100_000_000; 
 
-const PriceFilter = () => {
+const PriceRangeFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -88,4 +88,4 @@ const PriceFilter = () => {
   );
 };
 
-export default PriceFilter;
+export default PriceRangeFilter;

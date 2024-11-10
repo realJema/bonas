@@ -108,7 +108,10 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
           <aside className="hidden md:block md:w-64">
             <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
               <div className="flex flex-col space-y-6 pb-6">
+                {/* search filter */}
                 <Search />
+
+                {/* location filter */}
                 {filters.map((filter, index) => (
                   <FilterDropdown
                     key={filter.id}
@@ -119,6 +122,8 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
                     selectedValue={searchParams[filter.id] || ""}
                   />
                 ))}
+
+                {/* add price filter  here */}
               </div>
             </div>
           </aside>

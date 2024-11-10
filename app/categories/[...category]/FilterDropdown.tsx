@@ -61,7 +61,7 @@ const FilterDropdown = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0">
-        <ScrollArea className="h-[300px] w-full rounded-md">
+        <ScrollArea className="h-[250px] w-full rounded-md">
           <div className="p-4">
             {items.map((item, index) => (
               <Button

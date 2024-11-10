@@ -70,6 +70,7 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
         { name: "Date Posted", value: "" },
         { name: "Last 24 hours", value: "24h" },
         { name: "Last 7 days", value: "7d" },
+        { name: "Last 2 weeks", value: "14d" },
         { name: "Last 30 days", value: "30d" },
       ],
     },

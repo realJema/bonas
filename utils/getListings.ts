@@ -35,6 +35,9 @@ function getDateFilter(datePosted: string): Date {
     case "7d":
       filterDate.setDate(now.getDate() - 7);
       break;
+    case "14d":
+      filterDate.setDate(now.getDate() -14);
+      break;
     case "30d":
       filterDate.setDate(now.getDate() - 30);
       break;

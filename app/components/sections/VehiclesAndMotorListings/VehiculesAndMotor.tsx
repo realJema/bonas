@@ -1,56 +1,61 @@
 "use client";
 
-import { ExtendedListing } from "@/app/entities/ExtendedListing";
-import React, { Suspense } from "react";
+import React from "react";
 import SkeletonListingSection from "../../skeletons/SkeletonListingSection";
 import ListingSection from "../../ListingSection";
-
-
-interface Props {
-  vehiclesAndMotorListings: Promise<ExtendedListing[]>;
-}
+import { useCategoryListings } from "@/app/hooks/useCategoryListings";
+import { generateSlides } from "@/utils/generateSlides";
 
 const getCategoryUrl = (category: string) => {
   const encodedCategory = encodeURIComponent(category);
   return `/categories/${encodedCategory}`;
 };
 
-const generateSlides = (listing: ExtendedListing) => {
-  return listing.images.map((image) => ({
-    type: "image" as const,
-    url: image.imageUrl,
-  }));
-};
+const VehiclesAndMotor = () => {
+  const {
+    data: listings = [],
+    isLoading,
+    error,
+  } = useCategoryListings("Vehicles");
 
-const VehiculesAndMotor = ({ vehiclesAndMotorListings }: Props) => {
+  if (isLoading) {
+    return (
+      <div className="mt-52 bg-[#fafafa] rounded-md">
+        <SkeletonListingSection count={5} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mt-52 bg-[#fafafa] rounded-md p-8 text-center">
+        <p className="text-red-500">
+          Error loading listings. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
+  // No listings found state
+  if (!listings || listings.length === 0) {
+    return (
+      <div className="mt-52 bg-[#fafafa] rounded-md p-8 text-center">
+        <p className="text-gray-500">No vehicle listings found.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="mt-52 flex flex-col bg-[#fafafa] rounded-md">
-      <Suspense fallback={<SkeletonListingSection count={5} />}>
-        <VehiculesAndMotorContent
-          vehiclesAndMotorListingsPromise={vehiclesAndMotorListings}
-        />
-      </Suspense>
+    <div className="mt-52 bg-[#fafafa] rounded-md">
+      <ListingSection
+        heading="Vehicles and Motor"
+        href={getCategoryUrl("vehicles")}
+        subheading="Hand-vetted talent for all your professional needs"
+        listings={listings}
+        generateSlides={generateSlides}
+      />
     </div>
   );
 };
 
-const VehiculesAndMotorContent = async ({
-  vehiclesAndMotorListingsPromise,
-}: {
-  vehiclesAndMotorListingsPromise: Promise<ExtendedListing[]>;
-}) => {
-  const resolvedVehiclesAndMotorListings =
-    await vehiclesAndMotorListingsPromise;
-
-  return (
-    <ListingSection
-      heading="Vehicles and Motor"
-      href={getCategoryUrl("vehicles")}
-      subheading="Hand-vetted talent for all your professional needs"
-      listings={resolvedVehiclesAndMotorListings}
-      generateSlides={generateSlides}
-    />
-  );
-};
-
-export default VehiculesAndMotor;
+export default VehiclesAndMotor;

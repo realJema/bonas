@@ -17,7 +17,7 @@ import { deleteListing } from "@/actions/deleteListing";
 import { Button } from "@/components/ui/button";
 
 interface DeleteListingDialogProps {
-  listingId: number;
+  listingId: string;
   username: string;
   onDeleteSuccess?: () => void;
 }

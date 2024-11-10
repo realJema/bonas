@@ -5,6 +5,7 @@ import AuthProvider from "./components/auth/Provider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QueryClientProvider from "./QueryClientProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,6 +45,7 @@ export default function RootLayout({
             <main>{children}</main>
           </AuthProvider>
           <ToastContainer />
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </body>
     </html>

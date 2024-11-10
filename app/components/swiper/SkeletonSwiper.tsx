@@ -8,7 +8,7 @@ interface Props {
 
 const SkeletonSwiper = ({ count = 4 }: Props) => {
   return (
-    <Swiper slidesPerView="auto" spaceBetween={3} className="mySwiper">
+    <Swiper slidesPerView="auto" spaceBetween={5} className="mySwiper">
       {[...Array(count)].map((_, index) => (
         <SwiperSlide key={index} style={{ width: "230px" }}>
           <ItemCardSkeleton />

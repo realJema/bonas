@@ -8,6 +8,7 @@ import { buildListingUrl } from "@/utils/categoryUtils";
 import { formatUsername } from "@/utils/formatUsername";
 import {
   formatDatePosted,
+  formatPrice,
   getDisplayPrice
 } from "@/utils/formatUtils";
 import {
@@ -158,8 +159,8 @@ const ItemCard = ({
     }
   };
 
-  const formattedUsername = formatUsername(listing.user.name);
-  const username = listing.user.username ?? formattedUsername;
+  const formattedUsername = formatUsername(listing.user?.name);
+  const username = listing.user?.username ?? formattedUsername;
 
   return (
     <div
@@ -236,7 +237,7 @@ const ItemCard = ({
           <div className="flex items-center justify-between">
             {/* users info */}
             <div className="flex gap-1 items-center">
-              {listing.user.profilePicture && (
+              {listing.user?.profilePicture && (
                 <div className="h-10 w-10 rounded-full relative">
                   <Image
                     alt={listing.user.username!}
@@ -245,22 +246,22 @@ const ItemCard = ({
                     className="object-cover rounded-full"
                     onClick={() =>
                       router.push(
-                        `/profile/user-profile/${username}/${listing.category?.name}`
+                        `/profile/user-profile/${username}`
                       )
                     }
                   />
                 </div>
               )}
               <Link
-                href={`/profile/user-profile/${username}/${listing.category?.name}`}
+                href={`/profile/user-profile/${username}`}
                 className="text-sm font-semibold text-gray-700 text-opacity-85 hover:underline cursor-pointer"
               >
-                {listing.user.username ?? formattedUsername}
+                {listing.user?.username ?? formattedUsername}
               </Link>
             </div>
             {/* date posted */}
             <span className="text-xs text-gray-600">
-              {formatDatePosted(listing.createdAt)}
+              {formatDatePosted(listing.created_at)}
             </span>
           </div>
           <h2
@@ -270,7 +271,7 @@ const ItemCard = ({
           </h2>
           <div className="flex items-center text-xs text-gray-600 mt-1 py-0.5">
             <MapPinIcon className="w-3 h-3 mr-1" />
-            <span className="truncate">{listing.location}</span>
+            <span className="truncate">{listing.town}</span>
           </div>
           <div className="font-bold flex items-center gap-2 py-0.5">
             <svg
@@ -288,7 +289,7 @@ const ItemCard = ({
 
           <p className="font-semibold py-0.5 mb-3">
             <span className="font-normal">from </span>
-            {getDisplayPrice(listing.price, listing.budget)}
+            {formatPrice(listing.price)}
           </p>
 
           {offersVideo && (
@@ -305,7 +306,7 @@ const ItemCard = ({
       {canDeleteListing && (
         <DeleteListingDialog
           listingId={listing.id}
-          username={listing.user.username ?? formatUsername(listing.user.name)}
+          username={listing.user?.username ?? formatUsername(listing.user?.name)}
           onDeleteSuccess={() => {
             router.refresh();
           }}

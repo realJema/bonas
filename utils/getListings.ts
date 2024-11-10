@@ -3,6 +3,8 @@ import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { DEFAULT_IMAGE } from "@/utils/imageUtils";
 
+
+
 export const maxDuration = 60;
 
 interface GetListingsParams {
@@ -42,7 +44,6 @@ function getDateFilter(datePosted: string): Date {
   return filterDate;
 }
 
-// Optimized database fetch function
 export async function getListings({
   mainCategory,
   subCategory,
@@ -55,7 +56,7 @@ export async function getListings({
   maxPrice,
 }: GetListingsParams): Promise<GetListingsResult> {
   try {
-    // Optimized category query with single database call
+    // Get category hierarchy in one query
     const mainCategoryRecord = await prisma.category.findFirst({
       where: {
         name: { equals: mainCategory, mode: "insensitive" },
@@ -105,13 +106,13 @@ export async function getListings({
     }
 
     const whereClause: any = {
-      categoryId: {
-        in: Array.from(categoryIds),
+      subcategory_id: {
+        in: Array.from(categoryIds).map((id) => BigInt(id)), // Convert to BigInt
       },
     };
 
     if (location) {
-      whereClause.location = {
+      whereClause.town = {
         equals: location,
         mode: "insensitive",
       };
@@ -119,7 +120,7 @@ export async function getListings({
 
     if (datePosted) {
       const filterDate = getDateFilter(datePosted);
-      whereClause.createdAt = {
+      whereClause.created_at = {
         gte: filterDate,
         lte: new Date(),
       };
@@ -135,72 +136,71 @@ export async function getListings({
     const [listings, totalCount] = await prisma.$transaction([
       prisma.listing.findMany({
         where: whereClause,
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          price: true,
-          budget: true,
-          location: true,
-          createdAt: true,
-          updatedAt: true,
-          category: {
-            select: {
-              id: true,
-              name: true,
-              parent: {
-                select: {
-                  id: true,
-                  name: true,
-                  parent: {
-                    select: {
-                      id: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
+        include: {
           user: {
             select: {
               id: true,
               name: true,
-              email: true,
+              username: true,
               image: true,
               profilePicture: true,
-            },
-          },
-          images: {
-            select: {
-              imageUrl: true,
-            },
-          },
-          reviews: {
-            select: {
-              rating: true,
-              comment: true,
             },
           },
         },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        orderBy: { createdAt: "desc" },
+        orderBy: { created_at: "desc" },
       }),
       prisma.listing.count({ where: whereClause }),
     ]);
 
     return {
-      listings: listings.map(
-        (listing: any): ExtendedListing => ({
-          ...listing,
-          price: listing.price?.toFixed(2) ?? "0.00",
-          images: listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
-          category: listing.category,
+      listings: listings.map((listing): ExtendedListing => {
+        // Parse images with fallback to default
+        let parsedImages = null;
+        try {
+          parsedImages = listing.images
+            ? JSON.parse(listing.images as string)
+            : null;
+        } catch (e) {
+          console.error("Error parsing images:", e);
+          parsedImages = null;
+        }
+
+        // Use default image if no images or empty array
+        const finalImages =
+          parsedImages && Array.isArray(parsedImages) && parsedImages.length > 0
+            ? parsedImages
+            : [DEFAULT_IMAGE];
+
+        return {
+          id: listing.id.toString(),
+          title: listing.title,
+          description: listing.description,
+          subcategory_id: listing.subcategory_id?.toString() || null,
+          price: listing.price?.toString() || null,
+          currency: listing.currency,
+          town: listing.town,
+          address: listing.address,
+          user_id: listing.user_id,
+          created_at: listing.created_at?.toISOString() || null,
+          updated_at: listing.updated_at?.toISOString() || null,
+          status: listing.status,
+          views: listing.views,
+          cover_image: listing.cover_image,
+          images: finalImages,
+          is_boosted: listing.is_boosted,
+          is_boosted_type: listing.is_boosted_type,
+          is_boosted_expiry_date: listing.is_boosted_expiry_date,
+          expiry_date: listing.expiry_date?.toISOString() || null,
+          tags: listing.tags ? JSON.parse(listing.tags as string) : null,
+          condition: listing.condition,
+          negotiable: listing.negotiable?.toString() || null,
+          delivery_available: listing.delivery_available?.toString() || null,
+          rating: listing.rating,
           user: listing.user,
-          review: listing.reviews,
-        })
-      ),
+        };
+      }),
       totalCount,
     };
   } catch (error) {
@@ -208,418 +208,3 @@ export async function getListings({
     return { listings: [], totalCount: 0 };
   }
 }
-
-
-
-
-// import { unstable_cache } from "next/cache";
-// import prisma from "@/prisma/client";
-// import { ExtendedListing } from "@/app/entities/ExtendedListing";
-// import { DEFAULT_IMAGE } from "@/utils/imageUtils";
-// import { cache } from "react";
-
-// export const maxDuration = 60;
-
-// interface GetListingsParams {
-//   mainCategory: string;
-//   subCategory?: string;
-//   subSubCategory?: string;
-//   page: number;
-//   pageSize: number;
-//   location?: string;
-//   datePosted?: string;
-//   minPrice?: number;
-//   maxPrice?: number;
-// }
-
-// interface GetListingsResult {
-//   listings: ExtendedListing[];
-//   totalCount: number;
-// }
-
-// function getDateFilter(datePosted: string): Date {
-//   const now = new Date();
-//   const filterDate = new Date(now);
-
-//   switch (datePosted) {
-//     case "24h":
-//       filterDate.setHours(now.getHours() - 24);
-//       break;
-//     case "7d":
-//       filterDate.setDate(now.getDate() - 7);
-//       break;
-//     case "30d":
-//       filterDate.setDate(now.getDate() - 30);
-//       break;
-//     default:
-//       return new Date(0);
-//   }
-//   return filterDate;
-// }
-
-// const fetchListingsFromDB = async ({
-//   mainCategory,
-//   subCategory,
-//   subSubCategory,
-//   page,
-//   pageSize,
-//   location,
-//   datePosted,
-//   minPrice,
-//   maxPrice,
-// }: GetListingsParams): Promise<GetListingsResult> => {
-//   try {
-//     // First, find the main category
-//     const mainCategoryRecord = await prisma.category.findFirst({
-//       where: {
-//         name: { equals: mainCategory, mode: "insensitive" },
-//         parentId: null, // Main categories have no parent
-//       },
-//     });
-
-//     if (!mainCategoryRecord) {
-//       return { listings: [], totalCount: 0 };
-//     }
-
-//     // Build category IDs array based on the hierarchy
-//     let categoryIds: number[] = [];
-
-//     if (subCategory) {
-//       // Find sub-category under main category
-//       const subCategoryRecord = await prisma.category.findFirst({
-//         where: {
-//           name: { equals: subCategory, mode: "insensitive" },
-//           parentId: mainCategoryRecord.id,
-//         },
-//         include: {
-//           children: true, // Include sub-sub categories
-//         },
-//       });
-
-//       if (subCategoryRecord) {
-//         if (subSubCategory) {
-//           // Find specific sub-sub category
-//           const subSubCategoryRecord = subCategoryRecord.children.find(
-//             (child) => child.name.toLowerCase() === subSubCategory.toLowerCase()
-//           );
-//           if (subSubCategoryRecord) {
-//             categoryIds = [subSubCategoryRecord.id];
-//           }
-//         } else {
-//           // Include sub-category and all its children
-//           categoryIds = [
-//             subCategoryRecord.id,
-//             ...subCategoryRecord.children.map((child) => child.id),
-//           ];
-//         }
-//       }
-//     } else {
-//       // Get all categories under main category
-//       const fullHierarchy = await prisma.category.findMany({
-//         where: {
-//           OR: [
-//             { id: mainCategoryRecord.id },
-//             { parentId: mainCategoryRecord.id },
-//             {
-//               parent: {
-//                 parentId: mainCategoryRecord.id,
-//               },
-//             },
-//           ],
-//         },
-//       });
-//       categoryIds = fullHierarchy.map((cat) => cat.id);
-//     }
-
-//     const whereClause: any = {
-//       categoryId: {
-//         in: categoryIds,
-//       },
-//     };
-
-//     // Add location filter if provided
-//     if (location) {
-//       whereClause.location = {
-//         equals: location,
-//         mode: "insensitive",
-//       };
-//     }
-
-//     // Add date filter if provided
-//     if (datePosted) {
-//       const filterDate = getDateFilter(datePosted);
-//       whereClause.createdAt = {
-//         gte: filterDate,
-//         lte: new Date(),
-//       };
-//     }
-
-//     // Add price filter if provided
-//     if (minPrice !== undefined || maxPrice !== undefined) {
-//       whereClause.price = {};
-//       if (minPrice !== undefined) whereClause.price.gte = minPrice;
-//       if (maxPrice !== undefined) whereClause.price.lte = maxPrice;
-//     }
-
-//     // Fetch listings with related data
-//     const [listings, totalCount] = await prisma.$transaction([
-//       prisma.listing.findMany({
-//         where: whereClause,
-//         include: {
-//           category: {
-//             include: {
-//               parent: {
-//                 include: {
-//                   parent: true,
-//                 },
-//               },
-//             },
-//           },
-//           user: true,
-//           images: true,
-//           reviews: true,
-//         },
-//         skip: (page - 1) * pageSize,
-//         take: pageSize,
-//         orderBy: { createdAt: "desc" },
-//       }),
-//       prisma.listing.count({ where: whereClause }),
-//     ]);
-
-//     return {
-//       listings: listings.map(
-//         (listing): ExtendedListing => ({
-//           ...listing,
-//           price: listing.price?.toFixed(2) ?? "0.00",
-//           images: listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
-//           category: listing.category!,
-//           user: listing.user,
-//           review: listing.reviews,
-//         })
-//       ),
-//       totalCount,
-//     };
-//   } catch (error) {
-//     console.error("Error fetching listings:", error);
-//     return { listings: [], totalCount: 0 };
-//   }
-// };
-
-// // Wrap the database fetch with caching
-// export const getListings = cache(
-//   async (params: GetListingsParams): Promise<GetListingsResult> => {
-//     return unstable_cache(
-//       async () => fetchListingsFromDB(params),
-//       [`listings-${JSON.stringify(params)}`], // Create unique cache key based on all params
-//       {
-//         revalidate: 60, // Revalidate cache every 60 seconds
-//         tags: ["listings"], // Tag for cache invalidation
-//       }
-//     )();
-//   }
-// );
-
-// // newly updated:
-
-// import { unstable_cache } from "next/cache";
-// import prisma from "@/prisma/client";
-// import { ExtendedListing } from "@/app/entities/ExtendedListing";
-// import { DEFAULT_IMAGE } from "@/utils/imageUtils";
-// import { cache } from "react";
-
-// export const maxDuration = 60;
-
-// interface GetListingsParams {
-//   mainCategory: string;
-//   subCategory?: string;
-//   subSubCategory?: string;
-//   page: number;
-//   pageSize: number;
-//   location?: string;
-//   datePosted?: string;
-//   minPrice?: number;
-//   maxPrice?: number;
-// }
-
-// interface GetListingsResult {
-//   listings: ExtendedListing[];
-//   totalCount: number;
-// }
-
-// function getDateFilter(datePosted: string): Date {
-//   const now = new Date();
-//   const filterDate = new Date(now);
-
-//   switch (datePosted) {
-//     case "24h":
-//       filterDate.setHours(now.getHours() - 24);
-//       break;
-//     case "7d":
-//       filterDate.setDate(now.getDate() - 7);
-//       break;
-//     case "30d":
-//       filterDate.setDate(now.getDate() - 30);
-//       break;
-//     default:
-//       return new Date(0);
-//   }
-//   return filterDate;
-// }
-
-// const getCachedListings = unstable_cache(
-//   async ({
-//     mainCategory,
-//     subCategory,
-//     subSubCategory,
-//     page,
-//     pageSize,
-//     location,
-//     datePosted,
-//     minPrice,
-//     maxPrice,
-//   }: GetListingsParams): Promise<GetListingsResult> => {
-//     try {
-//       // First, find the main category
-//       const mainCategoryRecord = await prisma.category.findFirst({
-//         where: {
-//           name: { equals: mainCategory, mode: "insensitive" },
-//           parentId: null, // Main categories have no parent
-//         },
-//       });
-
-//       if (!mainCategoryRecord) {
-//         return { listings: [], totalCount: 0 };
-//       }
-
-//       // Build category IDs array based on the hierarchy
-//       let categoryIds: number[] = [];
-
-//       if (subCategory) {
-//         // Find sub-category under main category
-//         const subCategoryRecord = await prisma.category.findFirst({
-//           where: {
-//             name: { equals: subCategory, mode: "insensitive" },
-//             parentId: mainCategoryRecord.id,
-//           },
-//           include: {
-//             children: true, // Include sub-sub categories
-//           },
-//         });
-
-//         if (subCategoryRecord) {
-//           if (subSubCategory) {
-//             // Find specific sub-sub category
-//             const subSubCategoryRecord = subCategoryRecord.children.find(
-//               (child) =>
-//                 child.name.toLowerCase() === subSubCategory.toLowerCase()
-//             );
-//             if (subSubCategoryRecord) {
-//               categoryIds = [subSubCategoryRecord.id];
-//             }
-//           } else {
-//             // Include sub-category and all its children
-//             categoryIds = [
-//               subCategoryRecord.id,
-//               ...subCategoryRecord.children.map((child) => child.id),
-//             ];
-//           }
-//         }
-//       } else {
-//         // Get all categories under main category
-//         const fullHierarchy = await prisma.category.findMany({
-//           where: {
-//             OR: [
-//               { id: mainCategoryRecord.id },
-//               { parentId: mainCategoryRecord.id },
-//               {
-//                 parent: {
-//                   parentId: mainCategoryRecord.id,
-//                 },
-//               },
-//             ],
-//           },
-//         });
-//         categoryIds = fullHierarchy.map((cat) => cat.id);
-//       }
-
-//       const whereClause: any = {
-//         categoryId: {
-//           in: categoryIds,
-//         },
-//       };
-
-//       // Add location filter if provided
-//       if (location) {
-//         whereClause.location = {
-//           equals: location,
-//           mode: "insensitive",
-//         };
-//       }
-
-//       if (datePosted) {
-//         const filterDate = getDateFilter(datePosted);
-//         whereClause.createdAt = {
-//           gte: filterDate,
-//           lte: new Date(),
-//         };
-//       }
-
-//       if (minPrice !== undefined || maxPrice !== undefined) {
-//         whereClause.price = {};
-//         if (minPrice !== undefined) whereClause.price.gte = minPrice;
-//         if (maxPrice !== undefined) whereClause.price.lte = maxPrice;
-//       }
-
-//       // Fetch listings with related data
-//       const [listings, totalCount] = await prisma.$transaction([
-//         prisma.listing.findMany({
-//           where: whereClause,
-//           include: {
-//             category: {
-//               include: {
-//                 parent: {
-//                   include: {
-//                     parent: true,
-//                   },
-//                 },
-//               },
-//             },
-//             user: true,
-//             images: true,
-//             reviews: true,
-//           },
-//           skip: (page - 1) * pageSize,
-//           take: pageSize,
-//           orderBy: { createdAt: "desc" },
-//         }),
-//         prisma.listing.count({ where: whereClause }),
-//       ]);
-
-//       return {
-//         listings: listings.map(
-//           (listing): ExtendedListing => ({
-//             ...listing,
-//             price: listing.price?.toFixed(2) ?? "0.00",
-//             images:
-//               listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
-//             category: listing.category!,
-//             user: listing.user,
-//             review: listing.reviews,
-//           })
-//         ),
-//         totalCount,
-//       };
-//     } catch (error) {
-//       console.error("Error fetching listings:", error);
-//       return { listings: [], totalCount: 0 };
-//     }
-//   },
-//   ["listings"],
-//   { revalidate: false, tags: ["listings"] }
-// );
-
-// export async function getListings(
-//   params: GetListingsParams
-// ): Promise<GetListingsResult> {
-//   return getCachedListings(params);
-// }

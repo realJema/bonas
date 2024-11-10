@@ -6,7 +6,7 @@ import Listings from "./Listings";
 import Loading from "./loading";
 import { Suspense } from "react";
 import BreadCrumbs from "@/app/components/BreadCrumbs";
-import { Towns } from "@prisma/client";
+import { Town } from "@prisma/client";
 import prisma from "@/prisma/client";
 
 interface Props {
@@ -32,7 +32,7 @@ interface Filter {
 }
 
 const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
-  const towns = await prisma.towns.findMany({
+  const towns = await prisma.town.findMany({
     where: {
       active_listings: {
         gt: 0,

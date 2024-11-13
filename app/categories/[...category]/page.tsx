@@ -39,7 +39,7 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
         gt: 0,
       },
       name: {
-        not: null, // Ensure we only get towns with names
+        not: null, // Ensure we only ge
       },
     },
     orderBy: {

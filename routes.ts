@@ -12,6 +12,7 @@ export const publicRoutes = [
   "/api/categories",
   "/api/postListing",
   "/api/listings",
+  "/api/listings/search",
   "/api/postListing/:listingId",
   "/api/towns",
   "/auth/new-verification",

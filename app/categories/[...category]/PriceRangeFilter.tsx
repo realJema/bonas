@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDebounce } from "@/app/hooks/useDebounce";
 import { formatPrice } from "@/utils/formatUtils";
 
-const MAX_PRICE = 100_000_000; 
+const MAX_PRICE = 100_000; 
 
 const PriceRangeFilter = () => {
   const router = useRouter();

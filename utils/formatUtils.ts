@@ -2,16 +2,28 @@ import { format, parseISO, formatDistanceToNowStrict} from "date-fns";
 
 
 export function formatPrice(price: string | number | null): string {
-  if (price === null || price === "" || price === "0.00" || price === 0) {
+  // Special case for 0 - return "0 FCFA" instead of "Price not available"
+  if (price === 0 || price === "0" || price === "0.00") {
+    return "0 FCFA";
+  }
+
+  // Handle other null/empty cases
+  if (price === null || price === "") {
     return "Price not available";
   }
+
+  // Convert price to number and round it
   const numPrice = typeof price === "string" ? parseFloat(price) : price;
   const roundedPrice = Math.round(numPrice);
-  return new Intl.NumberFormat("en-US", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(roundedPrice) + " FCFA";
+
+  // Format the price
+  return (
+    new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(roundedPrice) + " FCFA"
+  );
 }
 
 export function getDisplayPrice(price: string | null, budget: number | null): string {

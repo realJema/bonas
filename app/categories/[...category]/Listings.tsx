@@ -27,6 +27,8 @@ const Listings = async ({
   pageSize,
   location,
   datePosted,
+  minPrice,
+  maxPrice,
 }: Props) => {
   const { listings, totalCount } = await getListings({
     mainCategory,
@@ -36,6 +38,8 @@ const Listings = async ({
     pageSize,
     location,
     datePosted,
+    minPrice,
+    maxPrice,
   });
 
   return (

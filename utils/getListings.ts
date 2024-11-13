@@ -1,9 +1,7 @@
 // utils/getListings.ts
-import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
-import { DEFAULT_IMAGE } from "@/utils/imageUtils";
-
-
+import prisma from "@/prisma/client";
+import { formatListings } from "./formatListings";
 
 export const maxDuration = 60;
 
@@ -36,7 +34,7 @@ function getDateFilter(datePosted: string): Date {
       filterDate.setDate(now.getDate() - 7);
       break;
     case "14d":
-      filterDate.setDate(now.getDate() -14);
+      filterDate.setDate(now.getDate() - 14);
       break;
     case "30d":
       filterDate.setDate(now.getDate() - 30);
@@ -157,55 +155,9 @@ export async function getListings({
       prisma.listing.count({ where: whereClause }),
     ]);
 
-    return {
-      listings: listings.map((listing): ExtendedListing => {
-        // Parse images with fallback to default
-        let parsedImages = null;
-        try {
-          parsedImages = listing.images
-            ? JSON.parse(listing.images as string)
-            : null;
-        } catch (e) {
-          console.error("Error parsing images:", e);
-          parsedImages = null;
-        }
+    const formattedListings = formatListings(listings);
 
-        // Use default image if no images or empty array
-        const finalImages =
-          parsedImages && Array.isArray(parsedImages) && parsedImages.length > 0
-            ? parsedImages
-            : [DEFAULT_IMAGE];
-
-        return {
-          id: listing.id.toString(),
-          title: listing.title,
-          description: listing.description,
-          subcategory_id: listing.subcategory_id?.toString() || null,
-          price: listing.price?.toString() || null,
-          currency: listing.currency,
-          town: listing.town,
-          address: listing.address,
-          user_id: listing.user_id,
-          created_at: listing.created_at?.toISOString() || null,
-          updated_at: listing.updated_at?.toISOString() || null,
-          status: listing.status,
-          views: listing.views,
-          cover_image: listing.cover_image,
-          images: finalImages,
-          is_boosted: listing.is_boosted,
-          is_boosted_type: listing.is_boosted_type,
-          is_boosted_expiry_date: listing.is_boosted_expiry_date,
-          expiry_date: listing.expiry_date?.toISOString() || null,
-          tags: listing.tags ? JSON.parse(listing.tags as string) : null,
-          condition: listing.condition,
-          negotiable: listing.negotiable?.toString() || null,
-          delivery_available: listing.delivery_available?.toString() || null,
-          rating: listing.rating,
-          user: listing.user,
-        };
-      }),
-      totalCount,
-    };
+    return { listings: formattedListings, totalCount };
   } catch (error) {
     console.error("Error fetching listings:", error);
     return { listings: [], totalCount: 0 };

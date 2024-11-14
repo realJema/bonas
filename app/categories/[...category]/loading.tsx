@@ -3,6 +3,7 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ItemCardSkeleton from "../../components/skeletons/ItemCardSkeleton";
+import BreadCrumbsSkeleton from "@/app/components/skeletons/BreadCrumbSkeleton";
 
 const SkeletonFilterDropdown = () => (
   <div className="w-full">
@@ -37,7 +38,8 @@ const Loading = () => {
 
           {/* Main content */}
           <main className="flex-1 p-5">
-            <Skeleton width={300} height={20} /> {/* BreadCrumbs */}
+            <BreadCrumbsSkeleton /> {/* BreadCrumbs */}
+            <Skeleton width={200} height={20} /> 
             <Skeleton height={150} className="mt-4" /> {/* Hero */}
             {/* Listings */}
             <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

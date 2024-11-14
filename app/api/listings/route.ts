@@ -1,3 +1,4 @@
+// app/api/listings/route.ts
 import { NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { Decimal } from "@prisma/client/runtime/library.js";
@@ -66,10 +67,18 @@ async function getListings({
   listings: ExtendedListing[];
   totalCount: number;
 }> {
+  // Get category hierarchy in one query
   const mainCategoryRecord = await prisma.category.findFirst({
     where: {
-      name: mainCategory,
+      name: { equals: mainCategory, mode: "insensitive" },
       parentId: null,
+    },
+    include: {
+      children: {
+        include: {
+          children: true,
+        },
+      },
     },
   });
 
@@ -77,42 +86,47 @@ async function getListings({
     return { listings: [], totalCount: 0 };
   }
 
-  const categoryIds = [mainCategoryRecord.id];
+  // Build category IDs array efficiently
+  const categoryIds = new Set<number>([mainCategoryRecord.id]);
 
   if (subCategory) {
-    const subCategoryRecord = await prisma.category.findFirst({
-      where: {
-        name: subCategory,
-        parentId: mainCategoryRecord.id,
-      },
-    });
+    const subCategoryRecord = mainCategoryRecord.children.find(
+      (child) => child.name.toLowerCase() === subCategory.toLowerCase()
+    );
 
     if (subCategoryRecord) {
-      categoryIds.push(subCategoryRecord.id);
-
       if (subSubCategory) {
-        const subSubCategoryRecord = await prisma.category.findFirst({
-          where: {
-            name: subSubCategory,
-            parentId: subCategoryRecord.id,
-          },
-        });
-
+        const subSubCategoryRecord = subCategoryRecord.children.find(
+          (child) => child.name.toLowerCase() === subSubCategory.toLowerCase()
+        );
         if (subSubCategoryRecord) {
-          categoryIds.push(subSubCategoryRecord.id);
+          categoryIds.add(subSubCategoryRecord.id);
         }
+      } else {
+        categoryIds.add(subCategoryRecord.id);
+        subCategoryRecord.children.forEach((child) =>
+          categoryIds.add(child.id)
+        );
       }
     }
+  } else {
+    mainCategoryRecord.children.forEach((subCat) => {
+      categoryIds.add(subCat.id);
+      subCat.children.forEach((subSubCat) => categoryIds.add(subSubCat.id));
+    });
   }
 
   const where: any = {
     subcategory_id: {
-      in: categoryIds,
+      in: Array.from(categoryIds).map((id) => BigInt(id)),
     },
   };
 
   if (location) {
-    where.town = location;
+    where.town = {
+      equals: location,
+      mode: "insensitive",
+    };
   }
 
   if (minPrice !== undefined) {

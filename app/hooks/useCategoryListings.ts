@@ -16,6 +16,7 @@ export const useCategoryListings = (category: string) => {
           category
         )}&page=1&pageSize=10`
       );
+      console.log("API Response:", data);
       return data.listings;
     },
     staleTime: 300000,

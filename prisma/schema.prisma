@@ -91,7 +91,6 @@ model JobSeeker {
 }
 
 
-// Main User model with authentication and new fields
 model User {
   id                    String     @id @default(cuid())
   name                  String?
@@ -124,7 +123,6 @@ model User {
 }
 
 
-// Account model (from original schema)
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -145,7 +143,6 @@ model Account {
   @@map("accounts")
 }
 
-// Session model (from original schema)
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
@@ -157,7 +154,6 @@ model Session {
   @@map("sessions")
 }
 
-// VerificationToken model (from original schema)
 model VerificationToken {
   token   String
   expires DateTime
@@ -169,7 +165,6 @@ model VerificationToken {
 }
 
 
-// UserRole enum (from original schema)
 enum UserRole {
   ADMIN
   USER
@@ -190,86 +185,3 @@ model Town {
   created_at      DateTime? @db.Timestamptz(6)
   updated_at      DateTime? @db.Timestamptz(6)
 }
-
-
-
-
-
-
-
-
-// model Account {
-//   id                String  @id @default(cuid())
-//   userId            String  @map("user_id")
-//   type              String
-//   provider          String
-//   providerAccountId String  @map("provider_account_id")
-//   refresh_token     String?
-//   access_token      String?
-//   expires_at        Int?
-//   token_type        String?
-//   scope             String?
-//   id_token          String?
-//   session_state     String?
-
-//   @@unique([provider, providerAccountId])
-//   @@index([userId])
-//   @@map("accounts")
-// }
-
-// model Session {
-//   id           String   @id @default(cuid())
-//   sessionToken String   @unique @map("session_token")
-//   userId       String   @map("user_id")
-//   expires      DateTime
-
-//   @@index([userId])
-//   @@map("sessions")
-// }
-
-// model VerificationToken {
-//   token   String
-//   expires DateTime
-//   email   String
-//   id      String   @id @default(cuid())
-
-//   @@unique([email, token])
-//   @@map("verificationtokens")
-// }
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-// model user {
-//   id                      BigInt    @id
-//   username                String?
-//   email                   String?
-//   password_hash           String?
-//   first_name              String?
-//   last_name               String?
-//   phone_number            BigInt?
-//   profile_picture         String?
-//   location                String?
-//   created_at              DateTime? @db.Timestamptz(6)
-//   updated_at              DateTime? @db.Timestamptz(6)
-//   last_login              String?
-//   user_type               String?
-//   email_verified          String?
-//   phone_verified          String?
-//   preferences             String?
-//   subscription_tier       String?
-//   subscription_start_date String?
-//   subscription_end_date   String?
-//   auto_renew              String?
-//   payment_method          String?
-//   city                    String?
-//   google_id               String?
-//   user_status             String?
-//   Listing                 Listing[]
-// }
-
-// enum UserRole {
-//   ADMIN
-//   USER
-// }

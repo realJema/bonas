@@ -12,11 +12,12 @@ const getCategoryUrl = (category: string) => {
 };
 
 const RealEstates = () => {
-  const {
-    data: listings = [],
-    isLoading,
-    error,
-  } = useCategoryListings("Real Estate");
+ console.log("Category being queried:", "Real Estate");
+ const {
+   data: listings = [],
+   isLoading,
+   error,
+ } = useCategoryListings("Real Estate");
 
   if (isLoading) {
     return (

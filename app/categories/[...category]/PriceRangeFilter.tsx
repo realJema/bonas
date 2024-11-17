@@ -42,7 +42,7 @@ const PriceRangeFilter = () => {
       }
 
       // Reset to page 1 when filter changes
-      current.set("page", "1");
+      // current.set("page", "1");
 
       const search = current.toString();
       const query = search ? `?${search}` : "";

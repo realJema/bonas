@@ -138,7 +138,6 @@ export async function getListings({
 
     // Added debug logging for pagination calculation
     const skip = Math.max(0, (page - 1) * pageSize);
-    console.log("Calculated skip:", skip);
 
     // Optimized query with specific field selection
     const [listings, totalCount] = await prisma.$transaction([
@@ -151,19 +150,17 @@ export async function getListings({
               name: true,
               username: true,
               image: true,
-              profilePicture: true,
+              profilImage: true,
             },
           },
         },
-        skip: skip, // Ensure skip is always non-negative
+        skip: skip,
         take: pageSize,
         orderBy: { created_at: "desc" },
       }),
       prisma.listing.count({ where: whereClause }),
     ]);
 
-    // Added debug logging for results
-    console.log("Found listings:", listings.length, "Total:", totalCount);
 
     const formattedListings = formatListings(listings);
 

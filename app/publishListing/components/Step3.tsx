@@ -1,14 +1,13 @@
 import { ListingFormData } from "@/schemas/interfaces";
 import { useState, useEffect, FormEvent } from "react";
-import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { X } from "lucide-react";
-import CloudinaryUpload from "./CloudinaryUpload/CloudinaryUpload";
+import { toast } from "react-toastify";
 
 interface Step3Props {
   onContinue: (data: {
-    timeline: string;
-    budget: string;
+    timeline?: string;
+    price: number;
     listingImages: string[];
   }) => void;
   onBack: () => void;
@@ -17,27 +16,58 @@ interface Step3Props {
 
 export default function Step3({ onContinue, onBack, formData }: Step3Props) {
   const [timeline, setTimeline] = useState<string>(formData.timeline || "");
-  const [budget, setBudget] = useState<string>(formData.budget || "");
+  const [price, setPrice] = useState<string>(formData.price?.toString() || "");
   const [listingImages, setListingImages] = useState<string[]>(
     formData.listingImages || []
   );
+  const [priceError, setPriceError] = useState<string>("");
+  const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10mb
 
   useEffect(() => {
     setTimeline(formData.timeline || "");
-    setBudget(formData.budget || "");
+    setPrice(formData.price?.toString() || "");
     setListingImages(formData.listingImages || []);
   }, [formData]);
 
+  const handlePriceChange = (value: string) => {
+    setPriceError("");
+    // Remove any non-digit characters except decimal point
+    const sanitizedValue = value.replace(/[^\d.]/g, "");
+
+    // Ensure only one decimal point
+    const parts = sanitizedValue.split(".");
+    if (parts.length > 2) return;
+
+    // Limit decimal places to 2
+    if (parts[1] && parts[1].length > 2) return;
+
+    // Validate maximum value
+    if (Number(sanitizedValue) > 1000000000) {
+      setPriceError("Maximum price is 1,000,000,000 XAF");
+      return;
+    }
+
+    setPrice(sanitizedValue);
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length + listingImages.length > 5) {
-      alert("Maximum 5 images allowed");
+    const totalImages = files.length + listingImages.length;
+
+    if (totalImages > 5) {
+      toast.info("Maximum 5 images allowed");
       return;
     }
 
     files.forEach((file) => {
       if (!file.type.match(/^image\/(jpeg|png|jpg)$/)) {
         alert("Please upload only JPG or PNG images");
+        return;
+      }
+
+      // Updated size check to 10MB
+      if (file.size > MAX_IMAGE_SIZE) {
+        alert("Each image must be less than 10MB");
         return;
       }
 
@@ -58,203 +88,174 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onContinue({ timeline, budget, listingImages });
+
+    const numericPrice = Number(price);
+    if (isNaN(numericPrice) || numericPrice <= 0) {
+      setPriceError("Please enter a valid price");
+      return;
+    }
+
+    if (listingImages.length === 0) {
+      alert("Please upload at least one image");
+      return;
+    }
+
+    onContinue({
+      timeline: timeline || undefined,
+      price: numericPrice,
+      listingImages,
+    });
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto p-4">
       {/* Left Column */}
-      <div className="w-full md:w-1/3 pr-0 md:pr-8 mb-6 md:mb-0">
-        <h1 className="text-4xl md:text-6xl font-bold mb-2 text-black">
-          Timeline & Budget
+      <div className="w-full md:w-1/3">
+        <h1 className="text-3xl md:text-4xl font-bold mb-4 text-black">
+          Details & Images
         </h1>
-        <p className="text-lg mb-2 text-gray-700">
-          Let&apos;s set your project expectations.
+        <p className="text-lg mb-4 text-gray-700">
+          Set your price and add images to make your listing stand out.
         </p>
-        <a href="#" className="text-sm text-blue-600 hover:underline">
-          How does the matching thing work?
-        </a>
-        <div className="mt-8 hidden md:block">
-          {/* person SVG */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-32 md:w-48 h-32 md:h-48"
-          >
-            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25h-1.5v-1.5h-1.5v1.5h-1.5v1.5h1.5v-1.5h1.5v-1.5z" />
-          </svg>
-        </div>
       </div>
 
-      {/* Right Column (Form) */}
+      {/* Right Column */}
       <div className="w-full md:w-2/3">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col h-auto md:h-[700px]"
-        >
-          <div className="flex-grow space-y-8">
-            {/* Timeline Field */}
-            <div>
-              <label
-                htmlFor="timeline"
-                className="block font-bold mb-2 text-black text-lg"
-              >
-                Project Timeline
-              </label>
-              <p className="text-sm text-gray-600 mb-2">
-                How long do you expect your project to take?
-              </p>
-              <select
-                id="timeline"
-                className="w-full border rounded-md p-2 text-black bg-gray-200"
-                required
-                value={timeline}
-                onChange={(e) => setTimeline(e.target.value)}
-              >
-                <option value="">Select a timeline</option>
-                <option value="Less than 1 month">Less than 1 month</option>
-                <option value="1-3 months">1-3 months</option>
-                <option value="3-6 months">3-6 months</option>
-                <option value="More than 6 months">More than 6 months</option>
-              </select>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Price & Timeline Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <h2 className="text-xl font-semibold mb-4">Pricing & Timeline</h2>
 
-            {/* Budget Field */}
-            <div>
-              <label
-                htmlFor="budget"
-                className="block font-bold mb-2 text-black text-lg"
-              >
-                Project Budget
-              </label>
-              <p className="text-sm text-gray-600 mb-2">
-                What&apos;s your estimated budget for this project?
-              </p>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="text-gray-500 sm:text-sm">XAF</span>
-                </div>
-                <input
-                  type="text"
-                  name="budget"
-                  id="budget"
-                  className="block w-full rounded-md border-0 py-1.5 pl-12 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="0"
-                  aria-describedby="price-currency"
-                  value={budget}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (/^\d*$/.test(value) || value === "") {
-                      setBudget(value);
-                    }
-                  }}
-                  required
-                />
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span
-                    className="text-gray-500 sm:text-sm"
-                    id="price-currency"
-                  >
-                    XAF
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Listing Images Field */}
-            <div>
-              <label className="block font-bold mb-2 text-black text-lg">
-                Listing Images
-              </label>
-              <p className="text-sm text-gray-600 mb-2">
-                Upload up to 5 images for your listing (minimum 1 required)
-              </p>
-
-              {listingImages.length < 5 && (
-                <div className="relative mb-4 block w-full cursor-pointer appearance-none rounded border border-dashed border-gray-400 bg-gray-50 px-4 py-4 hover:border-gray-600 transition-colors">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Price Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Price (Budget)
+                </label>
+                <div className="relative mt-1 rounded-md shadow-sm">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <span className="text-gray-500 sm:text-sm">XAF</span>
+                  </div>
                   <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/jpg"
-                    multiple
-                    onChange={handleImageUpload}
-                    className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                    type="text"
+                    className={`block w-full rounded-md border-0 py-1.5 pl-12 pr-12 text-gray-900 ring-1 ring-inset 
+                      ${
+                        priceError
+                          ? "ring-red-300 focus:ring-red-500"
+                          : "ring-gray-300 focus:ring-blue-500"
+                      } 
+                      placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    placeholder="0.00"
+                    value={price}
+                    onChange={(e) => handlePriceChange(e.target.value)}
+                    required
                   />
-                  <div className="flex flex-col items-center justify-center space-y-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
-                      </svg>
-                    </span>
-                    <p className="text-sm">
-                      <span className="font-medium text-gray-900">
-                        Click to upload
-                      </span>{" "}
-                      or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      JPG, PNG only ({listingImages.length}/5 images)
-                    </p>
-                  </div>
                 </div>
-              )}
-
-              {/* Images Preview Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 my-4">
-                {listingImages.map((image, index) => (
-                  <div key={index} className="relative group">
-                    <div className="relative w-full h-32 rounded-lg overflow-hidden">
-                      <Image
-                        src={image}
-                        alt={`Listing image ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
+                {priceError && (
+                  <p className="mt-1 text-sm text-red-600">{priceError}</p>
+                )}
               </div>
 
-              {listingImages.length === 0 && (
-                <p className="text-red-500 text-sm mt-2">
-                  Please upload at least one image for your listing
-                </p>
-              )}
+              {/* Timeline Select */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Timeline (Optional)
+                </label>
+                <select
+                  className="w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-500"
+                  value={timeline}
+                  onChange={(e) => setTimeline(e.target.value)}
+                >
+                  <option value="">Select timeline</option>
+                  <option value="Urgent">Urgent (24-48 hours)</option>
+                  <option value="1 week">Within a week</option>
+                  <option value="2 weeks">Within 2 weeks</option>
+                  <option value="1 month">Within a month</option>
+                  <option value="Flexible">Flexible</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="mt-8 md:mt-auto flex flex-col md:flex-row justify-between">
+          {/* Images Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <h2 className="text-xl font-semibold mb-4">Listing Images</h2>
+
+            {listingImages.length < 5 && (
+              <div className="relative mb-4 block w-full cursor-pointer appearance-none rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 hover:border-gray-400 transition-colors">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="rounded-full bg-gray-100 p-2">
+                    <svg
+                      className="h-6 w-6 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <span className="text-sm font-medium text-blue-600">
+                      Upload images
+                    </span>
+                    <p className="text-xs text-gray-500 mt-1">
+                      PNG, JPG up to 10MB ({listingImages.length}/5 images)
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Images Preview */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {listingImages.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative h-28 w-44 aspect-square group"
+                >
+                  <Image
+                    src={image}
+                    alt={`Listing image ${index + 1}`}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                    className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="flex justify-between pt-4">
             <button
               type="button"
               onClick={onBack}
-              className="bg-gray-300 text-black px-8 py-3 rounded text-lg font-semibold mb-4 md:mb-0"
+              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
             >
               ← Back
             </button>
             <button
               type="submit"
-              className="bg-black text-white px-8 py-3 rounded text-lg font-semibold"
-              disabled={listingImages.length === 0}
+              className="px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
+              disabled={listingImages.length === 0 || !price || !!priceError}
             >
               Continue →
             </button>

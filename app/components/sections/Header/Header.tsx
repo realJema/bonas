@@ -19,25 +19,15 @@ const Header = () => {
   const { categories, setCategories } = useCategoryStore();
 
   const { isLoading, error } = useQuery<CategoryWithChildren[], Error>({
-    queryKey: ["categories"],
+    queryKey: ["categories", "tree"],
     queryFn: async () => {
-      try {
-        const response = await axios.get<CategoryWithChildren[]>(
-          "/api/categories"
-        );
-        setCategories(response.data);
-        return response.data;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          throw new Error(
-            `Failed to fetch categories: ${
-              error.response?.data?.error || error.message
-            }`
-          );
-        }
-        throw error;
-      }
+      const response = await axios.get<CategoryWithChildren[]>(
+        "/api/categories?type=all"
+      );
+      setCategories(response.data);
+      return response.data;
     },
+    staleTime: 1000 * 60 * 60,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

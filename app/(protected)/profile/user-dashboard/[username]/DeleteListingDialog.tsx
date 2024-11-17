@@ -36,15 +36,15 @@ export default function DeleteListingDialog({
       const result = await deleteListing(listingId, username);
 
       if (result.success) {
-        toast.success("Listing deleted successfully");
+        toast.success(result.message || "Listing deleted successfully");
         onDeleteSuccess?.();
-        setIsOpen(false); // Only close after successful deletion
+        setIsOpen(false);
       } else {
-        toast.error(result.error);
+        toast.error(result.error || "Failed to delete listing");
       }
     } catch (error) {
-      toast.error("An unexpected error occurred");
       console.error("Error in handleDelete:", error);
+      toast.error("An unexpected error occurred while deleting the listing");
     } finally {
       setIsDeleting(false);
     }

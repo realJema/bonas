@@ -11,15 +11,26 @@ export const useCategoryListings = (category: string) => {
   return useQuery<ExtendedListing[]>({
     queryKey: ["categoryListings", category],
     queryFn: async () => {
-      const { data } = await axios.get<ListingsResponse>(
-        `/api/listings?mainCategory=${encodeURIComponent(
-          category
-        )}&page=1&pageSize=10`
-      );
-      console.log("API Response:", data);
-      return data.listings;
+      try {
+        const { data } = await axios.get<ListingsResponse>(
+          `/api/listings?mainCategory=${encodeURIComponent(
+            category
+          )}&page=1&pageSize=10`
+        );
+
+        // Validate response
+        if (!data || !Array.isArray(data.listings)) {
+          console.error("Invalid response format:", data);
+          return [];
+        }
+
+        return data.listings;
+      } catch (error) {
+        console.error("Error fetching category listings:", error);
+        throw error;
+      }
     },
-    staleTime: 300000,
+    staleTime: 60 * 60 * 10,
     retry: 3,
     refetchOnWindowFocus: false,
   });

@@ -87,7 +87,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white mb-10">
       {/* Header */}
       <header className="bg-white shadow-sm h-auto md:h-[70px] py-4 md:py-0 flex items-center">
         <div className="container mx-auto space-x-3 px-4 flex flex-col md:flex-row items-center">

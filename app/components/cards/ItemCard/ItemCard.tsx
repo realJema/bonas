@@ -8,8 +8,7 @@ import { buildListingUrl } from "@/utils/categoryUtils";
 import { formatUsername } from "@/utils/formatUsername";
 import {
   formatDatePosted,
-  formatPrice,
-  getDisplayPrice
+  formatPrice
 } from "@/utils/formatUtils";
 import {
   PlayIcon,
@@ -37,7 +36,6 @@ import type { ReactPlayerProps } from "react-player/types";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
-// Define props for ItemCard
 interface Item {
   listing: ExtendedListing;
   slides: SlideItem[];
@@ -233,21 +231,19 @@ const ItemCard = ({
         </div>
       </CarouselProvider>
       <Link href={buildListingUrl(listing)}>
-        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-52 rounded-sm">
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-[200px] rounded-sm">
           <div className="flex items-center justify-between">
             {/* users info */}
             <div className="flex gap-1 items-center">
-              {listing.user?.profilePicture && (
+              {listing.user?.profilImage && (
                 <div className="h-10 w-10 rounded-full relative">
                   <Image
                     alt={listing.user.username!}
-                    src={listing.user.profilePicture}
+                    src={listing.user?.profilImage}
                     fill
                     className="object-cover rounded-full"
                     onClick={() =>
-                      router.push(
-                        `/profile/user-profile/${username}`
-                      )
+                      router.push(`/profile/user-profile/${username}`)
                     }
                   />
                 </div>
@@ -306,7 +302,9 @@ const ItemCard = ({
       {canDeleteListing && (
         <DeleteListingDialog
           listingId={listing.id}
-          username={listing.user?.username ?? formatUsername(listing.user?.name)}
+          username={
+            listing.user?.username ?? formatUsername(listing.user?.name)
+          }
           onDeleteSuccess={() => {
             router.refresh();
           }}

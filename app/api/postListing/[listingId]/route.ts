@@ -1,36 +1,35 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-import { UpdateListingSchema } from "@/schemas";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
+import { Prisma } from "@prisma/client";
 
-// Configure Cloudinary with your credentials
+// Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
   secure: true,
 });
 
-// Helper function to upload a single image to Cloudinary
+// Helper function to upload images to Cloudinary
 async function uploadToCloudinary(
   base64Image: string,
-  subcategory: string
+  type: string
 ): Promise<string> {
   try {
-    // Remove the data:image/[type];base64, prefix if present
     const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Buffer.from(base64Data, "base64");
 
     return new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString().split("T")[0];
-      const fileName = `bollo_${timestamp}_${subcategory}_${Date.now()}`;
+      const fileName = `listing_${timestamp}_${type}_${Date.now()}`;
 
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: "Bollo",
+          folder: "Listings",
           public_id: fileName,
           resource_type: "auto" as const,
           timeout: 60000,
@@ -58,10 +57,8 @@ export async function PUT(
   { params }: { params: { listingId: string } }
 ) {
   try {
-    // 1. Get authenticated session
+    // 1. Authentication
     const session = await auth();
-
-    // 2. Check if user is authenticated and has an email
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: "Unauthorized - Please sign in" },
@@ -69,16 +66,10 @@ export async function PUT(
       );
     }
 
-    // 3. Get listing ID from params and validate
-    const listingId = parseInt(params.listingId);
-    if (isNaN(listingId)) {
-      return NextResponse.json(
-        { error: "Invalid listing ID" },
-        { status: 400 }
-      );
-    }
+    // 2. Get listing ID and validate
+    const listingId = BigInt(params.listingId);
 
-    // 4. Get user from database
+    // 3. Get user and verify ownership
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
     });
@@ -87,7 +78,6 @@ export async function PUT(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // 5. Verify listing exists and belongs to user
     const existingListing = await prisma.listing.findUnique({
       where: { id: listingId },
     });
@@ -96,199 +86,103 @@ export async function PUT(
       return NextResponse.json({ error: "Listing not found" }, { status: 404 });
     }
 
-    if (existingListing.userId !== user.id) {
+    if (existingListing.user_id !== user.id) {
       return NextResponse.json(
         { error: "Unauthorized to update this listing" },
         { status: 403 }
       );
     }
 
-    // 6. Parse request body and handle image uploads
+    // 4. Parse and handle request body
     const body = await request.json();
 
     try {
-      // Handle profile image upload if provided
-      let profileImageUrl: string | undefined;
-      if (body.profileImage && body.profileImage.startsWith("data:image/")) {
+      // 5. Handle image uploads
+      let coverImageUrl: string | undefined;
+      let additionalImages: string[] = [];
+
+      // Handle cover image
+      if (body.cover_image && body.cover_image.startsWith("data:image/")) {
         try {
-          profileImageUrl = await uploadToCloudinary(
-            body.profileImage,
-            "profile"
-          );
+          coverImageUrl = await uploadToCloudinary(body.cover_image, "cover");
         } catch (error) {
-          console.error("Profile image upload failed:", error);
           return NextResponse.json(
-            { error: "Failed to upload profile image" },
+            { error: "Failed to upload cover image" },
             { status: 400 }
           );
         }
       }
 
-      // Handle listing images upload
-      let listingImageUrls: string[] = [];
-      if (body.listingImages && body.listingImages.length > 0) {
+      // Handle additional images
+      if (body.images && body.images.length > 0) {
         try {
-          listingImageUrls = await Promise.all(
-            body.listingImages.map((image: string) =>
+          additionalImages = await Promise.all(
+            body.images.map((image: string) =>
               image.startsWith("data:image/")
-                ? uploadToCloudinary(image, "listing")
+                ? uploadToCloudinary(image, "additional")
                 : image
             )
           );
         } catch (error) {
-          console.error("Listing images upload failed:", error);
           return NextResponse.json(
-            { error: "Failed to upload listing images" },
+            { error: "Failed to upload additional images" },
             { status: 400 }
           );
         }
       }
 
-      // Prepare the data for validation with Cloudinary URLs
-      const dataToValidate = {
-        ...body,
-        profileImage: profileImageUrl || body.profileImage,
-        listingImages: listingImageUrls,
-        budget:
-          typeof body.budget === "string"
-            ? parseFloat(body.budget)
-            : body.budget,
-      };
+      // 6. Prepare data for update
+      const imagesData:
+        | Prisma.InputJsonValue
+        | Prisma.NullableJsonNullValueInput =
+        additionalImages.length > 0 ? additionalImages : Prisma.JsonNull;
 
-      // 7. Validate the data
-      const validatedData = UpdateListingSchema.parse(dataToValidate);
+      const tagsData:
+        | Prisma.InputJsonValue
+        | Prisma.NullableJsonNullValueInput =
+        body.tags?.length > 0 ? body.tags : Prisma.JsonNull;
 
-      // 8. Get the most specific category ID based on hierarchy
-      let categoryId: number | null | undefined = existingListing.categoryId;
-
-      if (validatedData.category) {
-        if (validatedData.subSubcategory) {
-          const subSubCategory = await prisma.category.findFirst({
-            where: {
-              name: validatedData.subSubcategory,
-              parent: {
-                name: validatedData.subcategory,
-                parent: {
-                  name: validatedData.category,
-                },
-              },
+      // 7. Update listing
+      const updatedListing = await prisma.listing.update({
+        where: { id: listingId },
+        data: {
+          title: body.title,
+          description: body.description,
+          price:
+            typeof body.price === "string"
+              ? parseFloat(body.price)
+              : body.price,
+          currency: body.currency || "XAF",
+          town: body.town,
+          address: body.address,
+          timeline: body.timeline,
+          subcategory_id: BigInt(body.subcategory_id),
+          cover_image: coverImageUrl || existingListing.cover_image,
+          images: imagesData,
+          tags: tagsData,
+          condition: body.condition,
+          negotiable: body.negotiable ? BigInt(1) : BigInt(0),
+          delivery_available: body.delivery_available ? BigInt(1) : BigInt(0),
+          updated_at: new Date(),
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              username: true,
             },
-            select: { id: true },
-          });
-          categoryId = subSubCategory?.id;
-        }
-
-        if (!categoryId && validatedData.subcategory) {
-          const subCategory = await prisma.category.findFirst({
-            where: {
-              name: validatedData.subcategory,
-              parent: {
-                name: validatedData.category,
-              },
-            },
-            select: { id: true },
-          });
-          categoryId = subCategory?.id;
-        }
-
-        if (!categoryId) {
-          const mainCategory = await prisma.category.findFirst({
-            where: {
-              name: validatedData.category,
-              parent: null,
-            },
-            select: { id: true },
-          });
-          categoryId = mainCategory?.id;
-        }
-
-        if (!categoryId) {
-          return NextResponse.json(
-            { error: "Invalid category hierarchy" },
-            { status: 400 }
-          );
-        }
-      }
-
-      // 9. Update listing and images in a transaction
-      const updatedListing = await prisma.$transaction(async (tx) => {
-        // 9.0 Update user's profile picture if provided
-        if (profileImageUrl) {
-          await tx.user.update({
-            where: { id: user.id },
-            data: {
-              profilePicture: profileImageUrl,
-              image: profileImageUrl, // Update both fields for consistency
-            },
-          });
-        }
-
-        // 9.1 Update the main listing
-        const listing = await tx.listing.update({
-          where: { id: listingId },
-          data: {
-            title: validatedData.title,
-            description: validatedData.description,
-            location: validatedData.location,
-            timeline: validatedData.timeline,
-            budget: validatedData.budget,
-            categoryId: categoryId,
-            updatedAt: new Date(),
           },
-        });
-
-        // 9.2 Update images if provided
-        if (listingImageUrls.length > 0) {
-          // Delete existing images
-          await tx.image.deleteMany({
-            where: { listingId: listingId },
-          });
-
-          // Create new images
-          await tx.image.createMany({
-            data: listingImageUrls.map((imageUrl) => ({
-              listingId: listingId,
-              imageUrl: imageUrl,
-            })),
-          });
-        }
-
-        // 9.3 Return updated listing with relations
-        return tx.listing.findUnique({
-          where: { id: listingId },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                profilePicture: true,
-                username: true,
-              },
-            },
-            category: {
-              include: {
-                parent: {
-                  include: {
-                    parent: true,
-                  },
-                },
-              },
-            },
-            images: true,
-          },
-        });
+        },
       });
 
-      // 10. Revalidate caches
-      revalidateTag("listings-by-user-id");
-      revalidateTag(`user-${user.id}-listings`);
+      // 8. Revalidate caches
       revalidateTag("listings");
-      revalidateTag("jobs");
-      revalidateTag("real-estate");
-      revalidateTag("vehicles");
+      revalidateTag(`user-${user.id}-listings`);
 
-      // 11. Return success response
+      // 9. Return success response
       return NextResponse.json(updatedListing, {
         status: 200,
         headers: {
@@ -320,214 +214,3 @@ export async function PUT(
 }
 
 export const dynamic = "force-dynamic";
-
-
-// import { auth } from "@/auth";
-// import prisma from "@/prisma/client";
-// import { UpdateListingSchema } from "@/schemas";
-// import { NextResponse } from "next/server";
-// import { z } from "zod";
-// import { revalidateTag } from "next/cache";
-
-// export async function PUT(
-//   request: Request,
-//   { params }: { params: { listingId: string } }
-// ) {
-//   try {
-//     // 1. Get authenticated session
-//     const session = await auth();
-
-//     // 2. Check if user is authenticated and has an email
-//     if (!session?.user?.email) {
-//       return NextResponse.json(
-//         { error: "Unauthorized - Please sign in" },
-//         { status: 401 }
-//       );
-//     }
-
-//     // 3. Get listing ID from params and validate
-//     const listingId = parseInt(params.listingId);
-//     if (isNaN(listingId)) {
-//       return NextResponse.json(
-//         { error: "Invalid listing ID" },
-//         { status: 400 }
-//       );
-//     }
-
-//     // 4. Get user from database
-//     const user = await prisma.user.findUnique({
-//       where: { email: session.user.email },
-//     });
-
-//     if (!user) {
-//       return NextResponse.json({ error: "User not found" }, { status: 404 });
-//     }
-
-//     // 5. Verify listing exists and belongs to user
-//     const existingListing = await prisma.listing.findUnique({
-//       where: { id: listingId },
-//     });
-
-//     if (!existingListing) {
-//       return NextResponse.json({ error: "Listing not found" }, { status: 404 });
-//     }
-
-//     if (existingListing.userId !== user.id) {
-//       return NextResponse.json(
-//         { error: "Unauthorized to update this listing" },
-//         { status: 403 }
-//       );
-//     }
-
-//     // 6. Parse and validate request body
-//     const body = await request.json();
-//     const validatedData = UpdateListingSchema.parse(body);
-
-//     // 7. Get the most specific category ID based on hierarchy
-//     let categoryId: number | null | undefined = existingListing.categoryId;
-
-//     if (validatedData.category) {
-//       if (validatedData.subSubcategory) {
-//         // First try to find the sub-subcategory
-//         const subSubCategory = await prisma.category.findFirst({
-//           where: {
-//             name: validatedData.subSubcategory,
-//             parent: {
-//               name: validatedData.subcategory,
-//               parent: {
-//                 name: validatedData.category,
-//               },
-//             },
-//           },
-//           select: { id: true },
-//         });
-//         categoryId = subSubCategory?.id;
-//       }
-
-//       if (!categoryId && validatedData.subcategory) {
-//         // If no sub-subcategory found, try to find the subcategory
-//         const subCategory = await prisma.category.findFirst({
-//           where: {
-//             name: validatedData.subcategory,
-//             parent: {
-//               name: validatedData.category,
-//             },
-//           },
-//           select: { id: true },
-//         });
-//         categoryId = subCategory?.id;
-//       }
-
-//       if (!categoryId) {
-//         // If no subcategory found, find the main category
-//         const mainCategory = await prisma.category.findFirst({
-//           where: {
-//             name: validatedData.category,
-//             parent: null, // Main categories have no parent
-//           },
-//           select: { id: true },
-//         });
-//         categoryId = mainCategory?.id;
-//       }
-
-//       if (!categoryId) {
-//         return NextResponse.json(
-//           { error: "Invalid category hierarchy" },
-//           { status: 400 }
-//         );
-//       }
-//     }
-
-//     // 8. Update listing and images in a transaction
-//     const updatedListing = await prisma.$transaction(async (tx) => {
-//       // 8.1 Update the main listing
-//       const listing = await tx.listing.update({
-//         where: { id: listingId },
-//         data: {
-//           title: validatedData.title,
-//           description: validatedData.description,
-//           location: validatedData.location,
-//           timeline: validatedData.timeline,
-//           budget: validatedData.budget as number,
-//           categoryId: categoryId,
-//           updatedAt: new Date(),
-//         },
-//       });
-
-//       // 8.2 Update images if provided
-//       if (validatedData.listingImages?.length > 0) {
-//         // Delete existing images
-//         await tx.image.deleteMany({
-//           where: { listingId: listingId },
-//         });
-
-//         // Create new images
-//         await tx.image.createMany({
-//           data: validatedData.listingImages.map((imageUrl) => ({
-//             listingId: listingId,
-//             imageUrl: imageUrl,
-//           })),
-//         });
-//       }
-
-//       // 8.3 Return updated listing with relations
-//       return tx.listing.findUnique({
-//         where: { id: listingId },
-//         include: {
-//           user: {
-//             select: {
-//               id: true,
-//               name: true,
-//               email: true,
-//               profilePicture: true,
-//               username: true,
-//             },
-//           },
-//           category: {
-//             include: {
-//               parent: {
-//                 include: {
-//                   parent: true,
-//                 },
-//               },
-//             },
-//           },
-//           images: true,
-//         },
-//       });
-//     });
-
-//     // Invalidate all relevant caches
-//     revalidateTag("listings-by-user-id");
-//     revalidateTag(`user-${user.id}-listings`);
-//     revalidateTag(`listings`);
-
-//     // 9. Return success response
-//     return NextResponse.json(updatedListing, {
-//       status: 200,
-//       headers: {
-//         "Cache-Control": "no-store, max-age=0",
-//       },
-//     });
-//   } catch (error) {
-//     if (error instanceof z.ZodError) {
-//       return NextResponse.json(
-//         {
-//           error: "Validation failed",
-//           details: error.errors.map((err) => ({
-//             path: err.path.join("."),
-//             message: err.message,
-//           })),
-//         },
-//         { status: 400 }
-//       );
-//     }
-//     console.error("Error updating listing:", error);
-//     return NextResponse.json(
-//       { error: "Failed to update listing" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// export const dynamic = "force-dynamic";

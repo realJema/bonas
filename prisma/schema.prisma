@@ -24,6 +24,7 @@ model Listing {
   id                     BigInt    @id
   title                  String?
   description            String?
+  timeline               String?
   subcategory_id         BigInt?
   price                  Float?
   currency               String?
@@ -99,6 +100,7 @@ model User {
   email                 String     @unique
   emailVerified         DateTime?  @map("email_verified")
   image                 String?
+  profilImage           String?
   phoneNumber           String?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt

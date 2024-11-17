@@ -28,5 +28,7 @@ export interface ExtendedListing {
     name: string | null;
     username: string | null;
     profilePicture: string | null;
+    profilImage: string | null;
+    image: string | null;
   } | null;
 }

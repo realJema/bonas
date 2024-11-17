@@ -54,27 +54,30 @@ export const CreateListingSchema = z.object({
   description: z
     .string()
     .min(10, { message: "Description must be at least 10 characters long" }),
-  category: z.string(),
-  subcategory: z.string().optional(),
-  subSubcategory: z.string().optional(),
-  location: z.string(),
+  price: z.number().min(0, { message: "Price must be a positive number" }),
+  currency: z.string().default("USD"),
+  town: z.string().min(1, { message: "Town is required" }),
+  address: z.string().min(1, { message: "Address is required" }),
   timeline: z.string().optional(),
-  budget: z.number(),
-  profileImage: z
+  subcategory_id: z.number().or(z.string().transform(Number)),
+  condition: z.string().optional(),
+  negotiable: z.boolean().default(false),
+  delivery_available: z.boolean().default(false),
+  tags: z.array(z.string()).optional(),
+  coverImage: z
     .string()
-    .optional()
     .refine(
-      isValidOptionalImageInput,
+      isValidImageInput,
       "Invalid image format. Must be base64 or Cloudinary URL"
     ),
-  listingImages: z
+  images: z
     .array(z.string())
-    .min(1, "At least one listing image is required")
-    .max(5, "Maximum 5 images allowed")
+    .max(5, "Maximum 5 additional images allowed")
     .refine(
       (images) => images.every((img) => isValidImageInput(img)),
       "Invalid image format. Must be base64 or Cloudinary URL"
-    ),
+    )
+    .optional(),
 });
 
 export type CreateListingInput = z.infer<typeof CreateListingSchema>;

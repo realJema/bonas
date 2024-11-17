@@ -2,126 +2,154 @@
 
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-import { revalidatePath , revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
+import { v2 as cloudinary } from "cloudinary";
 
-// 1. Define deletion schema for validation
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
+// Define deletion schema
 const DeleteListingSchema = z.object({
-  listingId: z.number().positive(),
+  listingId: z.string().or(z.number()).transform(val => BigInt(val)),
   username: z.string().min(1),
 });
 
-// 2. Define return type for better type safety
-type DeleteListingResult =
-  | { success: true }
-  | { success: false; error: string };
+// Define return type
+type DeleteListingResult = {
+  success: boolean;
+  error?: string;
+  message?: string;
+};
 
-// 3. Main server action for deleting listings
+// Helper function to delete image from Cloudinary
+async function deleteCloudinaryImage(url: string) {
+  try {
+    // Extract public_id from Cloudinary URL
+    const publicId = url
+      .split('/')
+      .slice(-1)[0]
+      .split('.')[0];
+
+    await cloudinary.uploader.destroy(`Listings/${publicId}`);
+  } catch (error) {
+    console.error('Error deleting image from Cloudinary:', error);
+    // Don't throw error as this is not critical
+  }
+}
+
 export async function deleteListing(
-  listingId: number,
+  listingId: string | number,
   username: string
 ): Promise<DeleteListingResult> {
   try {
-    // 4. Validate input data
+    // 1. Validate input
     const validated = DeleteListingSchema.parse({ listingId, username });
 
-    // 5. Get authenticated session
+    // 2. Auth check
     const session = await auth();
     if (!session?.user?.email) {
       return {
         success: false,
-        error: "Authentication required",
+        error: "Authentication required"
       };
     }
 
-    // 6. Get authenticated user from database
+    // 3. Get user
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      select: { id: true },
+      select: { id: true }
     });
 
     if (!user) {
       return {
         success: false,
-        error: "User not found",
+        error: "User not found"
       };
     }
 
-    // 7. Check if listing exists and belongs to user
+    // 4. Get listing with all related data
     const listing = await prisma.listing.findUnique({
       where: { id: validated.listingId },
       select: {
         id: true,
-        userId: true,
-        images: { select: { id: true } },
-        reviews: { select: { id: true } },
-      },
+        user_id: true,
+        cover_image: true,
+        images: true,
+      }
     });
 
     if (!listing) {
       return {
         success: false,
-        error: "Listing not found",
+        error: "Listing not found"
       };
     }
 
-    if (listing.userId !== user.id) {
+    if (listing.user_id !== user.id) {
       return {
         success: false,
-        error: "Unauthorized to delete this listing",
+        error: "Unauthorized to delete this listing"
       };
     }
 
-    // 8. Delete listing and related data in a transaction
+    // 5. Delete listing and cleanup in transaction
     await prisma.$transaction(async (tx) => {
-      // 8.1 Delete images
-      if (listing.images.length > 0) {
-        await tx.image.deleteMany({
-          where: { listingId: listing.id },
-        });
-      }
-
-      // 8.2 Delete reviews
-      if (listing.reviews.length > 0) {
-        await tx.review.deleteMany({
-          where: { listingId: listing.id },
-        });
-      }
-
-      // 8.3 Delete the listing
+      // Delete the listing first
       await tx.listing.delete({
-        where: { id: listing.id },
+        where: { id: validated.listingId }
       });
+
+      // Cleanup images from Cloudinary after successful DB deletion
+      const imagesToDelete = [];
+
+      // Add cover image if exists
+      if (listing.cover_image) {
+        imagesToDelete.push(listing.cover_image);
+      }
+
+      // Add additional images if they exist
+      const additionalImages = listing.images as string[] | null;
+      if (additionalImages) {
+        imagesToDelete.push(...additionalImages);
+      }
+
+      // Delete all images from Cloudinary in parallel
+      await Promise.allSettled(
+        imagesToDelete.map(url => deleteCloudinaryImage(url))
+      );
     });
 
-    // 9. Revalidate relevant paths
-    revalidatePath(`/profile/user-dashboard/${validated.username}`);
-    
-    revalidatePath("/listings"); // Revalidate main listings page if exists
-    revalidatePath(`/listings/${listing.id}`); // Revalidate listing detail page
-    // Add cache revalidation after successful creation
-      revalidateTag("listings-by-user-id");
+    // 6. Revalidate caches and paths
+    revalidatePath(`/profile/${username}/listings`);
+    revalidatePath('/listings');
+    revalidatePath(`/listings/${listing.id}`);
+    revalidateTag('listings');
+    revalidateTag(`user-${user.id}-listings`);
 
-      // Also revalidate the specific user's listings cache
-      revalidateTag(`user-${user.id}-listings`);
+    return {
+      success: true,
+      message: "Listing successfully deleted"
+    };
 
-      // revalidate all listings
-      revalidateTag("listings")
-
-    return { success: true };
   } catch (error) {
-    console.error("Error in deleteListing action:", error);
+    console.error("Error in deleteListing:", error);
 
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        error: "Invalid input data",
+        error: "Invalid input data: " + error.errors.map(e => e.message).join(", ")
       };
     }
 
     return {
       success: false,
-      error: "Failed to delete listing",
+      error: "Failed to delete listing"
     };
   }
 }

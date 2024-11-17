@@ -8,7 +8,7 @@ import PriceRangeFilter from "./PriceRangeFilter";
 import Search from "./Search";
 
 
-export const revalidate = 0;
+// export const revalidate = 0;
 
 interface Props {
   params: { category: string[] };

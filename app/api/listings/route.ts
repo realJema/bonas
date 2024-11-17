@@ -180,6 +180,7 @@ async function getListings({
             username: true,
             image: true,
             profilePicture: true,
+            profilImage: true,
           },
         },
       },
@@ -188,33 +189,74 @@ async function getListings({
   ]);
 
   return {
-    listings: listings.map((listing) => ({
-      id: listing.id.toString(),
-      title: listing.title,
-      description: listing.description,
-      subcategory_id: listing.subcategory_id?.toString() || null,
-      price: listing.price?.toString() || null,
-      currency: listing.currency,
-      town: listing.town,
-      address: listing.address,
-      user_id: listing.user_id,
-      created_at: listing.created_at?.toISOString() || null,
-      updated_at: listing.updated_at?.toISOString() || null,
-      status: listing.status,
-      views: listing.views,
-      cover_image: listing.cover_image,
-      images: listing.images ? JSON.parse(listing.images as string) : null,
-      is_boosted: listing.is_boosted,
-      is_boosted_type: listing.is_boosted_type,
-      is_boosted_expiry_date: listing.is_boosted_expiry_date,
-      expiry_date: listing.expiry_date?.toISOString() || null,
-      tags: listing.tags ? JSON.parse(listing.tags as string) : null,
-      condition: listing.condition,
-      negotiable: listing.negotiable?.toString() || null,
-      delivery_available: listing.delivery_available?.toString() || null,
-      rating: listing.rating,
-      user: listing.user,
-    })),
+    listings: listings.map((listing) => {
+      // Safely parse images
+      let parsedImages = null;
+      try {
+        if (listing.images) {
+          if (typeof listing.images === "string") {
+            parsedImages = JSON.parse(listing.images);
+          } else {
+            parsedImages = listing.images;
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing images for listing:", listing.id, error);
+        parsedImages = [];
+      }
+
+      // Safely parse tags
+      let parsedTags = null;
+      try {
+        if (listing.tags) {
+          if (typeof listing.tags === "string") {
+            parsedTags = JSON.parse(listing.tags);
+          } else {
+            parsedTags = listing.tags;
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing tags for listing:", listing.id, error);
+        parsedTags = [];
+      }
+
+      return {
+        id: listing.id.toString(),
+        title: listing.title,
+        description: listing.description,
+        subcategory_id: listing.subcategory_id?.toString() || null,
+        price: listing.price?.toString() || null,
+        currency: listing.currency,
+        town: listing.town,
+        address: listing.address,
+        user_id: listing.user_id,
+        created_at: listing.created_at?.toISOString() || null,
+        updated_at: listing.updated_at?.toISOString() || null,
+        status: listing.status,
+        views: listing.views,
+        cover_image: listing.cover_image,
+        images: parsedImages,
+        is_boosted: listing.is_boosted,
+        is_boosted_type: listing.is_boosted_type,
+        is_boosted_expiry_date: listing.is_boosted_expiry_date,
+        expiry_date: listing.expiry_date?.toISOString() || null,
+        tags: parsedTags,
+        condition: listing.condition,
+        negotiable: listing.negotiable?.toString() || null,
+        delivery_available: listing.delivery_available?.toString() || null,
+        rating: listing.rating,
+        user: listing.user
+          ? {
+              id: listing.user.id,
+              name: listing.user.name,
+              username: listing.user.username,
+              profilePicture: listing.user.profilePicture,
+              profilImage: listing.user.profilImage,
+              image: listing.user.image,
+            }
+          : null,
+      };
+    }),
     totalCount,
   };
 }

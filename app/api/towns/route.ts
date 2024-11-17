@@ -14,7 +14,7 @@ const serializeTown = (town: any) => ({
 
 export async function GET() {
   try {
-    const towns = await prisma.towns.findMany({
+    const towns = await prisma.town.findMany({
       orderBy: {
         name: 'asc'
       }

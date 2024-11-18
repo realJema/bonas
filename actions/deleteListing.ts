@@ -16,7 +16,10 @@ cloudinary.config({
 
 // Define deletion schema
 const DeleteListingSchema = z.object({
-  listingId: z.string().or(z.number()).transform(val => BigInt(val)),
+  listingId: z
+    .string()
+    .or(z.number())
+    .transform((val) => BigInt(val)),
   username: z.string().min(1),
 });
 
@@ -31,14 +34,11 @@ type DeleteListingResult = {
 async function deleteCloudinaryImage(url: string) {
   try {
     // Extract public_id from Cloudinary URL
-    const publicId = url
-      .split('/')
-      .slice(-1)[0]
-      .split('.')[0];
+    const publicId = url.split("/").slice(-1)[0].split(".")[0];
 
     await cloudinary.uploader.destroy(`Listings/${publicId}`);
   } catch (error) {
-    console.error('Error deleting image from Cloudinary:', error);
+    console.error("Error deleting image from Cloudinary:", error);
     // Don't throw error as this is not critical
   }
 }
@@ -56,20 +56,20 @@ export async function deleteListing(
     if (!session?.user?.email) {
       return {
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       };
     }
 
     // 3. Get user
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (!user) {
       return {
         success: false,
-        error: "User not found"
+        error: "User not found",
       };
     }
 
@@ -81,20 +81,20 @@ export async function deleteListing(
         user_id: true,
         cover_image: true,
         images: true,
-      }
+      },
     });
 
     if (!listing) {
       return {
         success: false,
-        error: "Listing not found"
+        error: "Listing not found",
       };
     }
 
     if (listing.user_id !== user.id) {
       return {
         success: false,
-        error: "Unauthorized to delete this listing"
+        error: "Unauthorized to delete this listing",
       };
     }
 
@@ -102,7 +102,7 @@ export async function deleteListing(
     await prisma.$transaction(async (tx) => {
       // Delete the listing first
       await tx.listing.delete({
-        where: { id: validated.listingId }
+        where: { id: validated.listingId },
       });
 
       // Cleanup images from Cloudinary after successful DB deletion
@@ -121,35 +121,35 @@ export async function deleteListing(
 
       // Delete all images from Cloudinary in parallel
       await Promise.allSettled(
-        imagesToDelete.map(url => deleteCloudinaryImage(url))
+        imagesToDelete.map((url) => deleteCloudinaryImage(url))
       );
     });
 
-    // 6. Revalidate caches and paths
-    revalidatePath(`/profile/${username}/listings`);
-    revalidatePath('/listings');
-    revalidatePath(`/listings/${listing.id}`);
-    revalidateTag('listings');
-    revalidateTag(`user-${user.id}-listings`);
+    revalidatePath("/"); // Home page
+    revalidatePath("/profile/user-dashboard/[username]", "page");
+    revalidatePath(`/profile/user-dashboard/${username}`);
+    // revalidatePath(`/profile/user-dashboard/${username}/listings`);
+    revalidateTag("listings");
 
     return {
       success: true,
-      message: "Listing successfully deleted"
+      message: "Listing successfully deleted",
     };
-
   } catch (error) {
     console.error("Error in deleteListing:", error);
 
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        error: "Invalid input data: " + error.errors.map(e => e.message).join(", ")
+        error:
+          "Invalid input data: " +
+          error.errors.map((e) => e.message).join(", "),
       };
     }
 
     return {
       success: false,
-      error: "Failed to delete listing"
+      error: "Failed to delete listing",
     };
   }
 }

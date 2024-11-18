@@ -2,11 +2,10 @@ import { auth } from "@/auth";
 import prisma from "@/prisma/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
 import { Prisma } from "@prisma/client";
 
-// Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,7 +13,22 @@ cloudinary.config({
   secure: true,
 });
 
-// Helper function to upload images to Cloudinary
+function serializeListing(listing: any) {
+  return {
+    ...listing,
+    id: listing.id.toString(),
+    subcategory_id: listing.subcategory_id?.toString(),
+    negotiable: listing.negotiable?.toString(),
+    delivery_available: listing.delivery_available?.toString(),
+    user: listing.user
+      ? {
+          ...listing.user,
+          id: listing.user.id.toString(),
+        }
+      : null,
+  };
+}
+
 async function uploadToCloudinary(
   base64Image: string,
   type: string
@@ -33,7 +47,10 @@ async function uploadToCloudinary(
           public_id: fileName,
           resource_type: "auto" as const,
           timeout: 60000,
-          transformation: [{ width: 1000, height: 1000, crop: "limit" }],
+          transformation:
+            type === "profile"
+              ? [{ width: 400, height: 400, crop: "fill", gravity: "face" }]
+              : [{ width: 1000, height: 1000, crop: "limit" }],
         },
         (error, result) => {
           if (error) {
@@ -57,7 +74,6 @@ export async function PUT(
   { params }: { params: { listingId: string } }
 ) {
   try {
-    // 1. Authentication
     const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
@@ -66,10 +82,8 @@ export async function PUT(
       );
     }
 
-    // 2. Get listing ID and validate
     const listingId = BigInt(params.listingId);
 
-    // 3. Get user and verify ownership
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
     });
@@ -93,15 +107,27 @@ export async function PUT(
       );
     }
 
-    // 4. Parse and handle request body
     const body = await request.json();
 
     try {
-      // 5. Handle image uploads
+      let profileImageUrl: string | undefined;
       let coverImageUrl: string | undefined;
       let additionalImages: string[] = [];
 
-      // Handle cover image
+      if (body.profileImage && body.profileImage.startsWith("data:image/")) {
+        try {
+          profileImageUrl = await uploadToCloudinary(
+            body.profileImage,
+            "profile"
+          );
+        } catch (error) {
+          return NextResponse.json(
+            { error: "Failed to upload profile image" },
+            { status: 400 }
+          );
+        }
+      }
+
       if (body.cover_image && body.cover_image.startsWith("data:image/")) {
         try {
           coverImageUrl = await uploadToCloudinary(body.cover_image, "cover");
@@ -113,7 +139,6 @@ export async function PUT(
         }
       }
 
-      // Handle additional images
       if (body.images && body.images.length > 0) {
         try {
           additionalImages = await Promise.all(
@@ -131,59 +156,68 @@ export async function PUT(
         }
       }
 
-      // 6. Prepare data for update
       const imagesData:
         | Prisma.InputJsonValue
         | Prisma.NullableJsonNullValueInput =
-        additionalImages.length > 0 ? additionalImages : Prisma.JsonNull;
+        additionalImages.length > 0
+          ? additionalImages
+          : existingListing.images || Prisma.JsonNull;
 
       const tagsData:
         | Prisma.InputJsonValue
         | Prisma.NullableJsonNullValueInput =
         body.tags?.length > 0 ? body.tags : Prisma.JsonNull;
 
-      // 7. Update listing
-      const updatedListing = await prisma.listing.update({
-        where: { id: listingId },
-        data: {
-          title: body.title,
-          description: body.description,
-          price:
-            typeof body.price === "string"
-              ? parseFloat(body.price)
-              : body.price,
-          currency: body.currency || "XAF",
-          town: body.town,
-          address: body.address,
-          timeline: body.timeline,
-          subcategory_id: BigInt(body.subcategory_id),
-          cover_image: coverImageUrl || existingListing.cover_image,
-          images: imagesData,
-          tags: tagsData,
-          condition: body.condition,
-          negotiable: body.negotiable ? BigInt(1) : BigInt(0),
-          delivery_available: body.delivery_available ? BigInt(1) : BigInt(0),
-          updated_at: new Date(),
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              image: true,
-              username: true,
+      const [updatedUser, updatedListing] = await prisma.$transaction([
+        profileImageUrl
+          ? prisma.user.update({
+              where: { id: user.id },
+              data: { profilImage: profileImageUrl },
+            })
+          : prisma.user.findUnique({ where: { id: user.id } }),
+
+        prisma.listing.update({
+          where: { id: listingId },
+          data: {
+            title: body.title,
+            description: body.description,
+            price:
+              typeof body.price === "string"
+                ? parseFloat(body.price)
+                : body.price,
+            currency: body.currency || "XAF",
+            town: body.town,
+            address: body.address,
+            timeline: body.timeline,
+            subcategory_id: BigInt(body.subcategory_id),
+            cover_image: coverImageUrl || existingListing.cover_image,
+            images: imagesData,
+            tags: tagsData,
+            condition: body.condition,
+            negotiable: body.negotiable ? BigInt(1) : BigInt(0),
+            delivery_available: body.delivery_available ? BigInt(1) : BigInt(0),
+            updated_at: new Date(),
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                username: true,
+                profilImage: true,
+              },
             },
           },
-        },
-      });
+        }),
+      ]);
 
-      // 8. Revalidate caches
       revalidateTag("listings");
-      revalidateTag(`user-${user.id}-listings`);
+      revalidatePath("/profile/user-dashboard/[username]", "page");
 
-      // 9. Return success response
-      return NextResponse.json(updatedListing, {
+
+      return NextResponse.json(serializeListing(updatedListing), {
         status: 200,
         headers: {
           "Cache-Control": "no-store, max-age=0",

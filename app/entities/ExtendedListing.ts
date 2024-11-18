@@ -5,6 +5,7 @@ export interface ExtendedListing {
   subcategory_id: string | null;
   price: string | null;
   currency: string | null;
+  timeline: string | null;
   town: string | null;
   address: string | null;
   user_id: string | null;

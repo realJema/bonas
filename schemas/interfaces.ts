@@ -14,4 +14,5 @@ export interface ListingFormData {
   tags?: string[];
   status?: string;
   listingImages?: string[];
+  categoryPath?: string[];
 }

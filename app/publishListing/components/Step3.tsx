@@ -14,6 +14,13 @@ interface Step3Props {
   formData: ListingFormData;
 }
 
+const TIMELINE_OPTIONS = [
+  { value: "Less than 1 month", label: "Less than 1 month" },
+  { value: "1-3 months", label: "1-3 months" },
+  { value: "3-6 months", label: "3-6 months" },
+  { value: "More than 6 months", label: "More than 6 months" },
+];
+
 export default function Step3({ onContinue, onBack, formData }: Step3Props) {
   const [timeline, setTimeline] = useState<string>(formData.timeline || "");
   const [price, setPrice] = useState<string>(formData.price?.toString() || "");
@@ -166,12 +173,12 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                   value={timeline}
                   onChange={(e) => setTimeline(e.target.value)}
                 >
-                  <option value="">Select timeline</option>
-                  <option value="Urgent">Urgent (24-48 hours)</option>
-                  <option value="1 week">Within a week</option>
-                  <option value="2 weeks">Within 2 weeks</option>
-                  <option value="1 month">Within a month</option>
-                  <option value="Flexible">Flexible</option>
+                  <option value="">Select a timeline</option>
+                  {TIMELINE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

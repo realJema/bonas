@@ -57,8 +57,6 @@ export async function getListings({
   maxPrice,
 }: GetListingsParams): Promise<GetListingsResult> {
   try {
-    // Added debug logging for pagination
-    console.log("Fetching page:", page, "with pageSize:", pageSize);
 
     // Get category hierarchy in one query
     const mainCategoryRecord = await prisma.category.findFirst({

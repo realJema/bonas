@@ -1,81 +1,147 @@
-import { unstable_cache } from "next/cache";
 import prisma from "@/prisma/client";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
 import { DEFAULT_IMAGE } from "@/utils/imageUtils";
 
-// Set the maximum duration for this function to 60 seconds
-export const maxDuration = 60;
-
-// Define the parameters for the getListingsByUserId function
 interface GetListingsByUserIdParams {
   userId: string;
   page: number;
   pageSize: number;
 }
 
-// Define the return type for the getListingsByUserId function
 interface GetListingsByUserIdResult {
   listings: ExtendedListing[];
   totalCount: number;
 }
 
-const getCachedListingsByUserId = unstable_cache(
-  async ({
-    userId,
-    page,
-    pageSize,
-  }: GetListingsByUserIdParams): Promise<GetListingsByUserIdResult> => {
-    try {
-      const whereClause = {
-        userId: userId,
-      };
+export async function getListingsByUserId({
+  userId,
+  page,
+  pageSize,
+}: GetListingsByUserIdParams): Promise<GetListingsByUserIdResult> {
+  try {
+    const whereClause = {
+      user_id: userId,
+    };
 
-      // const timestamp = Date.now();
-      // console.log(`Cache busting timestamp: ${timestamp}`);
-
-      // Fetch listings and total count in a single transaction
-      const [listings, totalCount] = await prisma.$transaction([
-        prisma.listing.findMany({
-          where: whereClause,
-          include: {
-            category: { include: { parent: true } },
-            user: true,
-            images: true,
-            reviews: true,
+    const [listings, totalCount] = await prisma.$transaction([
+      prisma.listing.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          timeline: true,
+          subcategory_id: true,
+          price: true,
+          currency: true,
+          town: true,
+          address: true,
+          user_id: true,
+          created_at: true,
+          updated_at: true,
+          status: true,
+          views: true,
+          cover_image: true,
+          images: true,
+          is_boosted: true,
+          is_boosted_type: true,
+          is_boosted_expiry_date: true,
+          expiry_date: true,
+          tags: true,
+          condition: true,
+          negotiable: true,
+          delivery_available: true,
+          rating: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+              profilePicture: true,
+              profilImage: true,
+            },
           },
-          skip: (page - 1) * pageSize,
-          take: pageSize,
-          orderBy: { createdAt: "desc" },
-        }),
-        prisma.listing.count({ where: whereClause }),
-      ]);
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { created_at: "desc" },
+      }),
+      prisma.listing.count({ where: whereClause }),
+    ]);
 
-      // Format the listings and return the result
-      return {
-        listings: listings.map(
-          (listing): ExtendedListing => ({
-            ...listing,
-            price: listing.price?.toFixed(2) ?? "0.00",
-            images:
-              listing.images.length > 0 ? listing.images : [DEFAULT_IMAGE],
-            category: listing.category!,
-            user: listing.user,
-            review: listing.reviews,
-          })
-        ),
-        totalCount,
-      };
-    } catch (error) {
-      console.error("Error fetching listings by user ID:", error);
-      return { listings: [], totalCount: 0 };
-    }
-  },
-  ["listings-by-user-id"],
-  { revalidate: false, tags: ["listings-by-user-id"] }
-);
+    return {
+      listings: listings.map((listing) => {
+        // Parse images
+        let parsedImages = null;
+        try {
+          if (listing.images) {
+            parsedImages =
+              typeof listing.images === "string"
+                ? JSON.parse(listing.images)
+                : listing.images;
+          }
+        } catch (error) {
+          console.error("Error parsing images for listing:", listing.id, error);
+          parsedImages = [DEFAULT_IMAGE];
+        }
 
-export async function getListingsByUserId(
-  params: GetListingsByUserIdParams
-): Promise<GetListingsByUserIdResult> {
-  return getCachedListingsByUserId(params);
+        // Parse tags
+        let parsedTags = null;
+        try {
+          if (listing.tags) {
+            parsedTags =
+              typeof listing.tags === "string"
+                ? JSON.parse(listing.tags)
+                : listing.tags;
+          }
+        } catch (error) {
+          console.error("Error parsing tags for listing:", listing.id, error);
+          parsedTags = [];
+        }
+
+        return {
+          id: listing.id.toString(),
+          title: listing.title,
+          description: listing.description,
+          timeline: listing.timeline,
+          subcategory_id: listing.subcategory_id?.toString() || null,
+          price: listing.price?.toString() || null,
+          currency: listing.currency,
+          town: listing.town,
+          address: listing.address,
+          user_id: listing.user_id,
+          created_at: listing.created_at?.toISOString() || null,
+          updated_at: listing.updated_at?.toISOString() || null,
+          status: listing.status,
+          views: listing.views,
+          cover_image: listing.cover_image,
+          images: parsedImages || [DEFAULT_IMAGE],
+          is_boosted: listing.is_boosted,
+          is_boosted_type: listing.is_boosted_type,
+          is_boosted_expiry_date: listing.is_boosted_expiry_date,
+          expiry_date: listing.expiry_date?.toISOString() || null,
+          tags: parsedTags,
+          condition: listing.condition,
+          negotiable: listing.negotiable?.toString() || null,
+          delivery_available: listing.delivery_available?.toString() || null,
+          rating: listing.rating,
+          user: listing.user
+            ? {
+                id: listing.user.id,
+                name: listing.user.name,
+                username: listing.user.username,
+                profilePicture: listing.user.profilePicture,
+                profilImage: listing.user.profilImage,
+                image: listing.user.image,
+              }
+            : null,
+        };
+      }),
+      totalCount,
+    };
+  } catch (error) {
+    console.error("Error fetching listings by user ID:", error);
+    return { listings: [], totalCount: 0 };
+  }
 }

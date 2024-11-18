@@ -84,6 +84,22 @@ const ItemCard = ({
     setIsEditModalOpen(false);
   };
 
+
+     const handleClick = async (e: React.MouseEvent) => {
+       e.preventDefault();
+       if (!listing.subcategory_id) {
+         console.error("No subcategory_id found for listing");
+         return;
+       }
+
+       try {
+         const url = await buildListingUrl(listing);
+         router.push(url);
+       } catch (error) {
+         console.error("Error navigating to listing:", error);
+       }
+     };
+
   const renderSlide = (item: SlideItem, index: number) => {
     if (item.type === "image") {
       return (
@@ -159,6 +175,7 @@ const ItemCard = ({
 
   const formattedUsername = formatUsername(listing.user?.name);
   const username = listing.user?.username ?? formattedUsername;
+  // /profile/user-profile/${username}
 
   return (
     <div
@@ -230,7 +247,8 @@ const ItemCard = ({
           )}
         </div>
       </CarouselProvider>
-      <Link href={buildListingUrl(listing)}>
+      {/* <Link href={buildListingUrl(listing)}> */}
+      <div onClick={handleClick} className="cursor-pointer">
         <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-[200px] rounded-sm">
           <div className="flex items-center justify-between">
             {/* users info */}
@@ -295,7 +313,7 @@ const ItemCard = ({
             </p>
           )}
         </div>
-      </Link>
+      </div>
 
       {/* Add delete and edit controls */}
 

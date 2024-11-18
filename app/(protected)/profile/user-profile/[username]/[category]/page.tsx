@@ -4,7 +4,7 @@ import ProfileCard from "./ProfileCard";
 import Pagination from "@/app/components/Pagination";
 import { getListingsByUserId } from "@/utils/getListingsByUserId";
 import ItemCard from "@/app/components/cards/ItemCard/ItemCard";
-import { generateSlides } from "@/lib/generateSlides";
+import { generateSlides } from "@/utils/generateSlides";
 import Reviews from "@/app/components/Reviews";
 import SearchReviews from "@/app/components/SearchReviews";
 import ReviewCard, {

@@ -1,8 +1,5 @@
-// components/Gig.tsx
 import Image from "next/image";
 import React from "react";
-import { MapPin, MessageCircle } from "lucide-react";
-import PublishedCard from "./PublishedCard";
 import Link from "next/link";
 import CategoryButton from "./CategoryButton";
 import Reviews from "../../../../../components/Reviews";
@@ -11,6 +8,7 @@ import ReviewCard, {
   ReviewCardItems,
 } from "../../../../../components/cards/ReviewCard/ReviewCard";
 import InfoRow from "./InfoRow";
+import PublishedCard from "./PublishedCard";
 
 interface Props {
   title: string;
@@ -21,7 +19,7 @@ interface Props {
   location: string;
   datePosted: Date;
   price: string | null;
-  listingImages: Array<{ imageUrl: string }>;
+  listingImages: string[];
   categoryName: string;
   condition?: string | null;
   currency?: string | null;
@@ -74,12 +72,10 @@ const Gig = ({
       <div className="lg:grid lg:grid-cols-3 lg:gap-6">
         <div className="lg:col-span-2">
           <div className="w-full">
-            {/* Title */}
             <div className="text-lg font-bold text-black mb-4 p-2 max-w-3xl">
               {title}
             </div>
 
-            {/* Rating */}
             {rating && (
               <div className="flex items-center mb-4">
                 <svg
@@ -102,7 +98,6 @@ const Gig = ({
               </div>
             )}
 
-            {/* Profile info */}
             <div className="flex items-center space-x-4 mb-4">
               <div className="relative h-24 w-24">
                 <Image
@@ -116,13 +111,12 @@ const Gig = ({
               <InfoRow location={location} username={username} />
             </div>
 
-            {/* Listing images */}
             {listingImages && listingImages.length > 0 && (
               <div className="space-y-4">
                 <div className="h-96 md:h-[400px] relative w-full md:w-[90%]">
                   <Image
                     alt="Main listing image"
-                    src={listingImages[0].imageUrl}
+                    src={listingImages[0]}
                     fill
                     className="rounded-md object-cover"
                     sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
@@ -133,7 +127,7 @@ const Gig = ({
                     <div key={index} className="aspect-square relative">
                       <Image
                         alt={`Listing image ${index + 1}`}
-                        src={img.imageUrl}
+                        src={img}
                         fill
                         className="rounded-md object-cover"
                         sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 16vw"
@@ -145,7 +139,6 @@ const Gig = ({
             )}
           </div>
 
-          {/* PublishedCard for mobile to lg screens */}
           <div className="lg:hidden mt-8 w-full sm:max-w-3xl">
             <PublishedCard
               location={location}
@@ -156,18 +149,15 @@ const Gig = ({
           </div>
 
           <div className="flex-col gap-3 w-full max-w-xl mt-6">
-            {/* Description */}
             <h2 className="font-bold mb-1">Description</h2>
             <p className="text-gray-500 mb-5">{description}</p>
 
-            {/* Read more */}
             <div className="mb-3">
               <Link href="#" className="text-black underline text-lg">
                 Read more
               </Link>
             </div>
 
-            {/* Condition if available */}
             {condition && (
               <div className="mt-4">
                 <h3 className="font-semibold mb-2">Condition</h3>
@@ -175,7 +165,6 @@ const Gig = ({
               </div>
             )}
 
-            {/* Tags */}
             {tags && tags.length > 0 && (
               <div className="flex flex-wrap gap-3 mt-4">
                 {tags.map((tag, index) => (
@@ -184,12 +173,10 @@ const Gig = ({
               </div>
             )}
 
-            {/* Reviews */}
             <div className="flex-col space-y-4 mt-6">
               <Reviews className="w-full max-w-3xl mx-auto mt-8 px-3 sm:px-4 lg:px-5 " />
               <SearchReviews />
 
-              {/* Reviews list */}
               <div className="space-y-4">
                 {sampleReviews.map((review, index) => (
                   <ReviewCard key={index} {...review} />
@@ -199,7 +186,6 @@ const Gig = ({
           </div>
         </div>
 
-        {/* PublishedCard for lg screens and above */}
         <div className="hidden lg:block lg:col-span-1">
           <PublishedCard
             location={location}

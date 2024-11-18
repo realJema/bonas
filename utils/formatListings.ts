@@ -26,6 +26,7 @@ export function formatListings(listings: any[]): ExtendedListing[] {
        id: listing.id.toString(),
        title: listing.title,
        description: listing.description,
+       timeline: listing.timeline,
        subcategory_id: listing.subcategory_id?.toString() || null,
        price: listing.price?.toString() || null,
        currency: listing.currency,

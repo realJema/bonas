@@ -33,5 +33,6 @@ export const useCategoryListings = (category: string) => {
     staleTime: 60 * 60 * 10,
     retry: 3,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };

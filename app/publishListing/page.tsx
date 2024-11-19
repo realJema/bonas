@@ -87,6 +87,11 @@ export default function Home() {
     "Publish",
   ];
 
+  const handleExit = () => {
+    router.refresh();
+    router.push("/"); 
+  };
+
   return (
     <div className="min-h-screen bg-white mb-10">
       {/* Header */}
@@ -142,24 +147,25 @@ export default function Home() {
           )}
 
           {/* Exit Button */}
-          <Link href="/">
-            <button className="text-[15px] text-gray-800 hover:underline">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </Link>
+          <button
+            onClick={handleExit}
+            className="text-[15px] text-gray-800 hover:underline"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
       </header>
 

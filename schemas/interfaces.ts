@@ -15,4 +15,5 @@ export interface ListingFormData {
   status?: string;
   listingImages?: string[];
   categoryPath?: string[];
+  listingId?: string;
 }

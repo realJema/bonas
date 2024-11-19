@@ -24,6 +24,7 @@ export default function Home() {
     setFormData((prevData) => ({
       ...prevData,
       ...data,
+      listingId: data.listingId || prevData.listingId,
     }));
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 4));
   };
@@ -189,7 +190,7 @@ export default function Home() {
               <FinalStep
                 formData={formData}
                 onBack={handleBack}
-                onPublish={handlePublish}
+                listingId={formData.listingId}
               />
             )}
           </>

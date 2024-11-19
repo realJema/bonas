@@ -41,7 +41,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
       const response = await axios.get<Category[]>("/api/categories");
       return response.data;
     },
-    staleTime: 1000 * 60 * 60,
+    staleTime: 5 * 60,
   });
 
   const { data: towns, isLoading: isLoadingTowns } = useQuery<Town[]>({
@@ -64,7 +64,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
       return response.data;
     },
     enabled: !!selectedMainId,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 5 * 60,
   });
 
   const { data: finalCategories = [], isLoading: isLoadingFinal } = useQuery<
@@ -79,7 +79,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
       return response.data;
     },
     enabled: !!selectedSubId,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 5 * 60,
   });
 
   const prefetchSubCategories = async (categoryId: number) => {
@@ -91,7 +91,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
         );
         return response.data;
       },
-      staleTime: 1000 * 60 * 60,
+      staleTime: 5 * 60,
     });
   };
 
@@ -104,7 +104,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
         );
         return response.data;
       },
-      staleTime: 1000 * 60 * 60,
+      staleTime: 5 * 60,
     });
   };
 

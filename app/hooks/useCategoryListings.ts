@@ -30,7 +30,7 @@ export const useCategoryListings = (category: string) => {
         throw error;
       }
     },
-    staleTime: 60 * 60 * 10,
+    staleTime: 20 * 60,
     retry: 3,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

@@ -197,6 +197,7 @@ export default function Home() {
                 formData={formData}
                 onBack={handleBack}
                 listingId={formData.listingId}
+                setIsPublished={setIsPublished}
               />
             )}
           </>

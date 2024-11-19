@@ -10,12 +10,14 @@ interface FinalStepProps {
   formData: ListingFormData;
   onBack: () => void;
   listingId?: string;
+  setIsPublished: (value: boolean) => void;
 }
 
 export default function FinalStep({
   formData,
   onBack,
   listingId,
+  setIsPublished,
 }: FinalStepProps) {
   const router = useRouter();
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
@@ -35,8 +37,7 @@ export default function FinalStep({
       );
 
       if (response.status === 200) {
-        toast.success("Listing published successfully!");
-        console.log("Published Listing:", response.data);
+        setIsPublished(true);
       }
     } catch (error: any) {
       console.error("Error publishing listing:", error);

@@ -16,7 +16,10 @@ export const publicRoutes = [
   "/api/postListing/:listingId",
   "/api/towns",
   "/auth/new-verification",
+  "/user-profile/:username/:userId",
 ];
+
+// app\user-profile\[username]\page.tsx
 
 /**
  * An array of routes that are used for authentication

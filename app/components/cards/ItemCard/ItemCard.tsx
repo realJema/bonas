@@ -28,7 +28,7 @@ import {
   Slider,
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
-import { ComponentType, useRef, useState } from "react";
+import { ComponentType, useEffect, useRef, useState } from "react";
 import type { ReactPlayerProps } from "react-player/types";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
@@ -66,6 +66,7 @@ const ItemCard = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [url, setUrl] = useState<string>("");
   const playerRef = useRef<ReactPlayerProps>(null);
   const router = useRouter();
 
@@ -81,20 +82,25 @@ const ItemCard = ({
     setIsEditModalOpen(false);
   };
 
-  const handleClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!listing.subcategory_id) {
-      console.error("No subcategory_id found for listing");
-      return;
-    }
 
-    try {
-      const url = await buildListingUrl(listing);
-      router.push(url);
-    } catch (error) {
-      console.error("Error navigating to listing:", error);
+useEffect(() => {
+  const generateUrl = async () => {
+    if (listing.subcategory_id) {
+      const generatedUrl = await buildListingUrl(listing);
+      setUrl(generatedUrl);
+      router.prefetch(generatedUrl);
     }
   };
+  generateUrl();
+}, [listing, router]);
+
+const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  if (!url) {
+    e.preventDefault();
+    console.error("URL not yet generated");
+    return;
+  }
+};
 
   const renderSlide = (item: SlideItem, index: number) => {
     if (item.type === "image") {
@@ -244,73 +250,74 @@ const ItemCard = ({
         </div>
       </CarouselProvider>
       {/* <Link href={buildListingUrl(listing)}> */}
-      <Link href="#" className="cursor-pointer" onClick={handleClick}>
-      <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-[200px] rounded-sm">
-        <div className="flex items-center justify-between">
-          {/* users info */}
-          <div
-            className="flex gap-1 items-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {listing.user?.profilImage && (
-              <Link href={`/user-profile/${username}/${listing.user_id}`}>
-                <div className="h-10 w-10 rounded-full relative">
-                  <Image
-                    alt={listing.user.username!}
-                    src={listing.user?.profilImage}
-                    fill
-                    className="object-cover rounded-full"
-                  />
-                </div>
-              </Link>
-            )}
-            <Link
-              href={`/user-profile/${username}/${listing.user_id}`}
-              className="text-sm font-semibold text-gray-700 text-opacity-85 hover:underline cursor-pointer"
+      {/* details page */}
+      <Link href={url || "#"} className="cursor-pointer" prefetch={true}>
+        <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-[200px] rounded-sm">
+          <div className="flex items-center justify-between">
+            {/* users info */}
+            <div
+              className="flex gap-1 items-center"
+              onClick={(e) => e.stopPropagation()}
             >
-              {listing.user?.username ?? formattedUsername}
-            </Link>
+              {listing.user?.profilImage && (
+                <Link href={`/user-profile/${username}/${listing.user_id}`}>
+                  <div className="h-10 w-10 rounded-full relative">
+                    <Image
+                      alt={listing.user.username!}
+                      src={listing.user?.profilImage}
+                      fill
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                </Link>
+              )}
+              <Link
+                href={`/user-profile/${username}/${listing.user_id}`}
+                className="text-sm font-semibold text-gray-700 text-opacity-85 hover:underline cursor-pointer"
+              >
+                {listing.user?.username ?? formattedUsername}
+              </Link>
+            </div>
+            {/* date posted */}
+            <span className="text-xs text-gray-600">
+              {formatDatePosted(listing.created_at)}
+            </span>
           </div>
-          {/* date posted */}
-          <span className="text-xs text-gray-600">
-            {formatDatePosted(listing.created_at)}
-          </span>
-        </div>
-        <h2
-          className={`hover:underline text-base font-medium line-clamp-2 ${titleAlign}`}
-        >
-          {listing?.title}
-        </h2>
-        <div className="flex items-center text-xs text-gray-600 mt-1 py-0.5">
-          <MapPinIcon className="w-3 h-3 mr-1" />
-          <span className="truncate">{listing.town}</span>
-        </div>
-        <div className="font-bold flex items-center gap-2 py-0.5">
-          <svg
-            className="flex-shrink-0 w-4 h-4 inline-block"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 16 16"
+          <h2
+            className={`hover:underline text-base font-medium line-clamp-2 ${titleAlign}`}
           >
-            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-          </svg>
-          {} <span className="opacity-80">(1k+)</span>
-        </div>
+            {listing?.title}
+          </h2>
+          <div className="flex items-center text-xs text-gray-600 mt-1 py-0.5">
+            <MapPinIcon className="w-3 h-3 mr-1" />
+            <span className="truncate">{listing.town}</span>
+          </div>
+          <div className="font-bold flex items-center gap-2 py-0.5">
+            <svg
+              className="flex-shrink-0 w-4 h-4 inline-block"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+            </svg>
+            {} <span className="opacity-80">(1k+)</span>
+          </div>
 
-        <p className="font-semibold py-0.5 mb-3">
-          <span className="font-normal">from </span>
-          {formatPrice(listing.price)}
-        </p>
-
-        {offersVideo && (
-          <p className="font-medium text-sm">
-            <VideoCameraIcon className="w-5 h-5 inline-block mr-1" />
-            Offers video consultations
+          <p className="font-semibold py-0.5 mb-3">
+            <span className="font-normal">from </span>
+            {formatPrice(listing.price)}
           </p>
-        )}
-      </div>
+
+          {offersVideo && (
+            <p className="font-medium text-sm">
+              <VideoCameraIcon className="w-5 h-5 inline-block mr-1" />
+              Offers video consultations
+            </p>
+          )}
+        </div>
       </Link>
 
       {/* Add delete and edit controls */}

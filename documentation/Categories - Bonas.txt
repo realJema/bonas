@@ -1,0 +1,399 @@
+Real Estate
+      Property Types
+            For Sale
+            For Rent
+            Holiday Rentals
+            Shared Accommodations
+      Commercial & Land
+            Commercial Property
+            Land & Plots
+            Agricultural Land
+            Off-Grid Properties
+      Services
+            Real Estate Agents
+            Property Management
+            Landscaping Services
+            Interior Design
+Vehicles & Transport
+      Cars & Motorbikes
+            Cars
+            Motorbikes
+            Bicycles
+            Scooters
+      Commercial Vehicles
+            Trucks
+            Vans
+            Heavy Machinery
+      Auto Services & Parts
+            Auto Parts & Accessories
+            Car Rentals
+            Car Services
+            Boat & Marine
+Jobs & Employment
+      Job Types
+            Full-Time Jobs
+            Part-Time Jobs
+            Internships
+            Freelance Jobs
+            Temp Jobs
+            Volunteer Opportunities
+      Job Services
+            Resume Writing
+            Interview Coaching
+            Career Counseling
+      Training & Workshops
+            Professional Training
+            Vocational Training
+            Seminars
+            Courses
+Electronics & Gadgets
+      Mobile & Accessories
+            Smartphones
+            Tablets
+            Smartwatches
+            Mobile Cases
+            Chargers & Cables
+            Earphones & Headphones
+      Computers & Peripherals
+            Desktops
+            Laptops
+            Monitors
+            Keyboards & Mice
+            Printers & Scanners
+            Computer Storage Devices
+      Home & Entertainment
+            Televisions
+            Sound Systems
+            Streaming Devices
+            Home Theaters
+            Projectors
+            Smart Home Devices
+      Gaming & Gadgets
+            Gaming Consoles
+            Gaming Controllers
+            Virtual Reality Headsets
+            Gaming Laptops
+            Gaming Accessories
+            Drones & RC Gadgets
+Fashion & Clothing
+      1. Clothing
+            Men’s Clothing
+            Women’s Clothing
+            Kids’ Clothing
+            Traditional Wear
+            Sportswear
+            Maternity Wear
+      2. Footwear
+            Men’s Shoes
+            Women’s Shoes
+            Sneakers
+            Sandals & Slippers
+            Boots
+            Kids’ Footwear
+      3. Accessories
+            Bags & Wallets
+            Belts
+            Sunglasses
+            Hats & Caps
+            Jewelry
+            Scarves & Shawls
+      4. Beauty & Grooming
+            Skincare Products
+            Makeup
+            Haircare
+            Perfumes
+            Grooming Kits
+            Nail Care
+Home & Furniture
+      1. Furniture
+            Living Room Furniture
+            Bedroom Furniture
+            Office Furniture
+            Dining Room Sets
+            Outdoor Furniture
+            Storage Solutions
+      2. Home Decor
+            Wall Art & Paintings
+            Rugs & Carpets
+            Curtains & Blinds
+            Lighting & Lamps
+            Vases & Decorative Items
+            Mirrors
+      3. Kitchen & Dining
+            Cookware & Utensils
+            Dinnerware & Cutlery
+            Storage Containers
+            Kitchen Appliances
+            Tableware & Glassware
+            Kitchen Organizers
+      4. Home Essentials
+            Bedding & Linens
+            Bathroom Accessories
+            Cleaning Supplies
+            Laundry Solutions
+            Safety & Security
+            Air Conditioners & Heaters
+Professional Services
+      4. IT & Software Services
+            Web Development
+            App Development
+            IT Support & Consulting
+            Software Development
+            Network Security
+            Cloud Solutions
+      5. Consulting Services
+            Management Consulting
+            HR Consulting
+            Leadership & Organizational Development
+            Operations Consulting
+            Risk Management
+      6. Creative Services
+            Graphic Design
+            Photography & Videography
+            Copywriting & Content Writing
+            Animation & Motion Graphics
+            Event Planning & Management
+            Interior Design
+Agriculture
+      Agricultural Products
+            Fresh Produce
+            Livestock & Poultry
+            Agricultural Supplies
+      Farming Equipment
+            Machinery
+            Tools
+            Irrigation
+      Agricultural Services
+            Farm Management
+            Veterinary Services
+            Consulting
+Companies & businesses 
+      Company Profiles
+            Small Businesses
+            Medium-Sized Enterprises
+            Large Corporations
+            Startups
+            Family-Owned Businesses
+      Business Listings
+            Businesses for Sale
+            Business Partnerships
+            Investment Opportunities
+      Industry Sectors
+            Technology & IT
+            Retail & Wholesale
+            Manufacturing
+            Services & Consulting
+            Hospitality
+      Business Contacts
+            Company Representatives
+            Networking & Collaborations
+            Business Development
+      Corporate Services
+            Business Consulting
+            Market Research
+            IT Services      
+Education & Training
+      Educational Institutions
+            Primary Schools
+            Secondary Schools
+            Colleges & Universities
+            Vocational & Technical Schools
+      Courses & Training
+            Online Courses
+            In-Person Workshops
+            Professional Certifications
+            Language Courses
+            Skill Development Programs
+      Tutoring & Coaching
+            Academic Tutoring
+            Test Preparation
+            Career Coaching
+            Personal Development Coaching
+      Learning Materials
+            Books & Study Guides
+            Educational Software
+            School Supplies
+      Extracurricular Activities
+            Music Lessons
+            Sports & Fitness Classes
+            Art & Craft Classes
+            Coding & Technology Clubs
+Food & Restaurants
+      Restaurants & Cafes
+            Fine Dining
+            Casual Dining
+            Fast Food
+            Cafes & Coffee Shops
+            Buffet & All-You-Can-Eat
+      Food Delivery Services
+            Meal Delivery
+            Grocery Delivery
+            Takeout Services
+      Catering Services
+            Event Catering
+            Corporate Catering
+            Wedding & Party Catering
+      Food Products
+            Fresh Produce
+            Packaged Foods
+            Organic & Specialty Foods
+      Beverages
+            Soft Drinks
+            Alcoholic Beverages
+            Juices & Smoothies
+      Bakeries & Sweets
+            Bread & Pastries
+            Cakes & Desserts
+            Cookies & Snacks
+      Dietary & Health Foods
+            Vegan & Vegetarian
+            Gluten-Free
+            Diabetic-Friendly
+            Keto & Low-Carb
+Health & Wellness
+      Health Services
+            Doctors & Specialists
+            Dentists & Orthodontists
+            Chiropractors & Physiotherapists
+            Health Checkups & Screenings
+            Mental Health Services
+      Fitness & Exercise
+            Gyms & Fitness Centers
+            Personal Trainers
+            Yoga & Pilates
+            Group Fitness Classes
+            Martial Arts & Boxing
+      Supplements & Nutrition
+            Vitamins & Minerals
+            Weight Loss Supplements
+            Protein & Fitness Nutrition
+            Organic & Natural Health Products
+      Alternative Medicine
+            Herbal Medicine
+            Acupuncture & Homeopathy
+            Aromatherapy
+            Holistic & Natural Healing
+      Health Equipment
+            Medical Devices & Equipment
+            Mobility Aids
+            Fitness Equipment
+            Personal Care Appliances
+      Pharmacy & Medical Supplies
+            Prescription Medication
+            Over-the-Counter Drugs
+            First Aid Kits
+            Medical Supplies & Accessories
+Business & Commercial
+      Business Services
+            Consulting Services
+            Marketing & Advertising
+            HR & Recruitment
+            Legal Services
+            Financial & Accounting Services
+      Office Equipment & Supplies
+            Office Furniture
+            Stationery & Office Supplies
+            Printing & Copying Services
+            IT & Networking Equipment
+            Office Decor & Design
+      Commercial Properties
+            Office Spaces
+            Retail Shops & Stores
+            Industrial Properties
+            Warehouses & Storage Spaces
+            Co-working Spaces
+      B2B Products
+            Wholesale Products
+            Raw Materials & Supplies
+            Machinery & Tools
+            Packaging & Shipping Supplies
+            Industrial Equipment
+      Franchise & Licensing
+            Franchise Opportunities
+            Licensing Agreements
+            Business Partnerships
+            Investment Opportunities
+Events & Entertainment
+      Event Planning & Services
+            Event Planning
+            Event Management
+            Event Coordination
+            Decor & Setup Services
+            Audio & Visual Equipment
+      Venues & Locations
+            Event Venues
+            Conference Halls
+            Party & Wedding Venues
+            Outdoor & Indoor Spaces
+            Meeting Rooms
+      Entertainment Services
+            DJs & Live Music
+            Performers & Entertainers
+            Magicians & Comedians
+            Event Photography & Videography
+            Event Catering
+      Tickets & Reservations
+            Concert Tickets
+            Movie & Theatre Tickets
+            Sports Event Tickets
+            Festival Tickets
+            Travel & Accommodation Bookings
+      Party & Wedding Services
+            Wedding Planning
+            Party Planning
+            Photographers & Videographers
+            Catering Services
+            Bridal Shops & Rentals
+      Cultural & Art Events
+            Art Exhibitions
+            Music Concerts
+            Theatre & Drama
+            Dance Performances
+            Film Screenings
+Hobbies & Leisure
+      Outdoor Activities
+            Hiking & Nature Walks
+            Sports & Recreation
+            Picnics & Social Outings
+            Fishing
+      Arts & Crafts
+            Traditional Crafts
+            Painting & Drawing
+            Sewing & Embroidery
+            Beading & Jewelry Making
+      Music & Dance
+            Traditional Music & Instruments
+            Dance Lessons & Cultural Dance
+            Music Events & Concerts
+            Music Equipment
+      Games & Entertainment
+            Board Games
+            Local Games & Sports
+            Movie Nights & Outdoor Cinema
+            Event Planning & Party Supplies
+      Books & Literature
+            Books for Sale
+            Storytelling & Folklore
+            Educational Resources
+            Local & African Literature
+Miscellaneous
+      Unclassified Items
+            Items for Sale
+            Used Goods
+            Freebies & Giveaways
+      Services & Offers
+            General Services
+            Special Offers & Discounts
+            Unique Opportunities
+      Items for Rent
+            Short-Term Rentals
+            Event Equipment Rentals
+            Miscellaneous Equipment Rentals
+      Personal Items
+            Lost & Found
+            Personal Belongings for Sale
+            Unwanted Items
+      Community Notices
+            Public Announcements
+            Community Alerts
+            Local News & Updates

@@ -16,7 +16,7 @@ const JobListings = () => {
     data: listings = [],
     isLoading,
     error,
-  } = useCategoryListings("Jobs");
+  } = useCategoryListings("Jobs & Employment");
 
   if (isLoading) {
     return (

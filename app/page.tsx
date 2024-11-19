@@ -13,7 +13,7 @@ export default async function Home() {
 
   const categories = [
     {
-      label: "Vehicles",
+      label: "Vehicles & Transport",
       icon: "https://fiverr-res.cloudinary.com/listings_assets/gq_icons/49.svg",
     },
     {
@@ -21,7 +21,7 @@ export default async function Home() {
       icon: "https://fiverr-res.cloudinary.com/listings_assets/gq_icons/514.svg",
     },
     {
-      label: "Jobs",
+      label: "Jobs & Employment",
       icon: "https://fiverr-res.cloudinary.com/listings_assets/gq_icons/67.svg",
     },
   ];

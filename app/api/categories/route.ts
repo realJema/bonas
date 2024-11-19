@@ -9,10 +9,10 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get("type");
     const parentId = searchParams.get("parentId");
 
-    const headers = {
-      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
-      "Content-Type": "application/json",
-    };
+   const headers = {
+     "Cache-Control": "public, max-age=300, stale-while-revalidate=600",
+     "Content-Type": "application/json",
+   };
 
     // For header navigation - fetch full tree
     if (type === "all") {

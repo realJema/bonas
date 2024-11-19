@@ -16,7 +16,7 @@ const VehiclesAndMotor = () => {
     data: listings = [],
     isLoading,
     error,
-  } = useCategoryListings("Vehicles");
+  } = useCategoryListings("Vehicles & Transport");
 
   if (isLoading) {
     return (

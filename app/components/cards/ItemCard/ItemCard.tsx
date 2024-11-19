@@ -47,6 +47,12 @@ interface Item {
   canDeleteListing?: boolean;
 }
 
+type BuildListingUrlResult = {
+  success: boolean;
+  url: string;
+};
+
+
 const ItemCard = ({
   listing,
   slides,
@@ -66,7 +72,7 @@ const ItemCard = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [url, setUrl] = useState<string>("");
+  const [isNavigating, setIsNavigating] = useState(false);
   const playerRef = useRef<ReactPlayerProps>(null);
   const router = useRouter();
 
@@ -83,22 +89,34 @@ const ItemCard = ({
   };
 
 
-useEffect(() => {
-  const generateUrl = async () => {
-    if (listing.subcategory_id) {
-      const generatedUrl = await buildListingUrl(listing);
-      setUrl(generatedUrl);
-      router.prefetch(generatedUrl);
+const generateUrl = async (): Promise<BuildListingUrlResult> => {
+  try {
+    if (!listing.subcategory_id) {
+      return { success: false, url: "#" };
     }
-  };
-  generateUrl();
-}, [listing, router]);
+    const url = await buildListingUrl(listing);
+    return { success: true, url };
+  } catch (error) {
+    console.error("Error generating URL:", error);
+    return { success: false, url: "#" };
+  }
+};
 
-const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  if (!url) {
-    e.preventDefault();
-    console.error("URL not yet generated");
-    return;
+const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+
+  if (isNavigating) return;
+
+  setIsNavigating(true);
+  try {
+    const { success, url } = await generateUrl();
+    if (success) {
+      await router.push(url);
+    } 
+  } catch (error) {
+    console.error("Navigation error:", error);
+  } finally {
+    setIsNavigating(false);
   }
 };
 
@@ -251,7 +269,13 @@ const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
       </CarouselProvider>
       {/* <Link href={buildListingUrl(listing)}> */}
       {/* details page */}
-      <Link href={url || "#"} className="cursor-pointer" prefetch={true}>
+      <Link
+        href="#"
+        onClick={handleClick}
+        className={`cursor-pointer ${
+          isNavigating ? "pointer-events-none" : ""
+        }`}
+      >
         <div className="flex flex-col gap-1 mt-1 p-1 hover:bg-gray-200 h-[200px] rounded-sm">
           <div className="flex items-center justify-between">
             {/* users info */}

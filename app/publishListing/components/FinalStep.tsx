@@ -4,11 +4,15 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
+
+type SaveStatus = 'pending' | 'success' | 'error';
 
 interface FinalStepProps {
   formData: ListingFormData;
   onBack: () => void;
+  savingStatus: SaveStatus;
+  errorMessage?: string;
   listingId?: string;
   setIsPublished: (value: boolean) => void;
 }
@@ -16,40 +20,42 @@ interface FinalStepProps {
 export default function FinalStep({
   formData,
   onBack,
+  savingStatus,
+  errorMessage,
   listingId,
   setIsPublished,
 }: FinalStepProps) {
   const router = useRouter();
-  const [isPublishing, setIsPublishing] = useState<boolean>(false);
-  const [showFullDescription, setShowFullDescription] =
-    useState<boolean>(false);
+ const [isPublishing, setIsPublishing] = useState<boolean>(false);
+ const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
 
-  const handlePublish = async () => {
-    if (!listingId) {
-      toast.error("Invalid listing ID");
-      return;
-    }
+ const handlePublish = async () => {
+   if (!listingId) {
+     toast.error("Listing not saved successfully");
+     return;
+   }
 
-    setIsPublishing(true);
-    try {
-      const response = await axios.patch(
-        `/api/postListing/publish/${listingId}`
-      );
+   setIsPublishing(true);
+   try {
+     const response = await axios.patch(
+       `/api/postListing/publish/${listingId}`
+     );
 
-      if (response.status === 200) {
-        setIsPublished(true);
-      }
-    } catch (error: any) {
-      console.error("Error publishing listing:", error);
-      const errorMessage =
-        error.response?.data?.details ||
-        error.response?.data?.error ||
-        "Failed to publish listing";
-      toast.error(errorMessage);
-    } finally {
-      setIsPublishing(false);
-    }
-  };
+     if (response.status === 200) {
+       setIsPublished(true);
+       toast.success("Listing published successfully!");
+     }
+   } catch (error: any) {
+     console.error("Error publishing listing:", error);
+     const errorMessage =
+       error.response?.data?.details ||
+       error.response?.data?.error ||
+       "Failed to publish listing";
+     toast.error(errorMessage);
+   } finally {
+     setIsPublishing(false);
+   }
+ };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("fr-FR", {
@@ -70,15 +76,45 @@ export default function FinalStep({
         <p className="text-lg mb-4 text-gray-700">
           Double-check your listing details before publishing.
         </p>
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900">
-            Publishing will:
-          </h3>
-          <ul className="mt-2 text-sm text-gray-700 space-y-2">
-            <li>• Make your listing visible to all users</li>
-            <li>• Allow potential buyers to contact you</li>
-            <li>• Start tracking views and interactions</li>
-          </ul>
+        {/* Save Status Information */}
+        <div className="mt-6">
+          {savingStatus === "pending" && (
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin text-yellow-700" />
+                <p className="text-sm text-yellow-700 font-medium">
+                  Saving your listing...
+                </p>
+              </div>
+            </div>
+          )}
+
+          {savingStatus === "error" && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-red-700" />
+                <p className="text-sm text-red-700 font-medium">
+                  Failed to save listing
+                </p>
+              </div>
+              {errorMessage && (
+                <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
+              )}
+            </div>
+          )}
+
+          {savingStatus === "success" && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="text-sm font-medium text-gray-900">
+                Publishing will:
+              </h3>
+              <ul className="mt-2 text-sm text-gray-700 space-y-2">
+                <li>• Make your listing visible to all users</li>
+                <li>• Allow potential buyers to contact you</li>
+                <li>• Start tracking views and interactions</li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
@@ -216,7 +252,7 @@ export default function FinalStep({
           <button
             type="button"
             onClick={handlePublish}
-            disabled={isPublishing}
+            disabled={isPublishing || savingStatus !== "success"}
             className="inline-flex items-center px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800 
               transition-colors disabled:opacity-50 disabled:cursor-not-allowed gap-2"
           >
@@ -225,6 +261,10 @@ export default function FinalStep({
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Publishing...
               </>
+            ) : savingStatus === "pending" ? (
+              "Waiting for save..."
+            ) : savingStatus === "error" ? (
+              "Save failed"
             ) : (
               "Publish Listing"
             )}

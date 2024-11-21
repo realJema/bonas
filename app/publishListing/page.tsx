@@ -11,69 +11,44 @@ import { ListingFormData } from "@/schemas/interfaces";
 import Link from "next/link";
 import Logo from "@/app/components/Logo";
 
+type SaveStatus = "pending" | "success" | "error";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({} as ListingFormData);
   const [isPublished, setIsPublished] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("pending");
+  const [saveError, setSaveError] = useState<string | undefined>();
   const router = useRouter();
 
-  const handleContinue = (data: { [key: string]: any }) => {
+  const handleContinue = (data: {
+    [key: string]: any;
+    savingStatus?: SaveStatus;
+    errorMessage?: string;
+  }) => {
+    // Update form data
     setFormData((prevData) => ({
       ...prevData,
       ...data,
       listingId: data.listingId || prevData.listingId,
     }));
+
+    // Update save status and error if provided
+    if (data.savingStatus) {
+      setSaveStatus(data.savingStatus);
+    }
+    if (data.errorMessage) {
+      setSaveError(data.errorMessage);
+    }
+
+    // Move to next step
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 4));
   };
 
   const handleBack = () => {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
-
-  const handlePublish = async () => {
-    try {
-      setIsPublishing(true);
-      setError(null);
-
-      console.log("Sending formData:", formData);
-      const response = await fetch("/api/postListing", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (data.details) {
-          // Handle validation errors
-          const errorMessage = data.details
-            .map(
-              (err: { path: string; message: string }) =>
-                `${err.path}: ${err.message}`
-            )
-            .join(", ");
-          throw new Error(errorMessage);
-        }
-        throw new Error(data.error || "Failed to create listing");
-      }
-
-      setIsPublished(true);
-    } catch (error) {
-      console.error("Error publishing listing:", error);
-      setError(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      );
-    } finally {
-      setIsPublishing(false);
-    }
-  };
-
 
   const handleReview = () => {
     setIsPublished(false);
@@ -89,7 +64,7 @@ export default function Home() {
 
   const handleExit = () => {
     router.refresh();
-    router.push("/"); 
+    router.push("/");
   };
 
   return (
@@ -198,6 +173,7 @@ export default function Home() {
                 onBack={handleBack}
                 listingId={formData.listingId}
                 setIsPublished={setIsPublished}
+                savingStatus={saveStatus}
               />
             )}
           </>

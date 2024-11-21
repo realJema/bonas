@@ -52,7 +52,6 @@ type BuildListingUrlResult = {
   url: string;
 };
 
-
 const ItemCard = ({
   listing,
   slides,
@@ -88,37 +87,36 @@ const ItemCard = ({
     setIsEditModalOpen(false);
   };
 
-
-const generateUrl = async (): Promise<BuildListingUrlResult> => {
-  try {
-    if (!listing.subcategory_id) {
+  const generateUrl = async (): Promise<BuildListingUrlResult> => {
+    try {
+      if (!listing.subcategory_id) {
+        return { success: false, url: "#" };
+      }
+      const url = await buildListingUrl(listing);
+      return { success: true, url };
+    } catch (error) {
+      console.error("Error generating URL:", error);
       return { success: false, url: "#" };
     }
-    const url = await buildListingUrl(listing);
-    return { success: true, url };
-  } catch (error) {
-    console.error("Error generating URL:", error);
-    return { success: false, url: "#" };
-  }
-};
+  };
 
-const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.preventDefault();
+  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
 
-  if (isNavigating) return;
+    if (isNavigating) return;
 
-  setIsNavigating(true);
-  try {
-    const { success, url } = await generateUrl();
-    if (success) {
-      await router.push(url);
-    } 
-  } catch (error) {
-    console.error("Navigation error:", error);
-  } finally {
-    setIsNavigating(false);
-  }
-};
+    setIsNavigating(true);
+    try {
+      const { success, url } = await generateUrl();
+      if (success) {
+        await router.push(url);
+      }
+    } catch (error) {
+      console.error("Navigation error:", error);
+    } finally {
+      setIsNavigating(false);
+    }
+  };
 
   const renderSlide = (item: SlideItem, index: number) => {
     if (item.type === "image") {
@@ -128,7 +126,7 @@ const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
             className={`h-[150px] ${itemCardImageHieght} w-full relative cursor-pointer`}
           >
             <Image
-              alt={`${listing.title} - image ${index + 1}`}
+              alt={`listing cover image`}
               src={item.url}
               fill
               className="rounded-md object-cover"
@@ -287,7 +285,7 @@ const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
                 <Link href={`/user-profile/${username}/${listing.user_id}`}>
                   <div className="h-10 w-10 rounded-full relative">
                     <Image
-                      alt={listing.user.username!}
+                      alt="user profile image"
                       src={listing.user?.profilImage}
                       fill
                       className="object-cover rounded-full"

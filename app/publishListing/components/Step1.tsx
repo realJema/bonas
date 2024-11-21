@@ -28,7 +28,7 @@
 
   const editorOptions: Options = {
     spellChecker: true,
-    autofocus: true,
+    autofocus: false,
     status: false,
     placeholder: "Describe your listing in detail (50-1500 characters)...",
     minHeight: "200px",

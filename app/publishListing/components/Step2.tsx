@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -32,6 +32,24 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
   const [selectedFinalId, setSelectedFinalId] = useState<number | null>(null);
   const [town, setTown] = useState("");
   const [address, setAddress] = useState("");
+
+  const isFormValid = useMemo(() => {
+    // Check if we have a final category selected (either final or sub category)
+    const hasFinalCategory = selectedFinalId || selectedSubId;
+
+    // Check if town is selected
+    const hasTown = town.trim().length > 0;
+
+    // Check if address is provided
+    const hasAddress = address.trim().length > 0;
+
+    // Check if main category is selected
+    const hasMainCategory = !!selectedMainId;
+
+    // All fields must be filled
+    return hasFinalCategory && hasTown && hasAddress && hasMainCategory;
+  }, [selectedMainId, selectedSubId, selectedFinalId, town, address]);
+
 
   const { data: mainCategories = [], isLoading: isLoadingMain } = useQuery<
     Category[]
@@ -171,6 +189,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
             <h2 className="text-xl font-semibold mb-4">Select Category</h2>
 
             <div className="space-y-4">
+              {/* Main Category */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Main Category
@@ -200,6 +219,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                 </select>
               </div>
 
+              {/* Sub Category */}
               {selectedMainId && !isLoadingSub && subCategories.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -236,6 +256,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
                 </div>
               )}
 
+              {/* Final Category */}
               {selectedSubId &&
                 !isLoadingFinal &&
                 finalCategories.length > 0 && (
@@ -263,6 +284,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
             </div>
           </div>
 
+          {/* Location Section */}
           <div className="bg-white p-6 rounded-lg shadow-sm border">
             <h2 className="text-xl font-semibold mb-4">Location Details</h2>
 
@@ -306,6 +328,7 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
             </div>
           </div>
 
+          {/* Navigation Buttons */}
           <div className="flex justify-between pt-4">
             <button
               type="button"
@@ -316,8 +339,8 @@ export default function Step2({ onContinue, onBack, formData }: Step2Props) {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
-              disabled={!selectedSubId}
+              className="px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!isFormValid}
             >
               Continue →
             </button>

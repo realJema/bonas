@@ -30,9 +30,9 @@ export const useCategoryListings = (category: string) => {
         throw error;
       }
     },
-    staleTime: 20 * 60,
+    staleTime: 1000 * 60,
     retry: 3,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

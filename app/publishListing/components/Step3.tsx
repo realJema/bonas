@@ -1,7 +1,7 @@
 import { ListingFormData } from "@/schemas/interfaces";
 import { useState, useEffect, FormEvent } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -316,19 +316,23 @@ export default function Step3({ onContinue, onBack, formData }: Step3Props) {
                 />
                 <div className="flex flex-col items-center justify-center gap-2">
                   <div className="rounded-full bg-gray-100 p-2">
-                    <svg
-                      className="h-6 w-6 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    {isUploading ? (
+                      <Loader2 className="h-7 w-7 animate-spin text-gray-600" />
+                    ) : (
+                      <svg
+                        className="h-6 w-6 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                    )}
                   </div>
                   <div className="text-center">
                     <span className="text-sm font-medium text-black">

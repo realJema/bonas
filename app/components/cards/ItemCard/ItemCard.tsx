@@ -132,9 +132,9 @@ const ItemCard = ({
               className="rounded-md object-cover"
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
             />
-            <div className="absolute top-2 right-2">
+            {/* <div className="absolute top-2 right-2">
               <HeartIcon className="h-7 w-7 text-white fill-gray-800" />
-            </div>
+            </div> */}
           </div>
         </Slide>
       );

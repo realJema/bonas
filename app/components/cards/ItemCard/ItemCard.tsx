@@ -100,17 +100,15 @@ const ItemCard = ({
     }
   };
 
-  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleListingClick = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
     if (isNavigating) return;
 
     setIsNavigating(true);
     try {
-      const { success, url } = await generateUrl();
-      if (success) {
-        await router.push(url);
-      }
+      const url = await buildListingUrl(listing);
+      router.push(url);
     } catch (error) {
       console.error("Navigation error:", error);
     } finally {
@@ -125,13 +123,16 @@ const ItemCard = ({
           <div
             className={`h-[150px] ${itemCardImageHieght} w-full relative cursor-pointer`}
           >
-            <Image
-              alt={`listing cover image`}
-              src={item.url}
-              fill
-              className="rounded-md object-cover"
-              sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-            />
+            {/* <Link href={``}> */}
+              <Image
+                onClick={handleListingClick}
+                alt={`listing cover image`}
+                src={item.url}
+                fill
+                className="rounded-md object-cover"
+                sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+              />
+            {/* </Link> */}
             {/* <div className="absolute top-2 right-2">
               <HeartIcon className="h-7 w-7 text-white fill-gray-800" />
             </div> */}
@@ -267,9 +268,9 @@ const ItemCard = ({
       </CarouselProvider>
       {/* <Link href={buildListingUrl(listing)}> */}
       {/* details page */}
-      <Link
-        href="#"
-        onClick={handleClick}
+      <div
+        // href="#"
+        onClick={handleListingClick}
         className={`cursor-pointer ${
           isNavigating ? "pointer-events-none" : ""
         }`}
@@ -340,7 +341,7 @@ const ItemCard = ({
             </p>
           )}
         </div>
-      </Link>
+      </div>
 
       {/* Add delete and edit controls */}
 

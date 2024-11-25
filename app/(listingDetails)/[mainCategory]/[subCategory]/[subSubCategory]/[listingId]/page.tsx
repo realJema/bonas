@@ -1,3 +1,4 @@
+// app/[mainCategory]/[subCategory]/[subSubCategory]/[listingId]/page.tsx
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/client";
 import BreadCrumbs from "@/app/components/BreadCrumbs";
@@ -13,11 +14,11 @@ interface ListingParams {
   };
 }
 
-async function getListingDetails(listingId: string) {
+const ListingDetailsPage = async ({ params }: ListingParams) => {
   try {
     const listing = await prisma.listing.findUnique({
       where: {
-        id: BigInt(listingId),
+        id: BigInt(params.listingId),
       },
       include: {
         user: {
@@ -33,7 +34,7 @@ async function getListingDetails(listingId: string) {
     });
 
     if (!listing) {
-      return null;
+      notFound();
     }
 
     // Handle images and tags with type checking
@@ -51,7 +52,7 @@ async function getListingDetails(listingId: string) {
         ? listing.tags
         : [];
 
-    return {
+    const formattedListing = {
       id: listing.id.toString(),
       title: listing.title,
       description: listing.description,
@@ -82,51 +83,49 @@ async function getListingDetails(listingId: string) {
           listing.user?.profilImage || listing.user?.profilePicture,
       },
     };
+
+    return (
+      <div className="">
+        <div className="md:flex-row items-center justify-between w-full">
+          <BreadCrumbs
+            subCategory={decodeURIComponent(params.subCategory)}
+            mainCategory={decodeURIComponent(params.mainCategory)}
+            subSubCategory={decodeURIComponent(params.subSubCategory)}
+          />
+          <IconRow />
+        </div>
+        <div className="mt-5">
+          <Gig
+            title={formattedListing.title || ""}
+            description={formattedListing.description || ""}
+            image={formattedListing.user?.profilePicture || ""}
+            location={formattedListing.town || ""}
+            listingImages={formattedListing.images}
+            username={
+              formattedListing.user?.name ||
+              formattedListing.user?.username ||
+              ""
+            }
+            price={formattedListing.price}
+            datePosted={
+              formattedListing.created_at
+                ? new Date(formattedListing.created_at)
+                : new Date()
+            }
+            categoryName={params.subSubCategory}
+            condition={formattedListing.condition}
+            currency={formattedListing.currency}
+            rating={formattedListing.rating}
+            tags={formattedListing.tags}
+            userId={formattedListing.user_id}
+          />
+        </div>
+      </div>
+    );
   } catch (error) {
     console.error("Error fetching listing:", error);
-    return null;
-  }
-}
-
-const ListingDetailsPage = async ({ params }: ListingParams) => {
-  const listing = await getListingDetails(params.listingId);
-
-  if (!listing) {
     notFound();
   }
-
-  return (
-    <div className="">
-      <div className="md:flex-row items-center justify-between w-full">
-        <BreadCrumbs
-          subCategory={decodeURIComponent(params.subCategory)}
-          mainCategory={decodeURIComponent(params.mainCategory)}
-          subSubCategory={decodeURIComponent(params.subSubCategory)}
-        />
-        <IconRow />
-      </div>
-      <div className="mt-5">
-        <Gig
-          title={listing.title || ""}
-          description={listing.description || ""}
-          image={listing.user?.profilePicture || ""}
-          location={listing.town || ""}
-          listingImages={listing.images}
-          username={listing.user?.name || listing.user?.username || ""}
-          price={listing.price}
-          datePosted={
-            listing.created_at ? new Date(listing.created_at) : new Date()
-          }
-          categoryName={params.subSubCategory}
-          condition={listing.condition}
-          currency={listing.currency}
-          rating={listing.rating}
-          tags={listing.tags}
-          userId={listing.user_id}
-        />
-      </div>
-    </div>
-  );
 };
 
 export default ListingDetailsPage;

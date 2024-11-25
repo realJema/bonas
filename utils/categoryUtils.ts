@@ -1,17 +1,17 @@
+// app/utils/categoryUtils.ts
 import { getCategoryPath } from "@/actions/getCategoryPath";
 import { ExtendedListing } from "@/app/entities/ExtendedListing";
-import prisma from "@/prisma/client";
 
-export async function buildListingUrl(listing: ExtendedListing): Promise<string> {
-  if (!listing.subcategory_id) {
-    throw new Error("Listing must have a subcategory_id");
-  }
-
+export async function buildListingUrl(
+  listing: ExtendedListing
+): Promise<string> {
   try {
-    const [mainCategory, subCategory, subSubCategory] = await getCategoryPath(listing.subcategory_id);
+    const [mainCategory, subCategory, subSubCategory] = await getCategoryPath(
+      listing.subcategory_id?.toString() || ""
+    );
     return `/${mainCategory}/${subCategory}/${subSubCategory}/${listing.id}`;
   } catch (error) {
-    console.error('Error building listing URL:', error);
+    console.error("Error building listing URL:", error);
     throw error;
   }
 }

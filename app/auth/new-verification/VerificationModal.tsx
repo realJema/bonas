@@ -59,7 +59,7 @@ const VerificationModal = ({
                 Click the link below to check your inbox or check manually.
               </p>
               <Button
-                size="xl"
+                size="lg"
                 className="w-full"
                 onClick={() => {
                   const link = getEmailLink(email);

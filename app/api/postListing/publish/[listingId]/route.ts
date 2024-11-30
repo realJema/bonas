@@ -11,6 +11,7 @@ function serializeListing(listing: any): ExtendedListing {
     id: listing.id.toString(),
     title: listing.title,
     description: listing.description,
+    deadline: listing.deadline,
     subcategory_id: listing.subcategory_id?.toString() || null,
     price: listing.price?.toString() || null,
     currency: listing.currency || null,
@@ -43,6 +44,8 @@ function serializeListing(listing: any): ExtendedListing {
           profilePicture: listing.user.profilePicture || null,
           profilImage: listing.user.profilImage || null,
           image: listing.user.image || null,
+          email: listing.user.email || null, // Added email
+          phoneNumber: listing.user.phoneNumber || null, // Added phoneNumber
         }
       : null,
   };

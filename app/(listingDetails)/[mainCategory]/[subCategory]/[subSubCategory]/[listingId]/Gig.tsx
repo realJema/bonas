@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import CategoryButton from "./CategoryButton";
 import Reviews from "../../../../../components/Reviews";
@@ -9,22 +11,31 @@ import ReviewCard, {
 } from "../../../../../components/cards/ReviewCard/ReviewCard";
 import InfoRow from "./InfoRow";
 import PublishedCard from "./PublishedCard";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import DescriptionFormatter from "@/app/components/DescriptionFormatter";
+import ImageGallery from "./ImageGallery";
 
 interface Props {
   title: string;
   image: string;
+  coverImage?: string;
   description: string;
   rating?: string | null;
   username: string;
+  userPhoneNumber: string | null;
+  userEmail: string | null;
   location: string;
   datePosted: Date;
-  price: string | null;
+  price: string;
   listingImages: string[];
   categoryName: string;
   condition?: string | null;
   currency?: string | null;
   tags?: string[];
   userId?: string | null;
+  deliveryAvailable?: string;
+  negotiable?: string;
+  deadline: Date | null;
 }
 
 const sampleReviews: ReviewCardItems[] = [
@@ -58,6 +69,8 @@ const Gig = ({
   description,
   rating,
   username,
+  userEmail,
+  userPhoneNumber,
   location,
   price,
   datePosted,
@@ -66,16 +79,23 @@ const Gig = ({
   condition,
   currency,
   tags = [],
+  coverImage,
+  deliveryAvailable,
+  negotiable,
+  deadline,
 }: Props) => {
+  const [selectedImage, setSelectedImage] = useState(
+    coverImage || listingImages[0]
+  );
+
+  // console.log('condition: ',condition)
+  // console.log('condition: ',condition)
+
   return (
     <div>
       <div className="lg:grid lg:grid-cols-3 lg:gap-6">
         <div className="lg:col-span-2">
           <div className="w-full">
-            <div className="text-lg font-bold text-black mb-4 p-2 max-w-3xl">
-              {title}
-            </div>
-
             {rating && (
               <div className="flex items-center mb-4">
                 <svg
@@ -97,7 +117,6 @@ const Gig = ({
                 <span className="text-black opacity-75 ml-1">(8)</span>
               </div>
             )}
-
             <div className="flex items-center space-x-4 mb-4">
               <div className="relative h-24 w-24">
                 <Image
@@ -110,61 +129,42 @@ const Gig = ({
               </div>
               <InfoRow location={location} username={username} />
             </div>
-
-            {listingImages && listingImages.length > 0 && (
-              <div className="space-y-4">
-                <div className="h-96 md:h-[400px] relative w-full md:w-[90%]">
-                  <Image
-                    alt="Main listing image"
-                    src={listingImages[0]}
-                    fill
-                    className="rounded-md object-cover"
-                    sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  />
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-                  {listingImages.slice(1, 7).map((img, index) => (
-                    <div key={index} className="aspect-square relative">
-                      <Image
-                        alt={`Listing image ${index + 1}`}
-                        src={img}
-                        fill
-                        className="rounded-md object-cover"
-                        sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 16vw"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div className="text-lg md:text-xl font-bold text-black mb-4 p-2 max-w-3xl">
+              {title}
+            </div>
+            <ImageGallery
+              listingImages={listingImages}
+              coverImage={coverImage}
+            />
           </div>
 
           <div className="lg:hidden mt-8 w-full sm:max-w-3xl">
             <PublishedCard
               location={location}
               price={price}
+              deadline={deadline}
               currency={currency}
               datePosted={datePosted}
+              userEmail={userEmail}
+              userPhoneNumber={userPhoneNumber}
+              condition={condition}
+              deliveryAvailable={deliveryAvailable}
+              negotiable={negotiable}
             />
           </div>
 
           <div className="flex-col gap-3 w-full max-w-xl mt-6">
             <h2 className="font-bold mb-1">Description</h2>
-            <p className="text-gray-500 mb-5">{description}</p>
-
-            <div className="mb-3">
-              <Link href="#" className="text-black underline text-lg">
-                Read more
-              </Link>
+            <div className="text-gray-500 mb-5">
+              <DescriptionFormatter content={description} maxLength={300} />
             </div>
-
+           
             {condition && (
-              <div className="mt-4">
+              <div className="mt-5">
                 <h3 className="font-semibold mb-2">Condition</h3>
                 <p className="text-gray-700">{condition}</p>
               </div>
             )}
-
             {tags && tags.length > 0 && (
               <div className="flex flex-wrap gap-3 mt-4">
                 {tags.map((tag, index) => (
@@ -172,7 +172,6 @@ const Gig = ({
                 ))}
               </div>
             )}
-
             <div className="flex-col space-y-4 mt-6">
               <Reviews className="w-full max-w-3xl mx-auto mt-8 px-3 sm:px-4 lg:px-5 " />
               <SearchReviews />
@@ -190,8 +189,14 @@ const Gig = ({
           <PublishedCard
             location={location}
             price={price}
+            deadline={deadline}
             currency={currency}
             datePosted={datePosted}
+            userEmail={userEmail}
+            userPhoneNumber={userPhoneNumber}
+            condition={condition}
+            deliveryAvailable={deliveryAvailable}
+            negotiable={negotiable}
           />
         </div>
       </div>

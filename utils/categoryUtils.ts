@@ -16,6 +16,32 @@ export async function buildListingUrl(
   }
 }
 
+// utils/categoryUtils.ts
+export const slugifyCategory = (category: string) => {
+  return category
+    .toLowerCase()
+    .replace(/[&]/g, 'and')          // replace & with 'and'
+    .replace(/[^a-z0-9]/g, '-')      // replace any non-alphanumeric with hyphen
+    .replace(/-+/g, '-')             // replace multiple hyphens with single hyphen
+    .replace(/^-|-$/g, '');          // remove leading/trailing hyphens
+};
+
+export const decodeCategorySlug = (slug: string) => {
+  return slug
+    .split('-')
+    .map(word => word === 'and' ? '&' : word)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+export const getCategoryUrl = (mainCategory: string, subCategory?: string, subSubCategory?: string) => {
+  const segments = [mainCategory, subCategory, subSubCategory]
+    .filter((segment): segment is string => Boolean(segment))
+    .map(slugifyCategory);
+  
+  return `/categories/${segments.join('/')}`;  // Added 'categories' prefix
+};
+
 // import { ExtendedListing } from "@/app/entities/ExtendedListing";
 // import { Category } from "@prisma/client";
 

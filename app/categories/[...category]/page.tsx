@@ -6,6 +6,7 @@ import FilterDropdown from "./FilterDropdown";
 import Listings from "./Listings";
 import PriceRangeFilter from "./PriceRangeFilter";
 import Search from "./Search";
+import { decodeCategorySlug } from "@/utils/categoryUtils";
 
 
 // export const revalidate = 0;
@@ -80,8 +81,10 @@ const CategoryPage = async ({ params: { category }, searchParams }: Props) => {
     },
   ];
 
+  // const [mainCategory, subCategory, subSubCategory] =
+  //   category.map(decodeURIComponent);
   const [mainCategory, subCategory, subSubCategory] =
-    category.map(decodeURIComponent);
+    category.map(decodeCategorySlug);
   const currentPage = parseInt(searchParams.page) || 1;
  
 

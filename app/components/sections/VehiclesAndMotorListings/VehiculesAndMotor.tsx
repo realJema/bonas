@@ -5,11 +5,8 @@ import SkeletonListingSection from "../../skeletons/SkeletonListingSection";
 import ListingSection from "../../ListingSection";
 import { useCategoryListings } from "@/app/hooks/useCategoryListings";
 import { generateSlides } from "@/utils/generateSlides";
+import { getCategoryUrl } from "@/utils/categoryUtils";
 
-const getCategoryUrl = (category: string) => {
-  const encodedCategory = encodeURIComponent(category);
-  return `/categories/${encodedCategory}`;
-};
 
 const VehiclesAndMotor = () => {
   const {
@@ -49,7 +46,7 @@ const VehiclesAndMotor = () => {
     <div className="mt-52 bg-[#fafafa] rounded-md">
       <ListingSection
         heading="Vehicles and Motor"
-        href={getCategoryUrl("vehicles")}
+        href={getCategoryUrl("Vehicles & Transport")}
         subheading="Hand-vetted talent for all your professional needs"
         listings={listings}
         generateSlides={generateSlides}

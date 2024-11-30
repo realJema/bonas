@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Category {
-  id          Int        @id @default(autoincrement())
+  id          BigInt     @id
   name        String
   description String?
-  parentId    Int?
+  parentId    BigInt?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
@@ -23,7 +23,8 @@ model Category {
 model Listing {
   id                     BigInt    @id
   title                  String?
-  description            String?
+  description            String?   @db.Text
+  deadline               DateTime? @db.Timestamptz(6)
   timeline               String?
   subcategory_id         BigInt?
   price                  Float?

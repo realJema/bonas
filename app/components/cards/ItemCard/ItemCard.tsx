@@ -47,10 +47,6 @@ interface Item {
   canDeleteListing?: boolean;
 }
 
-type BuildListingUrlResult = {
-  success: boolean;
-  url: string;
-};
 
 const ItemCard = ({
   listing,
@@ -87,18 +83,6 @@ const ItemCard = ({
     setIsEditModalOpen(false);
   };
 
-  const generateUrl = async (): Promise<BuildListingUrlResult> => {
-    try {
-      if (!listing.subcategory_id) {
-        return { success: false, url: "#" };
-      }
-      const url = await buildListingUrl(listing);
-      return { success: true, url };
-    } catch (error) {
-      console.error("Error generating URL:", error);
-      return { success: false, url: "#" };
-    }
-  };
 
   const handleListingClick = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();

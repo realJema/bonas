@@ -62,10 +62,6 @@ export default function Home() {
     "Publish",
   ];
 
-  const handleExit = () => {
-    router.refresh();
-    router.push("/");
-  };
 
   return (
     <div className="min-h-screen bg-white mb-10">
@@ -122,9 +118,10 @@ export default function Home() {
           )}
 
           {/* Exit Button */}
-          <button
-            onClick={handleExit}
+          <Link
+            href="/"
             className="text-[15px] text-gray-800 hover:underline"
+            prefetch={true}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +137,7 @@ export default function Home() {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
+          </Link>
         </div>
       </header>
 

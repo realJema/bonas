@@ -5,11 +5,8 @@ import SkeletonListingSection from "../../skeletons/SkeletonListingSection";
 import ListingSection from "../../ListingSection";
 import { useCategoryListings } from "@/app/hooks/useCategoryListings";
 import { generateSlides } from "@/utils/generateSlides";
+import { getCategoryUrl } from "@/utils/categoryUtils";
 
-const getCategoryUrl = (category: string) => {
-  const encodedCategory = encodeURIComponent(category);
-  return `/categories/${encodedCategory}`;
-};
 
 const JobListings = () => {
   const {
@@ -49,7 +46,7 @@ const JobListings = () => {
     <div className="mt-16 bg-[#fafafa] rounded-md">
       <ListingSection
         heading="Job Listing"
-        href={getCategoryUrl("jobs")}
+        href={getCategoryUrl("Jobs & Employment")}
         subheading="Find the perfect job opportunity for you"
         listings={listings}
         generateSlides={generateSlides}

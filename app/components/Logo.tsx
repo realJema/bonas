@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 
 const Logo = () => {
   return (
     <Link
       href="/"
+      prefetch={true}
       className="text-2xl font-black text-black opacity-90 flex items-center"
+      replace={true}
     >
       <span className="relative">
         Bonas

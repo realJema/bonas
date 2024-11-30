@@ -3,16 +3,49 @@ import { NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { type NextRequest } from "next/server";
 
+// Define types for our category structures
+interface BaseCategory {
+  id: string;
+  name: string;
+  description: string | null;
+  parentId?: string | null;
+}
+
+interface CategoryWithChildren extends BaseCategory {
+  children?: CategoryWithChildren[];
+}
+
+interface RawCategory {
+  id: bigint;
+  name: string;
+  description: string | null;
+  parentId?: bigint | null;
+  children?: RawCategory[];
+}
+
+function serializeCategories(
+  categories: RawCategory[]
+): CategoryWithChildren[] {
+  return categories.map((category) => ({
+    ...category,
+    id: category.id.toString(),
+    parentId: category.parentId?.toString() || null,
+    children: category.children
+      ? serializeCategories(category.children)
+      : undefined,
+  }));
+}
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get("type");
     const parentId = searchParams.get("parentId");
 
-   const headers = {
-     "Cache-Control": "public, max-age=300, stale-while-revalidate=600",
-     "Content-Type": "application/json",
-   };
+    const headers = {
+      "Cache-Control": "public, max-age=300, stale-while-revalidate=600",
+      "Content-Type": "application/json",
+    };
 
     // For header navigation - fetch full tree
     if (type === "all") {
@@ -44,14 +77,16 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      return NextResponse.json(mainCategories, { headers });
+      return NextResponse.json(serializeCategories(mainCategories), {
+        headers,
+      });
     }
 
     // For Step2 - fetch based on parentId
     if (parentId) {
       const childCategories = await prisma.category.findMany({
         where: {
-          parentId: parseInt(parentId),
+          parentId: BigInt(parentId),
         },
         select: {
           id: true,
@@ -64,7 +99,9 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      return NextResponse.json(childCategories, { headers });
+      return NextResponse.json(serializeCategories(childCategories), {
+        headers,
+      });
     }
 
     // Default - return main categories
@@ -82,7 +119,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(mainCategories, { headers });
+    return NextResponse.json(serializeCategories(mainCategories), { headers });
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json(

@@ -1,12 +1,22 @@
+"use client";
+
 import { ListingFormData } from "@/schemas/interfaces";
 import { useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Loader2 } from "lucide-react";
+import {
+  AlertCircle,
+  Calendar,
+  HandCoins,
+  Loader2,
+  Tag,
+  Truck,
+} from "lucide-react";
+import { format } from "date-fns";
 
-type SaveStatus = 'pending' | 'success' | 'error';
+type SaveStatus = "pending" | "success" | "error";
 
 interface FinalStepProps {
   formData: ListingFormData;
@@ -26,36 +36,37 @@ export default function FinalStep({
   setIsPublished,
 }: FinalStepProps) {
   const router = useRouter();
- const [isPublishing, setIsPublishing] = useState<boolean>(false);
- const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
+  const [showFullDescription, setShowFullDescription] =
+    useState<boolean>(false);
 
- const handlePublish = async () => {
-   if (!listingId) {
-     toast.error("Listing not saved successfully");
-     return;
-   }
+  const handlePublish = async () => {
+    if (!listingId) {
+      toast.error("Listing not saved successfully");
+      return;
+    }
 
-   setIsPublishing(true);
-   try {
-     const response = await axios.patch(
-       `/api/postListing/publish/${listingId}`
-     );
+    setIsPublishing(true);
+    try {
+      const response = await axios.patch(
+        `/api/postListing/publish/${listingId}`
+      );
 
-     if (response.status === 200) {
-       setIsPublished(true);
-       toast.success("Listing published successfully!");
-     }
-   } catch (error: any) {
-     console.error("Error publishing listing:", error);
-     const errorMessage =
-       error.response?.data?.details ||
-       error.response?.data?.error ||
-       "Failed to publish listing";
-     toast.error(errorMessage);
-   } finally {
-     setIsPublishing(false);
-   }
- };
+      if (response.status === 200) {
+        setIsPublished(true);
+        toast.success("Listing published successfully!");
+      }
+    } catch (error: any) {
+      console.error("Error publishing listing:", error);
+      const errorMessage =
+        error.response?.data?.details ||
+        error.response?.data?.error ||
+        "Failed to publish listing";
+      toast.error(errorMessage);
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("fr-FR", {
@@ -76,6 +87,7 @@ export default function FinalStep({
         <p className="text-lg mb-4 text-gray-700">
           Double-check your listing details before publishing.
         </p>
+
         {/* Save Status Information */}
         <div className="mt-6">
           {savingStatus === "pending" && (
@@ -123,19 +135,19 @@ export default function FinalStep({
         {/* Images Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold mb-4">Images</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {formData.profileImage && (
-              <div className="relative w-full h-40 col-span-1">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {formData.cover_image && (
+              <div className="relative w-full h-40 col-span-1 md:col-span-2">
                 <Image
-                  src={formData.profileImage}
-                  alt="Profile Image"
+                  src={formData.cover_image}
+                  alt="Cover Image"
                   fill
                   className="object-cover rounded-lg"
-                  sizes="(max-width: 640px) 100vw, 400px"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   priority
                 />
                 <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                  Profile Image
+                  Cover Image
                 </div>
               </div>
             )}
@@ -146,7 +158,7 @@ export default function FinalStep({
                   alt={`Listing image ${index + 1}`}
                   fill
                   className="object-cover rounded-lg"
-                  sizes="(max-width: 640px) 100vw, 400px"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   priority={index < 2}
                 />
               </div>
@@ -226,18 +238,59 @@ export default function FinalStep({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-sm font-medium text-gray-500">Price</h3>
-              <p className="mt-1 text-2xl font-bold text-black">
-                {formatPrice(formData.price)}
-              </p>
-            </div>
-            {formData.timeline && (
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Timeline</h3>
-                <p className="mt-1 text-lg">{formData.timeline}</p>
+              <div className="mt-1">
+                <p className="text-2xl font-bold text-black">
+                  {formatPrice(formData.price)}
+                </p>
+                {formData.negotiable && (
+                  <div className="flex items-center gap-2 mt-2 text-gray-600">
+                    <HandCoins className="h-4 w-4" />
+                    <span className="text-sm">Price is negotiable</span>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Deadline</h3>
+              <div className="flex items-center gap-2 mt-1">
+                <Calendar className="h-5 w-5 text-gray-500" />
+                <span className="text-lg">
+                  {formData.deadline
+                    ? format(new Date(formData.deadline), "PPP")
+                    : "Not specified"}
+                </span>
+              </div>
+            </div>
           </div>
+
+          {/* Delivery Option */}
+          {formData.delivery_available && (
+            <div className="mt-4 flex items-center gap-2 text-gray-600">
+              <Truck className="h-4 w-4" />
+              <span className="text-sm">Delivery service available</span>
+            </div>
+          )}
         </div>
+
+        {/* Tags Section */}
+        {formData.tags && formData.tags.length > 0 && (
+          <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <div className="flex items-center gap-2 mb-4">
+              <Tag className="h-5 w-5" />
+              <h2 className="text-xl font-semibold">Tags</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {formData.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex justify-between items-center pt-4">

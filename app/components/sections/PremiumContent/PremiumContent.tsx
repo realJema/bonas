@@ -14,6 +14,7 @@ import CategorySelectionItem from "../../premiumContent/CategorySelectItem/Categ
 import CustomSwiper from "../../swiper/CustomSwiper";
 import SkeletonSwiper from "../../swiper/SkeletonSwiper";
 import ItemCard from "../../cards/ItemCard/ItemCard";
+import { getCategoryUrl } from "@/utils/categoryUtils";
 
 interface Category {
   label: string;
@@ -62,10 +63,7 @@ const PremiumContent = ({ categories }: Props) => {
     setIsEnd(swiper.isEnd);
   };
 
-  const getCategoryUrl = (category: string) => {
-    const encodedCategory = encodeURIComponent(category);
-    return `/categories/${encodedCategory}`;
-  };
+ 
 
   return (
     <div className="mt-10">

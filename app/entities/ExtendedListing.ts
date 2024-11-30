@@ -6,6 +6,7 @@ export interface ExtendedListing {
   price: string | null;
   currency: string | null;
   timeline: string | null;
+  deadline: Date | null,
   town: string | null;
   address: string | null;
   user_id: string | null;
@@ -31,5 +32,7 @@ export interface ExtendedListing {
     profilePicture: string | null;
     profilImage: string | null;
     image: string | null;
+    email: string | null;
+    phoneNumber: string | null
   } | null;
 }

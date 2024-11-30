@@ -144,6 +144,7 @@ export async function PATCH(
             id: true,
             name: true,
             email: true,
+            phoneNumber: true,
             username: true,
             profilImage: true,
             profilePicture: true,

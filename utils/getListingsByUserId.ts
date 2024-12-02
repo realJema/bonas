@@ -30,6 +30,7 @@ export async function getListingsByUserId({
           id: true,
           title: true,
           description: true,
+          deadline: true,
           timeline: true,
           subcategory_id: true,
           price: true,
@@ -60,6 +61,8 @@ export async function getListingsByUserId({
               image: true,
               profilePicture: true,
               profilImage: true,
+              email: true,
+              phoneNumber: true
             },
           },
         },
@@ -104,6 +107,7 @@ export async function getListingsByUserId({
           id: listing.id.toString(),
           title: listing.title,
           description: listing.description,
+          deadline: listing.deadline,
           timeline: listing.timeline,
           subcategory_id: listing.subcategory_id?.toString() || null,
           price: listing.price?.toString() || null,
@@ -134,6 +138,8 @@ export async function getListingsByUserId({
                 profilePicture: listing.user.profilePicture,
                 profilImage: listing.user.profilImage,
                 image: listing.user.image,
+                email: listing.user.email, 
+                phoneNumber: listing.user.phoneNumber,
               }
             : null,
         };

@@ -11,7 +11,6 @@ import EditorSkeleton from "@/app/components/skeletons/EditorSkeleton";
 import { Loader2, X } from "lucide-react";
 import { marked } from 'marked';
 import { Step1Data, Step1Schema } from "@/schemas/Step1Schema";
-import axios from "axios";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -24,7 +23,7 @@ interface Step1Props {
 }
 
 const MAX_LISTING_IMAGES = 5;
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
 const editorOptions: Options = {
   spellChecker: true,
@@ -216,7 +215,7 @@ const handleMultipleImageUpload = (files: File[]) => {
     });
   };
 
-  // Your existing return JSX stays the same as it looks good
+  
   return (
     <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto p-4">
       {/* Left Column */}

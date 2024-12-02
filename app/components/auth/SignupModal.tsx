@@ -192,7 +192,7 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
         <PasswordValidationRules password={password || ""} className="my-3" />
         {error && <p className="text-xs text-red-600">{error}</p>}
         <Button
-          size="xl"
+          size="lg"
           className="bg-black w-full"
           onClick={() => {
             if (
@@ -252,7 +252,7 @@ const SignupModal = ({ isOpen, onClose, switchToSignin }: SignupModalProps) => {
         </p>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <Button
-          size="xl"
+          size="lg"
           type="submit"
           className="w-full bg-black"
           disabled={isLoading || !isValid}

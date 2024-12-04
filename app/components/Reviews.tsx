@@ -23,7 +23,7 @@ const Reviews = ({className}:Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
           <div className="space-y-3">
             {[5, 4, 3, 2, 1].map((stars) => (
               <div key={stars} className="flex items-center space-x-4">
@@ -49,26 +49,6 @@ const Reviews = ({className}:Props) => {
             ))}
           </div>
 
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg text-gray-900 mb-3">
-              Rating Breakdown
-            </h3>
-            {[
-              { label: "Seller communication level", rating: 4.9 },
-              { label: "Recommended to a friend", rating: 5 },
-              { label: "Service as described", rating: 5 },
-            ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <p className="text-gray-700 text-sm">{item.label}</p>
-                <div className="flex items-center space-x-1">
-                  <Star className="w-4 h-4 text-gray-950 fill-current" />
-                  <span className="font-medium text-gray-900">
-                    {item.rating}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

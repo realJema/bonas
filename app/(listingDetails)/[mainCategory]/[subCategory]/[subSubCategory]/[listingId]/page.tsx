@@ -89,6 +89,7 @@ const ListingDetailsPage = async ({ params }: ListingParams) => {
             image={formattedListing.user.profilePicture || ""}
             location={formattedListing.town || ""}
             listingImages={formattedListing.images}
+            listingId={formattedListing.id}
             coverImage={listing.cover_image || ""}
             username={
               formattedListing.user.name || formattedListing.user.username || ""

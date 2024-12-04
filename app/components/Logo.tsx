@@ -11,7 +11,7 @@ const Logo = () => {
       replace={true}
     >
       <span className="relative">
-        Bonas
+        Obilli
         <span className="absolute bottom-2 -right-2">
           <svg
             width="8"

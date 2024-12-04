@@ -14,6 +14,7 @@ import PublishedCard from "./PublishedCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import DescriptionFormatter from "@/app/components/DescriptionFormatter";
 import ImageGallery from "./ImageGallery";
+import { ReviewSection } from "@/app/components/reviews/ReviewSection/ReviewSection";
 
 interface Props {
   title: string;
@@ -28,6 +29,7 @@ interface Props {
   datePosted: Date;
   price: string;
   listingImages: string[];
+  listingId: string;
   categoryName: string;
   condition?: string | null;
   currency?: string | null;
@@ -75,6 +77,7 @@ const Gig = ({
   price,
   datePosted,
   listingImages,
+  listingId,
   categoryName,
   condition,
   currency,
@@ -172,16 +175,8 @@ const Gig = ({
                 ))}
               </div>
             )}
-            <div className="flex-col space-y-4 mt-6">
-              <Reviews className="w-full max-w-3xl mx-auto mt-8 px-3 sm:px-4 lg:px-5 " />
-              <SearchReviews />
-
-              <div className="space-y-4">
-                {sampleReviews.map((review, index) => (
-                  <ReviewCard key={index} {...review} />
-                ))}
-              </div>
-            </div>
+         
+           <ReviewSection listingId={parseInt(listingId)}  />
           </div>
         </div>
 

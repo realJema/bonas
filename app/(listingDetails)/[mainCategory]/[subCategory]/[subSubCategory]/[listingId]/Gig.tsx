@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import DescriptionFormatter from "@/app/components/DescriptionFormatter";
 import ImageGallery from "./ImageGallery";
 import { ReviewSection } from "@/app/components/reviews/ReviewSection/ReviewSection";
+import { Review } from "@/app/types/review";
 
 interface Props {
   title: string;
@@ -38,32 +39,10 @@ interface Props {
   deliveryAvailable?: string;
   negotiable?: string;
   deadline: Date | null;
+  initialReviews: Review[] | undefined;
+  totalReviews?: number;
 }
 
-const sampleReviews: ReviewCardItems[] = [
-  {
-    name: "John Doe",
-    location: "New York, USA",
-    createdAt: new Date("2023-06-15"),
-    rating: 5,
-    comment:
-      "Excellent service! The gig was completed quickly and the quality exceeded my expectations. I highly recommend this seller.",
-  },
-  {
-    name: "Jane Smith",
-    location: "London, UK",
-    createdAt: new Date("2023-07-02"),
-    rating: 4,
-    comment:
-      "Very good work overall. There were a few minor issues, but the seller was quick to address them. I would use their services again.",
-  },
-  {
-    name: "Alex Johnson",
-    location: "Sydney, Australia",
-    createdAt: new Date("2023-07-20"),
-    rating: 5,
-  },
-];
 
 const Gig = ({
   title,
@@ -86,6 +65,8 @@ const Gig = ({
   deliveryAvailable,
   negotiable,
   deadline,
+  initialReviews = [],
+  totalReviews = 0,
 }: Props) => {
   const [selectedImage, setSelectedImage] = useState(
     coverImage || listingImages[0]
@@ -161,7 +142,7 @@ const Gig = ({
             <div className="text-gray-500 mb-5">
               <DescriptionFormatter content={description} maxLength={300} />
             </div>
-           
+
             {condition && (
               <div className="mt-5">
                 <h3 className="font-semibold mb-2">Condition</h3>
@@ -175,8 +156,12 @@ const Gig = ({
                 ))}
               </div>
             )}
-         
-           <ReviewSection listingId={parseInt(listingId)}  />
+
+            <ReviewSection
+              initialReviews={initialReviews}
+              totalReviews={totalReviews}
+              listingId={BigInt(listingId)}
+            />
           </div>
         </div>
 

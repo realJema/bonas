@@ -16,24 +16,70 @@ interface ListingParams {
 
 const ListingDetailsPage = async ({ params }: ListingParams) => {
   try {
-    const listing = await prisma.listing.findUnique({
-      where: {
-        id: BigInt(params.listingId),
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            profilePicture: true,
-            profilImage: true,
-            email: true,
-            phoneNumber: true,
+    // Fetch listing and reviews in parallel
+    const [listing, initialReviews, totalReviews] = await Promise.all([
+      prisma.listing.findUnique({
+        where: {
+          id: BigInt(params.listingId),
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              profilePicture: true,
+              profilImage: true,
+              email: true,
+              phoneNumber: true,
+            },
           },
         },
-      },
-    });
+      }),
+
+      // Fetch initial reviews
+      prisma.review.findMany({
+        where: {
+          listingId: BigInt(params.listingId),
+          parentId: null, // Get only top-level reviews
+        },
+        take: 10,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+          replies: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          _count: {
+            select: {
+              replies: true,
+            },
+          },
+        },
+      }),
+
+      // Get total review count
+      prisma.review.count({
+        where: {
+          listingId: BigInt(params.listingId),
+          parentId: null,
+        },
+      }),
+    ]);
 
     if (!listing || !listing.user) {
       notFound();
@@ -107,6 +153,8 @@ const ListingDetailsPage = async ({ params }: ListingParams) => {
             negotiable={formattedListing.negotiable || ""}
             deadline={formattedListing.deadline}
             deliveryAvailable={formattedListing.delivery_available || ""}
+            initialReviews={initialReviews}
+            totalReviews={totalReviews}
           />
         </div>
       </div>

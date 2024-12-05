@@ -1,7 +1,7 @@
 # Obilli
 
 <details>
-  <summary>Project Timeline of Obilli</summary>
+  <summary>Project Timeline</summary>
 
 Here's a weekly breakdown with expected results for each phase of developing the classified listing website with Next.js:
 

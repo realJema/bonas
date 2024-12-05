@@ -46,11 +46,11 @@ const UserProfilePage = async ({
             imageUrl={session?.user?.image}
           />
 
-          <LearnmoreCard
+          {/* <LearnmoreCard
             title="Earn badges and stand out"
             description="Boost your sales by boosting your expertise."
             buttonText="Enroll Now"
-          />
+          /> */}
           <div className="">
             <DescriptionCard
               description="A frontend developer crafts user-friendly interfaces with code magic. He does amazing things to ensure great UI design and goes through lengths to link the front end and the back end"

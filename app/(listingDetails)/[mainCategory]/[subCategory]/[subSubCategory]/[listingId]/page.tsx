@@ -4,6 +4,7 @@ import prisma from "@/prisma/client";
 import BreadCrumbs from "@/app/components/BreadCrumbs";
 import IconRow from "./IconRow";
 import Gig from "./Gig";
+import { Review } from "@/app/types/review";
 
 interface ListingParams {
   params: {
@@ -17,7 +18,8 @@ interface ListingParams {
 const ListingDetailsPage = async ({ params }: ListingParams) => {
   try {
     // Fetch listing and reviews in parallel
-    const [listing, initialReviews, totalReviews] = await Promise.all([
+    const [listing, reviewsData, totalReviews] = await Promise.all([
+      // Listing query stays same
       prisma.listing.findUnique({
         where: {
           id: BigInt(params.listingId),
@@ -37,42 +39,28 @@ const ListingDetailsPage = async ({ params }: ListingParams) => {
         },
       }),
 
-      // Fetch initial reviews
+      // Reviews query - matching schema exactly
       prisma.review.findMany({
         where: {
           listingId: BigInt(params.listingId),
-          parentId: null, // Get only top-level reviews
-        },
-        take: 10,
-        orderBy: {
-          createdAt: "desc",
+          parentId: null, // Get top-level reviews
         },
         include: {
           user: {
             select: {
               name: true,
               image: true,
-            },
-          },
-          replies: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                  image: true,
-                },
-              },
-            },
-          },
-          _count: {
-            select: {
-              replies: true,
+              profilImage: true, // Include this as fallback
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 10,
       }),
 
-      // Get total review count
+      // Total count stays same
       prisma.review.count({
         where: {
           listingId: BigInt(params.listingId),
@@ -80,6 +68,59 @@ const ListingDetailsPage = async ({ params }: ListingParams) => {
         },
       }),
     ]);
+
+    // Get replies in separate query
+    const parentIds = reviewsData.map((review) => review.id);
+    const repliesData = await prisma.review.findMany({
+      where: {
+        parentId: { in: parentIds },
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+            profilImage: true,
+          },
+        },
+      },
+    });
+
+   const initialReviews: Review[] = reviewsData.map((review) => ({
+     id: review.id,
+     listingId: review.listingId,
+     userId: review.userId,
+     rating: review.rating,
+     comment: review.comment || "",
+     createdAt: review.createdAt,
+     parentId: review.parentId || undefined,
+     user: {
+       name: review.user.name || "",
+       image: review.user.image || review.user.profilImage || "",
+     },
+     _count: {
+       replies: repliesData.filter((r) => r.parentId === review.id).length,
+     },
+     // Only add replies array if there are actual replies
+     ...(repliesData.some((r) => r.parentId === review.id) && {
+       replies: repliesData
+         .filter((r) => r.parentId === review.id)
+         .map((reply) => ({
+           id: reply.id,
+           listingId: reply.listingId,
+           userId: reply.userId,
+           rating: reply.rating,
+           comment: reply.comment || "",
+           createdAt: reply.createdAt,
+           parentId: reply.parentId || undefined,
+           user: {
+             name: reply.user.name || "",
+             image: reply.user.image || reply.user.profilImage || "",
+           },
+           _count: { replies: 0 },
+         })),
+     }),
+   }));
 
     if (!listing || !listing.user) {
       notFound();

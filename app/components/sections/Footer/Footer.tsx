@@ -66,7 +66,7 @@ const Footer = () => {
             </div>
 
             <p className="opacity-75 text-sm text-gray-700">
-              © Bonas International Ltd. 2024
+              © Obilli International Ltd. 2024
             </p>
           </div>
 
@@ -75,7 +75,7 @@ const Footer = () => {
               <Logo />
 
               <p className="mt-1 text-base sm:text-sm text-gray-600 dark:text-neutral-400">
-                © Bonas International Ltd. 2024
+                © Obilli International Ltd. 2024
               </p>
             </div>
 
@@ -279,7 +279,7 @@ export default Footer;
 //             </div>
 
 //             <p className="opacity-75 text-sm text-gray-700">
-//               © Bonas International Ltd. 2024
+//               © Obilli International Ltd. 2024
 //             </p>
 //           </div>
 
@@ -288,7 +288,7 @@ export default Footer;
 //               <Logo />
 
 //               <p className="mt-1 text-base sm:text-sm text-gray-600 dark:text-neutral-400">
-//                 © Bonas International Ltd. 2024
+//                 © Obilli International Ltd. 2024
 //               </p>
 //             </div>
 

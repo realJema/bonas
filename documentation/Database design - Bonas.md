@@ -1,6 +1,6 @@
-Here’s a database design for your classified listing website, Bonas. The design includes tables for users, categories, listings, and other essential components.
+Here’s a database design for your classified listing website, Obilli. The design includes tables for users, categories, listings, and other essential components.
 
-### **Database Schema for Bonas**
+### **Database Schema for Obilli**
 
 #### **1. Users Table**
 

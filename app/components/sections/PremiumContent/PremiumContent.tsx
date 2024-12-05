@@ -68,7 +68,7 @@ const PremiumContent = ({ categories }: Props) => {
   return (
     <div className="mt-10">
       <div className="flex items-center justify-between">
-        <Heading label="Explore popular categories on Bonas" />
+        <Heading label="Explore popular categories on Obilli" />
         <div className="flex items-center gap-4">
           <Link
             href={getCategoryUrl(selectedCategory)}

@@ -1,8 +1,8 @@
 # API routes 
 
-Yes, to interact with a MySQL database for your classified listing website, you'll need an API to handle data retrieval, updates, and other operations. Here’s a basic outline of how you can structure the API for the Bonas project:
+Yes, to interact with a MySQL database for your classified listing website, you'll need an API to handle data retrieval, updates, and other operations. Here’s a basic outline of how you can structure the API for the Obilli project:
 
-### API Structure for Bonas**
+### API Structure for Obilli**
 
 #### 1. **Authentication and User Management**
 

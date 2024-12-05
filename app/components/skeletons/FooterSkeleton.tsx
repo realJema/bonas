@@ -26,7 +26,7 @@ const FooterSkeleton = () => {
           <div className="flex items-center gap-x-3 mb-4 sm:mb-0">
             <Logo />
             <p className="opacity-75 text-sm text-gray-700">
-              © Bonas International Ltd. 2024
+              © Obilli International Ltd. 2024
             </p>
           </div>
 
@@ -34,7 +34,7 @@ const FooterSkeleton = () => {
             <div className="sm:hidden">
               <Logo />
               <p className="mt-1 text-base sm:text-sm text-gray-600 dark:text-neutral-400">
-                © Bonas International Ltd. 2024
+                © Obilli International Ltd. 2024
               </p>
             </div>
 

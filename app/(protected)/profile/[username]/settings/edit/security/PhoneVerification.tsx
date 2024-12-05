@@ -16,7 +16,7 @@ const PhoneVerification = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 lg:gap-20 w-full sm:w-auto">
             <div>
               <p className="text-sm text-gray-600 w-full  xl:w-[510px]">
-                Your phone is verified with Bonas. Click Edit to change your
+                Your phone is verified with Obilli. Click Edit to change your
                 phone number
               </p>
             </div>

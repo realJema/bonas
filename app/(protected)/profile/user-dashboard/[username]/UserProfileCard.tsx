@@ -57,7 +57,7 @@ const ProfileCard = ({
         </p>
       </div>
       <button className="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-100 mb-4">
-        Preview Bonas Profile
+        Preview Obilli Profile
       </button>
       <hr className="border-gray-200 mb-4" />
       <div className="space-y-2">

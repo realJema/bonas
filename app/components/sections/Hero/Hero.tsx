@@ -86,7 +86,7 @@ const Hero = ({ username }: Props) => {
       />
       <div className="relative z-10">
         <h1 className="text-white text-2xl md:text-[34px] font-semibold mb-8 px-8">
-          Welcome to Bonas{" "}
+          Welcome to Obilli{" "}
           {username && <span>, {formatUsername(username)} 🎉</span>}
         </h1>
 

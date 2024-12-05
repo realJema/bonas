@@ -1,4 +1,4 @@
-# Bonas
+# Obilli
 
 <details>
   <summary>Project Timeline</summary>
@@ -134,22 +134,22 @@ This roadmap should guide the development process effectively while ensuring eac
 
 ### Mockup Files 
 Here are the 
-[Figma Mockup](https://www.figma.com/design/muQYHATICXzmA2kskIk0Kn/Bonas---Classified-Listing?node-id=0-1&t=htQLTlKuTEYD8137-1) designs for the project 
+[Figma Mockup](https://www.figma.com/design/muQYHATICXzmA2kskIk0Kn/Obilli---Classified-Listing?node-id=0-1&t=htQLTlKuTEYD8137-1) designs for the project 
 
 
 ### Categories 
 
-A list of categories can be found in "Categories - Bonas.json" file, it contains 
+A list of categories can be found in "Categories - Obilli.json" file, it contains 
 
 
 ### Database design 
 
-The design for the database can be found in "Database design- Bonas.json" file, it contains 
+The design for the database can be found in "Database design- Obilli.json" file, it contains 
 
 
 ### Api routes 
 
-A documentation for the api routes can be found in "Categories - Bonas.json" file, it contains 
+A documentation for the api routes can be found in "Categories - Obilli.json" file, it contains 
 
 
 ### Pages 

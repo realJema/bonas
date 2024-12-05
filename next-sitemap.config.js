@@ -1,8 +1,9 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://obilli.com', 
-  generateRobotsTxt: true, // (optional) Generate a robots.txt file
-  sitemapSize: 5000, // (optional) Limit number of URLs per sitemap file
-  changefreq: 'daily', // Frequency of content updates (optional)
-  priority: 0.7, // Default priority for pages (optional)
+  siteUrl: "https://obilli.com", // Replace with your domain
+  generateRobotsTxt: true, // Ensures robots.txt is generated
+  sitemapSize: 5000, // Max URLs per sitemap file
+  changefreq: "daily", // Optional: Sets change frequency
+  priority: 0.7, // Optional: Sets default priority
+  exclude: ["/api/*", "/server-sitemap.xml"], // Exclude paths if necessary
 };
